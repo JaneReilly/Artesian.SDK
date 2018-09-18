@@ -144,7 +144,7 @@ namespace Artesian.SDK.Service
         }
 
         #region private
-        string _buildRequest()
+        private string _buildRequest()
         {
             _validateQuery();
 
@@ -153,7 +153,7 @@ namespace Artesian.SDK.Service
                 .SetQueryParam("tz", _tz)
                 .SetQueryParam("tr", _tr);
 
-            return url.ToString();
+            return url;
         }
 
         protected sealed override void _validateQuery()

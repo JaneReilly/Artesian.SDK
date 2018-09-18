@@ -58,7 +58,7 @@ namespace Artesian.SDK.Service
                     .SetQueryParam("userDefined", userDefined)
                     ;
 
-            return _client.Exec<PagedResult<TimeTransform>>(HttpMethod.Get, url.ToString(), ctk: ctk);
+            return _client.Exec<PagedResult<TimeTransform>>(HttpMethod.Get, url, ctk: ctk);
         }
         /// <summary>
         /// Read marketdata metadata by provider and curve name with MarketDataIdentifier
@@ -73,7 +73,7 @@ namespace Artesian.SDK.Service
                     .SetQueryParam("provider", id.Provider)
                     .SetQueryParam("curveName", id.Name)
                     ;
-            return _client.Exec<MarketDataEntity.Output>(HttpMethod.Get, url.ToString(), ctk: ctk);
+            return _client.Exec<MarketDataEntity.Output>(HttpMethod.Get, url, ctk: ctk);
         }
         /// <summary>
         /// Read marketdata metadata by id
@@ -87,7 +87,7 @@ namespace Artesian.SDK.Service
                 throw new ArgumentException("Id invalid :" + id);
 
             var url = "/marketdata/entity/".AppendPathSegment(id.ToString());
-            return _client.Exec<MarketDataEntity.Output>(HttpMethod.Get, url.ToString(), ctk: ctk);
+            return _client.Exec<MarketDataEntity.Output>(HttpMethod.Get, url, ctk: ctk);
         }
         /// <summary>
         /// Read paged set of available versions of the marketdata by id
@@ -131,7 +131,43 @@ namespace Artesian.SDK.Service
                     .SetQueryParam("sorts", filter.Sorts)
                     ;
 
-            return _client.Exec<ArtesianSearchResults>(HttpMethod.Get, url.ToString(), ctk: ctk);
+            return _client.Exec<ArtesianSearchResults>(HttpMethod.Get, url, ctk: ctk);
+        }
+        /// <summary>
+        /// Register the given MarketData entity
+        /// </summary>
+        /// <param name="metadata">MarketDataEntity</param>
+        /// <param name="ctk">CancellationToken</param>
+        /// <returns></returns>
+        public Task<MarketDataEntity.Output> RegisterMarketDataAsync(MarketDataEntity.Input metadata, CancellationToken ctk = default(CancellationToken))
+        {
+            var url = "/marketdata/entity/";
+
+            return _client.Exec<MarketDataEntity.Output, MarketDataEntity.Input>(HttpMethod.Post, url, metadata, ctk: ctk);
+        }
+        /// <summary>
+        /// Save the given MarketData entity
+        /// </summary>
+        /// <param name="metadata">MarketDataEntity</param>
+        /// <param name="ctk">CancellationToken</param>
+        /// <returns></returns>
+        public Task<MarketDataEntity.Output> UpdateMarketDataAsync(MarketDataEntity.Input metadata, CancellationToken ctk = default)
+        {
+            var url = "/marketdata/entity/".AppendPathSegment(metadata.MarketDataId.ToString());
+
+            return _client.Exec<MarketDataEntity.Output, MarketDataEntity.Input>(HttpMethod.Put, url, metadata, ctk: ctk);
+        }
+        /// <summary>
+        /// Delete the specific MarketData entity by id
+        /// </summary>
+        /// <param name="id">int</param>
+        /// <param name="ctk">CancellationToken</param>
+        /// <returns></returns>
+        public Task DeleteMarketDataAsync(int id, CancellationToken ctk = default)
+        {
+            var url = "/marketdata/entity/".AppendPathSegment(id.ToString());
+
+            return _client.Exec(HttpMethod.Delete, url, ctk: ctk);
         }
     }
 }

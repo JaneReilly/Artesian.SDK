@@ -162,5 +162,68 @@ namespace Artesian.SDK.Tests
             }
         }
 
+        [Test]
+        public void RegisterMarketDataAsync()
+        {
+            using (var httpTest = new HttpTest())
+            {
+                var mds = new MetadataService(_cfg);
+
+                var marketDataEntity = new MarketDataEntity.Input();
+
+                var mdq = mds.RegisterMarketDataAsync(marketDataEntity).ConfigureAwait(true).GetAwaiter().GetResult();
+
+                httpTest.ShouldHaveCalled($"{_cfg.BaseAddress}v2.1/marketdata/entity")
+                    .WithVerb(HttpMethod.Post)
+                    //.WithContentType("application/x.msgpacklz4")
+                    .WithHeader("Accept", "application/x.msgpacklz4; q=1.0")
+                    .WithHeader("Accept", "application/x-msgpack; q=0.75")
+                    .WithHeader("Accept", "application/json; q=0.5")
+                    .Times(1);
+            }
+        }
+
+        [Test]
+        public void UpdateMarketDataAsync()
+        {
+            using (var httpTest = new HttpTest())
+            {
+                var mds = new MetadataService(_cfg);
+
+                var marketDataEntity = new MarketDataEntity.Input()
+                {
+                    MarketDataId = 1
+                };
+
+                var mdq = mds.UpdateMarketDataAsync(marketDataEntity).ConfigureAwait(true).GetAwaiter().GetResult();
+
+                httpTest.ShouldHaveCalled($"{_cfg.BaseAddress}v2.1/marketdata/entity/1")
+                    .WithVerb(HttpMethod.Put)
+                    //.WithContentType("application/x.msgpacklz4")
+                    .WithHeader("Accept", "application/x.msgpacklz4; q=1.0")
+                    .WithHeader("Accept", "application/x-msgpack; q=0.75")
+                    .WithHeader("Accept", "application/json; q=0.5")
+                    .Times(1);
+            }
+        }
+
+        [Test]
+        public void DeleteMarketDataAsync()
+        {
+            using (var httpTest = new HttpTest())
+            {
+                var mds = new MetadataService(_cfg);
+
+                mds.DeleteMarketDataAsync(1).ConfigureAwait(true).GetAwaiter().GetResult();
+
+                httpTest.ShouldHaveCalled($"{_cfg.BaseAddress}v2.1/marketdata/entity/1")
+                    .WithVerb(HttpMethod.Delete)
+                    //.WithContentType("application/x.msgpacklz4")
+                    .WithHeader("Accept", "application/x.msgpacklz4; q=1.0")
+                    .WithHeader("Accept", "application/x-msgpack; q=0.75")
+                    .WithHeader("Accept", "application/json; q=0.5")
+                    .Times(1);
+            }
+        }
     }
 }

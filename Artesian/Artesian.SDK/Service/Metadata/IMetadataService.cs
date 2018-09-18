@@ -62,5 +62,26 @@ namespace Artesian.SDK.Service
         /// <param name="ctk">CancellationToken</param>
         /// <returns></returns>
         Task<ArtesianSearchResults> SearchFacetAsync(ArtesianSearchFilter filter, CancellationToken ctk = default(CancellationToken));
+        /// <summary>
+        /// Register the given MarketData entity
+        /// </summary>
+        /// <param name="metadata">MarketDataEntity</param>
+        /// <param name="ctk">CancellationToken</param>
+        /// <returns></returns>
+        Task<MarketDataEntity.Output> RegisterMarketDataAsync(MarketDataEntity.Input metadata, CancellationToken ctk = default(CancellationToken));
+        /// <summary>
+        /// Save the given MarketData entity
+        /// </summary>
+        /// <param name="metadata">MarketDataEntity</param>
+        /// <param name="ctk">CancellationToken</param>
+        /// <returns></returns>
+        Task<MarketDataEntity.Output> UpdateMarketDataAsync(MarketDataEntity.Input metadata, CancellationToken ctk = default(CancellationToken));
+        /// <summary>
+        /// Delete the specific MarketData entity by id
+        /// </summary>
+        /// <param name="id">int</param>
+        /// <param name="ctk">CancellationToken</param>
+        /// <returns></returns>
+        Task DeleteMarketDataAsync(int id, CancellationToken ctk = default(CancellationToken));
     }
 }

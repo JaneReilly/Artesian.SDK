@@ -52,11 +52,11 @@ namespace Artesian.SDK.Dto
                 }
             }
 
-            if (artesianSearchFilter.PageSize < 0)
-                throw new ArgumentException("Page size is less than 0");
+            if (artesianSearchFilter.PageSize <= 0)
+                throw new ArgumentException("Page size should be greater than 0");
 
-            if (artesianSearchFilter.Page < 0)
-                throw new ArgumentException("Page is less than 0");
+            if (artesianSearchFilter.Page <= 0)
+                throw new ArgumentException("Page should be greater than 0");
 
             if (artesianSearchFilter.Filters!=null) {
                 foreach (KeyValuePair<string, string[]> element in artesianSearchFilter.Filters)

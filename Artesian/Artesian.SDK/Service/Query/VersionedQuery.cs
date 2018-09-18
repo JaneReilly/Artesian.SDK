@@ -317,7 +317,7 @@ namespace Artesian.SDK.Service
             return subPath;
         }
 
-        string _buildRequest()
+        private string _buildRequest()
         {
             _validateQuery();
 
@@ -326,7 +326,7 @@ namespace Artesian.SDK.Service
                         .SetQueryParam("tz", _tz)
                         .SetQueryParam("tr", _tr);
 
-            return url.ToString();
+            return url;
         } 
         #endregion
 

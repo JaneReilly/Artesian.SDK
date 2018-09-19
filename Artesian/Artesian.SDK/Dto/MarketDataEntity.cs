@@ -3,6 +3,7 @@
 // license information. 
 using MessagePack;
 using NodaTime;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
@@ -11,9 +12,10 @@ namespace Artesian.SDK.Dto
     /// <summary>
     /// The MarketData Entity with Etag
     /// </summary>
-    [MessagePackObject]
-    public class MarketDataEntity
+    public static class MarketDataEntity
     {
+
+        [MessagePackObject]
         public class Input
         {
             public Input() { }
@@ -183,6 +185,24 @@ namespace Artesian.SDK.Dto
             /// The Curve Ranges
             /// </summary>
             public IEnumerable<CurveRange> Curves { get; set; }
+        }
+    }
+
+    public static class MarketDataEntityInputExt
+    {
+        public static void ValidateRegister(this MarketDataEntity.Input marketDataEntityInput)
+        {
+            if (marketDataEntityInput.MarketDataId != 0)
+                throw new ArgumentException("MarketDataId must be 0");
+
+            if (marketDataEntityInput.Type == MarketDataType.MarketAssessment && marketDataEntityInput.TransformID != null)
+                throw new ArgumentException("No transform possible when Type is MarketAssessment");
+        }
+
+        public static void ValidateUpdate(this MarketDataEntity.Input marketDataEntityInput)
+        {
+            if (marketDataEntityInput.Type == MarketDataType.MarketAssessment && marketDataEntityInput.TransformID != null)
+                throw new ArgumentException("No transform possible when Type is MarketAssessment");
         }
     }
 }

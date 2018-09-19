@@ -106,7 +106,6 @@ namespace Artesian.SDK.Service
         {
             try
             {
-
                 var req = _client.Request(resource).WithAcceptHeader(_formatters).AllowAnyHttpStatus();
 
                 if (Config.ApiKey != null)
@@ -117,19 +116,31 @@ namespace Artesian.SDK.Service
                     req = req.WithOAuthBearerToken(token);
                 }
 
-                using (var res = await req.SendAsync(method, cancellationToken: ctk))
+                ObjectContent content = null;
+
+                try
                 {
-                    if (res.StatusCode == HttpStatusCode.NoContent || res.StatusCode == HttpStatusCode.NotFound)
-                        return default;
-                     
-                    if (!res.IsSuccessStatusCode)
+                    if (body != null)
+                        content = new ObjectContent(typeof(TBody), body, _lz4msgPackFormatter);
+                
+                    using (var res = await req.SendAsync(method, content: content, cancellationToken: ctk))
                     {
-                        var responseText = await res.Content.ReadAsStringAsync();
+                        if (res.StatusCode == HttpStatusCode.NoContent || res.StatusCode == HttpStatusCode.NotFound)
+                            return default;
 
-                        throw new ArtesianSdkRemoteException("Failed handling REST call to WebInterface {0} {1}. Returned status: {2}. Content: \n{3}", method, Config.BaseAddress + _url + resource, res.StatusCode, responseText);
+                        if (!res.IsSuccessStatusCode)
+                        {
+                            var responseText = await res.Content.ReadAsStringAsync();
+
+                            throw new ArtesianSdkRemoteException("Failed handling REST call to WebInterface {0} {1}. Returned status: {2}. Content: \n{3}", method, Config.BaseAddress + _url + resource, res.StatusCode, responseText);
+                        }
+
+                        return await res.Content.ReadAsAsync<TResult>(_formatters, ctk);
                     }
-
-                    return await res.Content.ReadAsAsync<TResult>(_formatters, ctk);
+                }
+                finally
+                {
+                    content?.Dispose();
                 }
             }
             catch (ArtesianSdkRemoteException)

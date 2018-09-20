@@ -69,26 +69,6 @@ namespace Artesian.SDK.Service
             return _client.Exec<PagedResult<CurveRange>>(HttpMethod.Get, url, ctk: ctk);
         }
         /// <summary>
-        /// Search the marketdata metadata
-        /// </summary>
-        /// <param name="filter">ArtesianSearchFilter containing the search params</param>
-        /// <param name="ctk">CancellationToken</param>
-        /// <returns></returns>
-        public Task<ArtesianSearchResults> SearchFacetAsync(ArtesianSearchFilter filter, CancellationToken ctk = default)
-        {
-            filter.Validate();
-
-            var url = "/marketdata/searchfacet"
-                    .SetQueryParam("pageSize", filter.PageSize)
-                    .SetQueryParam("page", filter.Page)
-                    .SetQueryParam("searchText", filter.SearchText)
-                    .SetQueryParam("filters", filter.Filters?.SelectMany(s => s.Value.Select(x => $@"{s.Key}:{x}")))
-                    .SetQueryParam("sorts", filter.Sorts)
-                    ;
-
-            return _client.Exec<ArtesianSearchResults>(HttpMethod.Get, url, ctk: ctk);
-        }
-        /// <summary>
         /// Register the given MarketData entity
         /// </summary>
         /// <param name="metadata">MarketDataEntity</param>
@@ -127,18 +107,6 @@ namespace Artesian.SDK.Service
             var url = "/marketdata/entity/".AppendPathSegment(id);
 
             return _client.Exec(HttpMethod.Delete, url, ctk: ctk);
-        }
-        /// <summary>
-        /// A sequence of operation will be applied to the metadata identified by ids
-        /// </summary>
-        /// <param name="operations"></param>
-        /// <param name="ctk"></param>
-        /// <returns></returns>
-        public Task<List<MarketDataEntity.Output>> PerformOperationsAsync(Operations operations, CancellationToken ctk = default)
-        {
-            var url = "/marketdata/operations";
-
-            return _client.Exec<List<MarketDataEntity.Output>, Operations>(HttpMethod.Post, url, operations, ctk: ctk);
         }
     }
 }

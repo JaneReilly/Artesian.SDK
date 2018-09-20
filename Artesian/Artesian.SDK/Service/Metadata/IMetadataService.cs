@@ -166,5 +166,153 @@ namespace Artesian.SDK.Service
         /// <returns>client.Exec() <see cref="Client.Exec{TResult}(HttpMethod, string, CancellationToken)"/></returns>
         Task<PagedResult<CustomFilter>> ReadFilters(int page, int pageSize, CancellationToken ctk = default(CancellationToken));
         #endregion
+
+        #region Acl
+        /// <summary>
+        /// Retrieve the ACL Path Roles by path
+        /// </summary>
+        /// <param name="path">The path (starting with "/" char. Ex. "/marketdata/system/" identifies folder "marketdata" with a subfolder "system", roles are assigned to "system" subfolder. Ex. "/marketdata/genoacurve" identifies folder "marketdata" with entity "genoacurve", roles are assigned to "genoacurve" entity.</param>
+        /// <param name="ctk"></param>
+        /// <returns>client.Exec() <see cref="Client.Exec{TResult}(HttpMethod, string, CancellationToken)"/></returns>
+        Task<IEnumerable<AuthorizationPath.Output>> ReadRolesByPath(PathString path, CancellationToken ctk = default);
+        /// <summary>
+        /// Retrieve the ACL Path Roles paged
+        /// </summary>
+        /// <param name="page">the requested page</param>
+        /// <param name="pageSize">the size of the page</param>
+        /// <param name="principalIds">The principal ids I want to inspect, encoded.( ex. u:user@example.com for users and clients,g:1001 for groups)</param>
+        /// <param name="asOf">LocalDateTime we want to inspect</param>
+        /// <param name="ctk"></param>
+        /// <returns>client.Exec() <see cref="Client.Exec{TResult}(HttpMethod, string, CancellationToken)"/></returns>
+        Task<PagedResult<AuthorizationPath.Output>> GetRoles(int page, int pageSize, string[] principalIds, LocalDateTime? asOf = null, CancellationToken ctk = default);
+        /// <summary>
+        /// Upsert the ACL Path Roles
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <param name="upsert">the entity we want to upsert</param>
+        /// <param name="ctk"></param>
+        /// <returns>client.Exec() <see cref="Client.Exec{TResult}(HttpMethod, string, CancellationToken)"/></returns>
+        Task UpsertRoles(AuthorizationPath.Input upsert, CancellationToken ctk = default);
+        /// <summary>
+        /// Add a role to the ACL Path
+        /// </summary>
+        /// <param name="add">the entity we want to add. At the path add.Path we add the add.Roles</param>
+        /// <param name="ctk"></param>
+        /// <returns>client.Exec() <see cref="Client.Exec{TResult}(HttpMethod, string, CancellationToken)"/></returns>
+        Task AddRoles(AuthorizationPath.Input add, CancellationToken ctk = default);
+        /// <summary>
+        /// Remove a role from the ACL Path
+        /// </summary>
+        /// <param name="remove">the entity we want to remove. At the path remove.Path we remove the remove.Roles</param>
+        /// <param name="ctk"></param>
+        /// <returns>client.Exec() <see cref="Client.Exec{TResult}(HttpMethod, string, CancellationToken)"/></returns>
+        Task RemoveRoles(AuthorizationPath.Input remove, CancellationToken ctk = default);
+        #endregion
+
+        #region Admin
+        /// <summary>
+        /// Create a new Authorization Group
+        /// </summary>
+        /// <param name="group">the entity we are going to insert</param>
+        /// <param name="ctk">CancellationToken</param>
+        /// <returns>client.Exec() <see cref="Client.Exec{TResult}(HttpMethod, string, CancellationToken)"/></returns>
+        Task<AuthGroup> CreateAuthGroup(AuthGroup group, CancellationToken ctk = default);
+        /// <summary>
+        /// Update an Authorization Group
+        /// </summary>
+        /// <param name="groupID">the entity Identifier</param>
+        /// <param name="group">the entity to update</param>
+        /// <param name="ctk">CancellationToken</param>
+        /// <returns>client.Exec() <see cref="Client.Exec{TResult}(HttpMethod, string, CancellationToken)"/></returns>
+        Task<AuthGroup> UpdateAuthGroup(int groupID, AuthGroup group, CancellationToken ctk = default);
+        /// <summary>
+        /// Remove an Authorization Group
+        /// </summary>
+        /// <param name="groupID">the entity Identifier</param>
+        /// <param name="ctk">CancellationToken</param>
+        /// <returns></returns>
+        Task RemoveAuthGroup(int groupID, CancellationToken ctk = default);
+        /// <summary>
+        /// Read Authorization Group
+        /// </summary>
+        /// <param name="groupID">the entity Identifier</param>
+        /// <param name="ctk">CancellationToken</param>
+        /// <returns>client.Exec() <see cref="Client.Exec{TResult}(HttpMethod, string, CancellationToken)"/></returns>
+        Task<AuthGroup> ReadAuthGroup(int groupID, CancellationToken ctk = default);
+        /// <summary>
+        /// Remove an Authorization Group
+        /// </summary>
+        /// <param name="page">the requested page</param>
+        /// <param name="pageSize">the size of the page</param>
+        /// <param name="ctk">CancellationToken</param>
+        /// <returns></returns>
+        Task<PagedResult<AuthGroup>> ReadAuthGroups(int page, int pageSize, CancellationToken ctk = default);
+        /// <summary>
+        /// Get a list of Principals of hte selected user
+        /// </summary>
+        /// <param name="user">the user name</param>
+        /// <param name="ctk">CancellationToken</param>
+        /// <returns></returns>
+        Task<List<Principals>> ReadUserPrincipals(string user, CancellationToken ctk = default);
+        #endregion
+
+        #region UpsertCurve
+        /// <summary>
+        /// Upsert the curve data supplied in <paramref name="data"/>
+        /// </summary>
+        /// <remarks>
+        /// Unified controller for saving curve data
+        /// ID, TimeZone and DownloadedAt fields should always be not null
+        /// - Market Data Assessment: MarketAssessment field should not be null, other fields should be null
+        /// - Actual TimeSerie: Rows field should not be null, other fields should be null-
+        /// - Versioned TimeSerie: Rows and Version fields should not be null, other fields should be null
+        /// </remarks>
+        /// <param name="data">
+        /// An object that rappresent MarketDataAssessment, ActualTimeSerie or VersionedTimeSerie
+        /// </param>
+        /// <param name="ctk">CancellationToken</param>
+        /// <returns></returns>
+        Task UpsertCurveDataAsync(UpsertCurveData data, CancellationToken ctk = default);
+        #endregion
+
+        #region ApiKey
+        /// <summary>
+        /// Create new ApiKey
+        /// </summary>
+        /// <param name="apiKeyRecord">the entity we are going to insert</param>
+        /// <param name="ctk">CancellationToken</param>
+        /// <returns></returns>
+        Task<ApiKey.Output> CreateApiKeyAsync(ApiKey.Input apiKeyRecord, CancellationToken ctk = default);
+        /// <summary>
+        /// Retrieve the ApiKey entity
+        /// </summary>
+        /// <param name="key">The Key</param>
+        /// <returns></returns>
+        Task<ApiKey.Output> ReadApiKeyByKeyAsync(string key, CancellationToken ctk = default);
+        /// <summary>
+        /// Retrieve the ApiKey entity
+        /// </summary>
+        /// <param name="id">The id</param>
+        /// <param name="ctk">CancellationToken</param>
+        /// <returns></returns>
+        Task<ApiKey.Output> ReadApiKeyByIdAsync(int id, CancellationToken ctk = default);
+        /// <summary>
+        /// Retrieve the apikeys paged
+        /// </summary>
+        /// <param name="page">the requested page</param>
+        /// <param name="pageSize">the size of the page</param>
+        /// <param name="userId">the userid we want to filter for</param>y</param>
+        /// <returns></returns>
+        Task<PagedResult<ApiKey.Output>> ReadApiKeysAsync(int page, int pageSize, string userId, CancellationToken ctk = default);
+        /// <summary>
+        /// Delete the ApiKey
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="ctk">CancellationToken</param>
+        /// <returns></returns>
+        Task DeleteApiKeyAsync(int id, CancellationToken ctk = default);
+        #endregion
     }
 }

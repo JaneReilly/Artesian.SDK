@@ -23,6 +23,8 @@ namespace Artesian.SDK.Service
         /// <returns></returns>
         public Task<List<MarketDataEntity.Output>> PerformOperationsAsync(Operations operations, CancellationToken ctk = default)
         {
+            operations.Validate();
+
             var url = "/marketdata/operations";
 
             return _client.Exec<List<MarketDataEntity.Output>, Operations>(HttpMethod.Post, url, operations, ctk: ctk);

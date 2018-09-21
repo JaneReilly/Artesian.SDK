@@ -9,10 +9,19 @@ namespace Artesian.SDK.Dto
     [MessagePackObject]
     public class ArtesianMetadataFacet
     {
+        /// <summary>
+        /// Facet Name
+        /// </summary>
         [Key(0)]
         public string FacetName { get; set; }
+        /// <summary>
+        /// Facet Type
+        /// </summary>
         [Key(1)]
         public ArtesianMetadataFacetType FacetType { get; set; }
+        /// <summary>
+        /// Facet Values
+        /// </summary>
         [Key(2)]
         public List<ArtesianMetadataFacetCount> Values { get; set; }
     }

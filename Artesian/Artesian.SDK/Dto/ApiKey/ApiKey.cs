@@ -6,19 +6,37 @@ using System.Text;
 
 namespace Artesian.SDK.Dto
 {
+    /// <summary>
+    /// The ApiKey Entity with Etag
+    /// </summary>
     public static class ApiKey
     {
         [MessagePackObject]
         public class Input
         {
+            /// <summary>
+            /// The ApiKey Id
+            /// </summary>
             [Key(0)]
             public int Id { get; set; }
+            /// <summary>
+            /// The ApiKey ETag
+            /// </summary>
             [Key(1)]
             public string ETag { get; set; }
+            /// <summary>
+            /// The ApiKey UsagePerDay
+            /// </summary>
             [Key(2)]
             public int? UsagePerDay { get; set; }
+            /// <summary>
+            /// The expire time of ApiKey
+            /// </summary>
             [Key(3)]
             public Instant? ExpiresAt { get; set; }
+            /// <summary>
+            /// Desctiption
+            /// </summary>
             [Key(4)]
             public string Description { get; set; }
 
@@ -29,20 +47,44 @@ namespace Artesian.SDK.Dto
         {
             public Output() { }
 
+            /// <summary>
+            /// The ApiKey Id
+            /// </summary>
             [Key(0)]
             public int Id { get; set; }
+            /// <summary>
+            /// The ApiKey ETag
+            /// </summary>
             [Key(1)]
             public string ETag { get; set; }
+            /// <summary>
+            /// The ApiKey UsagePerDay
+            /// </summary>
             [Key(2)]
             public int? UsagePerDay { get; set; }
+            /// <summary>
+            /// The expire time of ApiKey
+            /// </summary>
             [Key(3)]
             public Instant? ExpiresAt { get; set; }
+            /// <summary>
+            /// Desctiption
+            /// </summary>
             [Key(4)]
             public string Description { get; set; }
+            /// <summary>
+            /// The ApiKey UserId
+            /// </summary>
             [Key(5)]
             public string UserId { get; set; }
+            /// <summary>
+            /// The ApiKey Key
+            /// </summary>
             [Key(6)]
             public string Key { get; set; }
+            /// <summary>
+            /// The Creation time of ApiKey
+            /// </summary>
             [Key(7)]
             public Instant CreatedAt { get; set; }
         }

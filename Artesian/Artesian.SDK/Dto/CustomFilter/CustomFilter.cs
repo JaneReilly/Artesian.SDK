@@ -4,22 +4,36 @@ using System.Collections.Generic;
 
 namespace Artesian.SDK.Dto
 {
+    /// <summary>
+    /// The CustomFilter Entity with Etag
+    /// </summary>
     [MessagePackObject]
     public class CustomFilter
     {
-        [MessagePack.Key(0)]
+        /// <summary>
+        /// The CustomFilter Id
+        /// </summary>
+        [Key(0)]
         public int Id { get; set; }
-
-        [MessagePack.Key(1)]
+        /// <summary>
+        /// The CustomFilter Name
+        /// </summary>
+        [Key(1)]
         public string Name { get; set; }
-
-        [MessagePack.Key(2)]
+        /// <summary>
+        /// The CustomFilter Search Text
+        /// </summary>
+        [Key(2)]
         public string SearchText { get; set; }
-
-        [MessagePack.Key(3)]
+        /// <summary>
+        /// The CustomFilter values
+        /// </summary>
+        [Key(3)]
         public Dictionary<string, List<string>> Filters { get; set; }
-
-        [MessagePack.Key(4)]
+        /// <summary>
+        /// The CustomFilter Etag
+        /// </summary>
+        [Key(4)]
         public string ETag { get; set; }
     }
 
@@ -33,6 +47,5 @@ namespace Artesian.SDK.Dto
             if (String.IsNullOrWhiteSpace(customfilter.SearchText) && customfilter.Filters == null)
                 throw new ArgumentException("Either filter text or filter key values must be provided");
         }
-
     }
 }

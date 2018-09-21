@@ -32,6 +32,8 @@ namespace Artesian.SDK.Service
         /// <returns></returns>
         public Task UpsertCurveDataAsync(UpsertCurveData data, CancellationToken ctk = default)
         {
+            data.Validate();
+
             var url = "/marketdata/upsertdata";
 
             return _client.Exec(HttpMethod.Post, url, data, ctk: ctk);

@@ -3,11 +3,20 @@ using System.Collections.Generic;
 
 namespace Artesian.SDK.Dto
 {
+    /// <summary>
+    /// The Principals entity
+    /// </summary>
     [MessagePackObject]
     public class Principals
     {
+        /// <summary>
+        /// The Principals name
+        /// </summary>
         [Key("Principal")]
         public string Principal { get; set; }
+        /// <summary>
+        /// The Principals type
+        /// </summary>
         [Key("Type")]
         public string Type { get; set; }
 

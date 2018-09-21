@@ -6,13 +6,25 @@ using System;
 
 namespace Artesian.SDK.Dto
 {
+    /// <summary>
+    /// The TimeTransformSimpleShift entity
+    /// </summary>
     [MessagePackObject]
     public class TimeTransformSimpleShift : TimeTransform
     {
+        /// <summary>
+        /// The Granularity of the Time transform
+        /// </summary>
         [Key("Period")]
         public Granularity Period { get; set; }
+        /// <summary>
+        /// The Positive Shift
+        /// </summary>
         [Key(">")]
         public string PositiveShift { get; set; }
+        /// <summary>
+        /// The Negative Shift
+        /// </summary>
         [Key("<")]
         public string NegativeShift { get; set; }
 

@@ -26,11 +26,12 @@ namespace Artesian.SDK.Dto
         public IOperationParamsPayload Params { get; set; }
     }
 
-    [MessagePack.Union(0, typeof(OperationEnableDisableTag))]
-    [MessagePack.Union(1, typeof(OperationUpdateOriginalTimeZone))]
-    [MessagePack.Union(2, typeof(OperationUpdateTimeTransform))]
-    [MessagePack.Union(3, typeof(OperationUpdateProviderDescription))]
-    [MessagePack.Union(4, typeof(OperationUpdateAggregationRule))]
+    [Union(0, typeof(OperationEnableDisableTag))]
+    [Union(1, typeof(OperationUpdateOriginalTimeZone))]
+    [Union(2, typeof(OperationUpdateTimeTransform))]
+    [Union(3, typeof(OperationUpdateProviderDescription))]
+    [Union(4, typeof(OperationUpdateAggregationRule))]
+
     public interface IOperationParamsPayload
     { }
     

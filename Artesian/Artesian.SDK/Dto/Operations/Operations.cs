@@ -1,7 +1,10 @@
+using Artesian.SDK.Service;
 using MessagePack;
+using NodaTime;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Text.RegularExpressions;
 
 namespace Artesian.SDK.Dto
 {
@@ -57,69 +60,90 @@ namespace Artesian.SDK.Dto
                     if (op.Params == null)
                         throw new ArgumentException("Operations: any single Params in operationList must be valorized");
 
-                    if (op.Type == OperationType.EnableTag)
+                    switch (op.Type)
                     {
-                        var p = op.Params as OperationEnableDisableTag;
+                        case OperationType.EnableTag:
+                            {
+                                var p = op.Params as OperationEnableDisableTag;
 
-                        //if (p.TagKey == "Type")
-                        //    throw new ArgumentException("Operations: any single Params TagKey must have specific values");
+                                if (!p.TagKey.IsValidTagKey())
+                                    throw new ArgumentException("Operations: any single Params TagKey must have specific values");
 
-                        //.IsValidString(3, 50)
-                        //.NotEqual("Type")
-                        //.NotEqual("ProviderName")
-                        //.NotEqual("MarketDataName")
-                        //.NotEqual("OriginalGranularity")
-                        //.NotEqual("OriginalTimezone")
-                        //.NotEqual("MarketDataId")
-                        //.NotEqual("AggregationRule")
+                                if (!p.TagKey.IsValidString(3, 50))
+                                    throw new ArgumentException("Operations: any single Params TagKey must match internal format");
+
+                                if (!p.TagValue.IsValidString(1, 50))
+                                    throw new ArgumentException("Operations: any single Params TagValue must match internal format");
+
+                                break;
+                            }
+                        case OperationType.DisableTag:
+                            {
+                                var p = op.Params as OperationEnableDisableTag;
+
+                                if (!p.TagKey.IsValidTagKey())
+                                    throw new ArgumentException("Operations: any single Params TagKey must have specific values");
+
+                                if (!p.TagKey.IsValidString(3, 50))
+                                    throw new ArgumentException("Operations: any single Params TagKey must match internal format");
+
+                                if (!p.TagValue.IsValidString(1, 50))
+                                    throw new ArgumentException("Operations: any single Params TagValue must match internal format");
+
+                                break;
+                            }
+                        case OperationType.UpdateTimeTransformID:
+                            {
+                                var p = op.Params as OperationUpdateTimeTransform;
+
+                                break;
+                            }
+                        case OperationType.UpdateAggregationRule:
+                            {
+                                var p = op.Params as OperationUpdateAggregationRule;
+
+                                break;
+                            }
+                        case OperationType.UpdateOriginalTimeZone:
+                            {
+                                var p = op.Params as OperationUpdateOriginalTimeZone;
+
+                                if (!String.IsNullOrWhiteSpace(p.Value) && DateTimeZoneProviders.Tzdb.GetZoneOrNull(p.Value) == null)
+                                    throw new ArgumentException("Operations: any single Params Value must be in IANA database if valorized");
+
+                                break;
+                            }
+                        default:
+                            throw new ArgumentException("Operations: any single Params TagKey must have specific values");
                     }
-                    //When(x => x.Type == OperationType.EnableTag, () =>
-                    //{
-                    //    RuleFor(x => x.Params as OperationEnableDisableTag)
-                    //        .SetValidator(new OperationEnableDisableTagValidator())
-                    //        .WithName("Params")
-                    //        ;
-                    //});
-
-
-                    //When(x => x.Type == OperationType.DisableTag, () =>
-                    //{
-                    //    RuleFor(x => x.Params as OperationEnableDisableTag)
-                    //        .SetValidator(new OperationEnableDisableTagValidator())
-                    //        .WithName("Params")
-                    //        ;
-                    //});
-
-
                 }
-
-
-
-
-                //When(x => x.Type == OperationType.UpdateTimeTransformID, () =>
-                //{
-                //    RuleFor(x => x.Params as OperationUpdateTimeTransform)
-                //        .SetValidator(new OperationUpdateTimeTransformValidator(ctx, ids))
-                //        .WithName("Params")
-                //        ;
-                //});
-
-                //When(x => x.Type == OperationType.UpdateAggregationRule, () =>
-                //{
-                //    RuleFor(x => x.Params as OperationUpdateAggregationRule)
-                //        .SetValidator(new OperationUpdateAggregationRuleValidator())
-                //        .WithName("Params")
-                //        ;
-                //});
-
-                //When(x => x.Type == OperationType.UpdateOriginalTimeZone, () =>
-                //{
-                //    RuleFor(x => x.Params as OperationUpdateOriginalTimeZone)
-                //        .SetValidator(new OperationUpdateOriginalTimeZoneValidator())
-                //        .WithName("Params")
-                //        ;
-                //});
             }
+        }
+
+        private static bool IsValidString(this string stringToEvaluate, int minLenght, int maxLenght)
+        {
+            if (stringToEvaluate != null && (stringToEvaluate.Length > minLenght && stringToEvaluate.Length < maxLenght) && Regex.IsMatch(stringToEvaluate, ArtesianConstants.CharacterValidatorRegEx))
+            {
+                return true;
+            }
+            else
+                return false;
+        }
+
+        private static bool IsValidTagKey(this string stringToEvaluate)
+        {
+            if (stringToEvaluate == "Type" ||
+                stringToEvaluate == "ProviderName" ||
+                stringToEvaluate == "MarketDataName" ||
+                stringToEvaluate == "OriginalGranularity" ||
+                stringToEvaluate == "OriginalGranularity" ||
+                stringToEvaluate == "OriginalTimezone" ||
+                stringToEvaluate == "MarketDataId" ||
+                stringToEvaluate == "AggregationRule"
+                )
+                return false;
+            else
+                return true;
         }
     }
 

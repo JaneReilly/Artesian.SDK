@@ -40,12 +40,12 @@ namespace Artesian.SDK.Tests
             {
                 var mds = new MetadataService(_cfg);
 
-                var mdq = mds.ReadCurveRangeAsync(100000001,1,1,"M+1", new LocalDateTime(2018, 07, 19, 12, 0), new LocalDateTime(2017, 07, 19, 12, 0)).ConfigureAwait(true).GetAwaiter().GetResult();
+                var mdq = mds.ReadCurveRangeAsync(100000001, 1, 1, "M+1", new LocalDateTime(2018, 07, 19, 12, 0), new LocalDateTime(2017, 07, 19, 12, 0)).ConfigureAwait(true).GetAwaiter().GetResult();
 
                 httpTest.ShouldHaveCalled($"{_cfg.BaseAddress}v2.1/marketdata/entity/100000001/curves"
                     .SetQueryParam("versionFrom", new LocalDateTime(2018, 07, 19, 12, 0))
                     .SetQueryParam("versionTo", new LocalDateTime(2017, 07, 19, 12, 0))
-                    .SetQueryParam("product","M+1")
+                    .SetQueryParam("product", "M+1")
                     .SetQueryParam("page", 1)
                     .SetQueryParam("pageSize", 1))
                     .WithVerb(HttpMethod.Get)
@@ -90,9 +90,7 @@ namespace Artesian.SDK.Tests
                 httpTest.ShouldHaveCalled($"{_cfg.BaseAddress}v2.1/marketdata/entity")
                     .WithVerb(HttpMethod.Post)
                     .WithContentType("application/x.msgpacklz4")
-                    .WithHeader("Accept", "application/x.msgpacklz4; q=1.0")
-                    .WithHeader("Accept", "application/x-msgpack; q=0.75")
-                    .WithHeader("Accept", "application/json; q=0.5")
+                    .WithHeadersTest()
                     .Times(1);
             }
         }
@@ -120,9 +118,7 @@ namespace Artesian.SDK.Tests
                 httpTest.ShouldHaveCalled($"{_cfg.BaseAddress}v2.1/marketdata/entity/1")
                     .WithVerb(HttpMethod.Put)
                     .WithContentType("application/x.msgpacklz4")
-                    .WithHeader("Accept", "application/x.msgpacklz4; q=1.0")
-                    .WithHeader("Accept", "application/x-msgpack; q=0.75")
-                    .WithHeader("Accept", "application/json; q=0.5")
+                    .WithHeadersTest()
                     .Times(1);
             }
         }
@@ -138,9 +134,7 @@ namespace Artesian.SDK.Tests
 
                 httpTest.ShouldHaveCalled($"{_cfg.BaseAddress}v2.1/marketdata/entity/1")
                     .WithVerb(HttpMethod.Delete)
-                    .WithHeader("Accept", "application/x.msgpacklz4; q=1.0")
-                    .WithHeader("Accept", "application/x-msgpack; q=0.75")
-                    .WithHeader("Accept", "application/json; q=0.5")
+                    .WithHeadersTest()
                     .Times(1);
             }
         }
@@ -180,7 +174,7 @@ namespace Artesian.SDK.Tests
 
         #region Operations
         [Test]
-        public void Operations_SearchFacetAsync()
+        public void Operations_PerformOperationsAsync()
         {
             using (var httpTest = new HttpTest())
             {
@@ -189,7 +183,17 @@ namespace Artesian.SDK.Tests
                 var operations = new Operations()
                 {
                     IDS = new HashSet<MarketDataETag>() { (new MarketDataETag(0, "provaEtag")) },
-                    OperationList = new List<OperationParams>() { new  OperationParams()}
+                    OperationList = new List<OperationParams>() {
+                        new  OperationParams()
+                        {
+                            Params = new OperationEnableDisableTag()
+                            {
+                                TagKey = "Pippo",
+                                TagValue = "Valore"
+                            },
+                            Type = OperationType.EnableTag,
+                        }
+                    }
                 };
 
                 var mdq = mds.PerformOperationsAsync(operations).ConfigureAwait(true).GetAwaiter().GetResult();
@@ -211,8 +215,16 @@ namespace Artesian.SDK.Tests
 
                 var data = new UpsertCurveData()
                 {
-                    Timezone = TimeZone.CurrentTimeZone.ToString(),
+                    ID = new MarketDataIdentifier(),
+                    Timezone = null,
+                    DownloadedAt = new Instant(),
+                    MarketAssessment = new Dictionary<LocalDateTime, IDictionary<string, MarketAssessmentValue>>()
                 };
+
+                var localDateTime = new LocalDateTime(2018, 09, 24, 00, 00);
+
+                data.MarketAssessment.Add(localDateTime, new Dictionary<string, MarketAssessmentValue>());
+                data.MarketAssessment[localDateTime].Add("test", new MarketAssessmentValue());
 
                 mds.UpsertCurveDataAsync(data).ConfigureAwait(true).GetAwaiter().GetResult();
 
@@ -282,9 +294,7 @@ namespace Artesian.SDK.Tests
                     .SetQueryParam("page", 1)
                     .SetQueryParam("userDefined", true))
                     .WithVerb(HttpMethod.Get)
-                    .WithHeader("Accept", "application/x.msgpacklz4; q=1.0")
-                    .WithHeader("Accept", "application/x-msgpack; q=0.75")
-                    .WithHeader("Accept", "application/json; q=0.5")
+                    .WithHeadersTest()
                     .Times(1);
             }
         }
@@ -312,9 +322,7 @@ namespace Artesian.SDK.Tests
                 httpTest.ShouldHaveCalled($"{_cfg.BaseAddress}v2.1/timeTransform/entity")
                     .WithVerb(HttpMethod.Post)
                     .WithContentType("application/x.msgpacklz4")
-                    .WithHeader("Accept", "application/x.msgpacklz4; q=1.0")
-                    .WithHeader("Accept", "application/x-msgpack; q=0.75")
-                    .WithHeader("Accept", "application/json; q=0.5")
+                    .WithHeadersTest()
                     .Times(1);
             }
         }
@@ -342,9 +350,7 @@ namespace Artesian.SDK.Tests
                 httpTest.ShouldHaveCalled($"{_cfg.BaseAddress}v2.1/timeTransform/entity/1")
                     .WithVerb(HttpMethod.Put)
                     .WithContentType("application/x.msgpacklz4")
-                    .WithHeader("Accept", "application/x.msgpacklz4; q=1.0")
-                    .WithHeader("Accept", "application/x-msgpack; q=0.75")
-                    .WithHeader("Accept", "application/json; q=0.5")
+                    .WithHeadersTest()
                     .Times(1);
             }
         }
@@ -360,9 +366,7 @@ namespace Artesian.SDK.Tests
 
                 httpTest.ShouldHaveCalled($"{_cfg.BaseAddress}v2.1/timeTransform/entity/1")
                     .WithVerb(HttpMethod.Delete)
-                    .WithHeader("Accept", "application/x.msgpacklz4; q=1.0")
-                    .WithHeader("Accept", "application/x-msgpack; q=0.75")
-                    .WithHeader("Accept", "application/json; q=0.5")
+                    .WithHeadersTest()
                     .Times(1);
             }
         }
@@ -388,9 +392,7 @@ namespace Artesian.SDK.Tests
                 httpTest.ShouldHaveCalled($"{_cfg.BaseAddress}v2.1/filter")
                     .WithVerb(HttpMethod.Post)
                     .WithContentType("application/x.msgpacklz4")
-                    .WithHeader("Accept", "application/x.msgpacklz4; q=1.0")
-                    .WithHeader("Accept", "application/x-msgpack; q=0.75")
-                    .WithHeader("Accept", "application/json; q=0.5")
+                    .WithHeadersTest()
                     .Times(1);
             }
         }
@@ -414,9 +416,7 @@ namespace Artesian.SDK.Tests
                 httpTest.ShouldHaveCalled($"{_cfg.BaseAddress}v2.1/filter/1")
                     .WithVerb(HttpMethod.Put)
                     .WithContentType("application/x.msgpacklz4")
-                    .WithHeader("Accept", "application/x.msgpacklz4; q=1.0")
-                    .WithHeader("Accept", "application/x-msgpack; q=0.75")
-                    .WithHeader("Accept", "application/json; q=0.5")
+                    .WithHeadersTest()
                     .Times(1);
             }
         }
@@ -434,9 +434,7 @@ namespace Artesian.SDK.Tests
 
                 httpTest.ShouldHaveCalled($"{_cfg.BaseAddress}v2.1/filter/1")
                     .WithVerb(HttpMethod.Delete)
-                    .WithHeader("Accept", "application/x.msgpacklz4; q=1.0")
-                    .WithHeader("Accept", "application/x-msgpack; q=0.75")
-                    .WithHeader("Accept", "application/json; q=0.5")
+                    .WithHeadersTest()
                     .Times(1);
             }
         }
@@ -454,9 +452,7 @@ namespace Artesian.SDK.Tests
 
                 httpTest.ShouldHaveCalled($"{_cfg.BaseAddress}v2.1/filter/")
                     .WithVerb(HttpMethod.Get)
-                    .WithHeader("Accept", "application/x.msgpacklz4; q=1.0")
-                    .WithHeader("Accept", "application/x-msgpack; q=0.75")
-                    .WithHeader("Accept", "application/json; q=0.5")
+                    .WithHeadersTest()
                     .Times(1);
             }
         }
@@ -476,9 +472,7 @@ namespace Artesian.SDK.Tests
                     .SetQueryParam("pageSize", 1)
                     .SetQueryParam("page", 1))
                     .WithVerb(HttpMethod.Get)
-                    .WithHeader("Accept", "application/x.msgpacklz4; q=1.0")
-                    .WithHeader("Accept", "application/x-msgpack; q=0.75")
-                    .WithHeader("Accept", "application/json; q=0.5")
+                    .WithHeadersTest()
                     .Times(1);
             }
         }
@@ -498,9 +492,7 @@ namespace Artesian.SDK.Tests
 
                 httpTest.ShouldHaveCalled($"{_cfg.BaseAddress}v2.1/acl/me")
                     .WithVerb(HttpMethod.Get)
-                    .WithHeader("Accept", "application/x.msgpacklz4; q=1.0")
-                    .WithHeader("Accept", "application/x-msgpack; q=0.75")
-                    .WithHeader("Accept", "application/json; q=0.5")
+                    .WithHeadersTest()
                     .Times(1);
             }
         }
@@ -520,9 +512,7 @@ namespace Artesian.SDK.Tests
                     .SetQueryParam("principalIds", "Principals")
                     .SetQueryParam("asOf", null))
                     .WithVerb(HttpMethod.Get)
-                    .WithHeader("Accept", "application/x.msgpacklz4; q=1.0")
-                    .WithHeader("Accept", "application/x-msgpack; q=0.75")
-                    .WithHeader("Accept", "application/json; q=0.5")
+                    .WithHeadersTest()
                     .Times(1);
             }
         }
@@ -557,9 +547,7 @@ namespace Artesian.SDK.Tests
                 httpTest.ShouldHaveCalled($"{_cfg.BaseAddress}v2.1/acl/roles")
                     .WithVerb(HttpMethod.Post)
                     .WithContentType("application/x.msgpacklz4")
-                    .WithHeader("Accept", "application/x.msgpacklz4; q=1.0")
-                    .WithHeader("Accept", "application/x-msgpack; q=0.75")
-                    .WithHeader("Accept", "application/json; q=0.5")
+                    .WithHeadersTest()
                     .Times(1);
             }
         }
@@ -594,9 +582,7 @@ namespace Artesian.SDK.Tests
                 httpTest.ShouldHaveCalled($"{_cfg.BaseAddress}v2.1/acl")
                     .WithVerb(HttpMethod.Post)
                     .WithContentType("application/x.msgpacklz4")
-                    .WithHeader("Accept", "application/x.msgpacklz4; q=1.0")
-                    .WithHeader("Accept", "application/x-msgpack; q=0.75")
-                    .WithHeader("Accept", "application/json; q=0.5")
+                    .WithHeadersTest()
                     .Times(1);
             }
         }
@@ -631,9 +617,7 @@ namespace Artesian.SDK.Tests
                 httpTest.ShouldHaveCalled($"{_cfg.BaseAddress}v2.1/acl/roles")
                     .WithVerb(HttpMethod.Delete)
                     .WithContentType("application/x.msgpacklz4")
-                    .WithHeader("Accept", "application/x.msgpacklz4; q=1.0")
-                    .WithHeader("Accept", "application/x-msgpack; q=0.75")
-                    .WithHeader("Accept", "application/json; q=0.5")
+                    .WithHeadersTest()
                     .Times(1);
             }
         }
@@ -658,9 +642,7 @@ namespace Artesian.SDK.Tests
                 httpTest.ShouldHaveCalled($"{_cfg.BaseAddress}v2.1/group")
                     .WithVerb(HttpMethod.Post)
                     .WithContentType("application/x.msgpacklz4")
-                    .WithHeader("Accept", "application/x.msgpacklz4; q=1.0")
-                    .WithHeader("Accept", "application/x-msgpack; q=0.75")
-                    .WithHeader("Accept", "application/json; q=0.5")
+                    .WithHeadersTest()
                     .Times(1);
             }
         }
@@ -683,9 +665,7 @@ namespace Artesian.SDK.Tests
                 httpTest.ShouldHaveCalled($"{_cfg.BaseAddress}v2.1/group/1")
                     .WithVerb(HttpMethod.Put)
                     .WithContentType("application/x.msgpacklz4")
-                    .WithHeader("Accept", "application/x.msgpacklz4; q=1.0")
-                    .WithHeader("Accept", "application/x-msgpack; q=0.75")
-                    .WithHeader("Accept", "application/json; q=0.5")
+                    .WithHeadersTest()
                     .Times(1);
             }
         }
@@ -701,9 +681,7 @@ namespace Artesian.SDK.Tests
 
                 httpTest.ShouldHaveCalled($"{_cfg.BaseAddress}v2.1/group/1")
                     .WithVerb(HttpMethod.Delete)
-                    .WithHeader("Accept", "application/x.msgpacklz4; q=1.0")
-                    .WithHeader("Accept", "application/x-msgpack; q=0.75")
-                    .WithHeader("Accept", "application/json; q=0.5")
+                    .WithHeadersTest()
                     .Times(1);
             }
         }
@@ -719,9 +697,7 @@ namespace Artesian.SDK.Tests
 
                 httpTest.ShouldHaveCalled($"{_cfg.BaseAddress}v2.1/group/1")
                     .WithVerb(HttpMethod.Get)
-                    .WithHeader("Accept", "application/x.msgpacklz4; q=1.0")
-                    .WithHeader("Accept", "application/x-msgpack; q=0.75")
-                    .WithHeader("Accept", "application/json; q=0.5")
+                    .WithHeadersTest()
                     .Times(1);
             }
         }
@@ -739,9 +715,7 @@ namespace Artesian.SDK.Tests
                     .SetQueryParam("pageSize", 1)
                     .SetQueryParam("page", 1))
                     .WithVerb(HttpMethod.Get)
-                    .WithHeader("Accept", "application/x.msgpacklz4; q=1.0")
-                    .WithHeader("Accept", "application/x-msgpack; q=0.75")
-                    .WithHeader("Accept", "application/json; q=0.5")
+                    .WithHeadersTest()
                     .Times(1);
             }
         }
@@ -765,9 +739,7 @@ namespace Artesian.SDK.Tests
                 httpTest.ShouldHaveCalled($"{_cfg.BaseAddress}v2.1/apikey/entity")
                     .WithVerb(HttpMethod.Post)
                     .WithContentType("application/x.msgpacklz4")
-                    .WithHeader("Accept", "application/x.msgpacklz4; q=1.0")
-                    .WithHeader("Accept", "application/x-msgpack; q=0.75")
-                    .WithHeader("Accept", "application/json; q=0.5")
+                    .WithHeadersTest()
                     .Times(1);
             }
         }
@@ -783,9 +755,7 @@ namespace Artesian.SDK.Tests
 
                 httpTest.ShouldHaveCalled($"{_cfg.BaseAddress}v2.1/apikey/entity/1")
                     .WithVerb(HttpMethod.Get)
-                    .WithHeader("Accept", "application/x.msgpacklz4; q=1.0")
-                    .WithHeader("Accept", "application/x-msgpack; q=0.75")
-                    .WithHeader("Accept", "application/json; q=0.5")
+                    .WithHeadersTest()
                     .Times(1);
             }
         }
@@ -802,9 +772,7 @@ namespace Artesian.SDK.Tests
                 httpTest.ShouldHaveCalled($"{_cfg.BaseAddress}v2.1/apikey/entity"
                     .SetQueryParam("key", "testKey"))
                     .WithVerb(HttpMethod.Get)
-                    .WithHeader("Accept", "application/x.msgpacklz4; q=1.0")
-                    .WithHeader("Accept", "application/x-msgpack; q=0.75")
-                    .WithHeader("Accept", "application/json; q=0.5")
+                    .WithHeadersTest()
                     .Times(1);
             }
         }
@@ -823,9 +791,7 @@ namespace Artesian.SDK.Tests
                     .SetQueryParam("page", 1)
                     .SetQueryParam("userId", "testName"))
                     .WithVerb(HttpMethod.Get)
-                    .WithHeader("Accept", "application/x.msgpacklz4; q=1.0")
-                    .WithHeader("Accept", "application/x-msgpack; q=0.75")
-                    .WithHeader("Accept", "application/json; q=0.5")
+                    .WithHeadersTest()
                     .Times(1);
             }
         }
@@ -841,12 +807,21 @@ namespace Artesian.SDK.Tests
 
                 httpTest.ShouldHaveCalled($"{_cfg.BaseAddress}v2.1/apikey/entity/1")
                     .WithVerb(HttpMethod.Delete)
-                    .WithHeader("Accept", "application/x.msgpacklz4; q=1.0")
-                    .WithHeader("Accept", "application/x-msgpack; q=0.75")
-                    .WithHeader("Accept", "application/json; q=0.5")
+                    .WithHeadersTest()
                     .Times(1);
             }
         }
         #endregion
+    }
+
+    public static class MetadataQueriesExt
+    {
+        public static HttpCallAssertion WithHeadersTest(this HttpCallAssertion assertion)
+        {
+            return assertion
+                    .WithHeader("Accept", "application/x.msgpacklz4; q=1.0")
+                    .WithHeader("Accept", "application/x-msgpack; q=0.75")
+                    .WithHeader("Accept", "application/json; q=0.5");
+        }
     }
 }

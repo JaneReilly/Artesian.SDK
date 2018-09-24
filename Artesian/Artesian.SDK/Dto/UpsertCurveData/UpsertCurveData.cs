@@ -1,5 +1,4 @@
-﻿//using Ark.MarketTools.MarketProducts;
-using MessagePack;
+﻿using MessagePack;
 using NodaTime;
 using System;
 using System.Collections.Generic;
@@ -100,9 +99,8 @@ namespace Artesian.SDK.Dto
             if (upsertCurveData.MarketAssessment == null && (upsertCurveData.Rows == null || upsertCurveData.Rows.Count == 0))
                 throw new ArgumentException("UpsertCurveData Rows must be valorized if MarketAssessment is null");
 
-            if (upsertCurveData.MarketAssessment != null && upsertCurveData.Rows == null)
-                throw new ArgumentException("UpsertCurveData Rows must be valorized if MarketAssessment is null");
-
+            if (upsertCurveData.MarketAssessment != null && upsertCurveData.Rows != null)
+                throw new ArgumentException("UpsertCurveData MarketAssessment must be valorized if Rows is null");
 
             if (upsertCurveData.Rows == null)
             {
@@ -111,7 +109,6 @@ namespace Artesian.SDK.Dto
 
                 if (upsertCurveData.MarketAssessment == null || upsertCurveData.MarketAssessment.Count == 0)
                     throw new ArgumentException("UpsertCurveData MarketAssessment must be valorized if Rows is NULL");
-
 
                 //foreach (var mkt in upsertCurveData.MarketAssessment)
                 //{

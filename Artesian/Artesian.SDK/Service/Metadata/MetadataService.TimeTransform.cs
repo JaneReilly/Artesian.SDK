@@ -1,15 +1,12 @@
 ﻿// Copyright (c) ARK LTD. All rights reserved.
 // Licensed under the MIT License. See LICENSE in the project root for
 // license information. 
-using System.Linq;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using Artesian.SDK.Dto;
 using Flurl;
-using NodaTime;
 using System;
-using System.Collections.Generic;
 
 namespace Artesian.SDK.Service
 {
@@ -20,7 +17,7 @@ namespace Artesian.SDK.Service
         /// </summary>
         /// <param name="timeTransformId">ID of the time transform to be retrieved</param>
         /// <param name="ctk">CancellationToken</param>
-        /// <returns>client.Exec() <see cref="Client.Exec{TResult}(HttpMethod, string, CancellationToken)"/></returns>
+        /// <returns>Time Transform Entity</returns>
         public Task<TimeTransform> ReadTimeTransformBaseAsync(int timeTransformId, CancellationToken ctk = default)
         {
             if (timeTransformId < 1)
@@ -35,7 +32,7 @@ namespace Artesian.SDK.Service
         /// <param name="pageSize">Page size</param>
         /// <param name="userDefined">Retrieve either user or system defined time transforms</param>
         /// <param name="ctk">CancellationToken</param>
-        /// <returns>client.exec() <see cref="Client.Exec{TResult}(HttpMethod, string, CancellationToken)"/></returns>
+        /// <returns>Paged Result of Time Transform Entity</returns>
         public Task<PagedResult<TimeTransform>> ReadTimeTransformsAsync(int page, int pageSize, bool userDefined, CancellationToken ctk = default)
         {
             if (page < 1 || pageSize < 1)
@@ -54,7 +51,7 @@ namespace Artesian.SDK.Service
         /// </summary>
         /// <param name="timeTransform">the entity we are going to insert</param>
         /// <param name="ctk">CancellationToken</param>
-        /// <returns>client.Exec() <see cref="Client.Exec{TResult}(HttpMethod, string, CancellationToken)"/></returns>
+        /// <returns>Time Transform Entity</returns>
         public Task<TimeTransform> RegisterTimeTransformBaseAsync(TimeTransform timeTransform, CancellationToken ctk = default)
         {
             (timeTransform as TimeTransformSimpleShift).Validate();
@@ -68,7 +65,7 @@ namespace Artesian.SDK.Service
         /// </summary>
         /// <param name="timeTransform">the entity we are going to update</param>
         /// <param name="ctk">CancellationToken</param>
-        /// <returns>client.Exec() <see cref="Client.Exec{TResult}(HttpMethod, string, CancellationToken)"/></returns>
+        /// <returns>Time Transform Entity</returns>
         public Task<TimeTransform> UpdateTimeTransformBaseAsync(TimeTransform timeTransform, CancellationToken ctk = default)
         {
             (timeTransform as TimeTransformSimpleShift).Validate();
@@ -82,7 +79,7 @@ namespace Artesian.SDK.Service
         /// </summary>
         /// <param name="timeTransformId">the entity id we are going to delete</param>
         /// <param name="ctk">CancellationToken</param>
-        /// <returns>client.Exec() <see cref="Client.Exec{TResult}(HttpMethod, string, CancellationToken)"/></returns>
+        /// <returns></returns>
         public Task DeleteTimeTransformSimpleShiftAsync(int timeTransformId, CancellationToken ctk = default)
         {
             var url = "/timeTransform/entity".AppendPathSegment(timeTransformId);

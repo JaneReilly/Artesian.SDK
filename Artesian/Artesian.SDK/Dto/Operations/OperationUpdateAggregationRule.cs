@@ -3,6 +3,9 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Artesian.SDK.Dto
 {
+    /// <summary>
+    /// The Operation for Update Aggregation rule
+    /// </summary>
     [MessagePackObject]
     public class OperationUpdateAggregationRule : IOperationParamsPayload
     {

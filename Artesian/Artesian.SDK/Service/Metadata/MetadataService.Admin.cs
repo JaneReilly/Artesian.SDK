@@ -20,7 +20,7 @@ namespace Artesian.SDK.Service
         /// </summary>
         /// <param name="group">the entity we are going to insert</param>
         /// <param name="ctk">CancellationToken</param>
-        /// <returns>client.Exec() <see cref="Client.Exec{TResult}(HttpMethod, string, CancellationToken)"/></returns>
+        /// <returns>Auth Group entity</returns>
         public Task<AuthGroup> CreateAuthGroup(AuthGroup group, CancellationToken ctk = default)
         {
             var url = "/group";
@@ -33,7 +33,7 @@ namespace Artesian.SDK.Service
         /// <param name="groupID">the entity Identifier</param>
         /// <param name="group">the entity to update</param>
         /// <param name="ctk">CancellationToken</param>
-        /// <returns>client.Exec() <see cref="Client.Exec{TResult}(HttpMethod, string, CancellationToken)"/></returns>
+        /// <returns>Auth Group entity</returns>
         public Task<AuthGroup> UpdateAuthGroup(int groupID, AuthGroup group, CancellationToken ctk = default)
         {
             var url = "/group".AppendPathSegment(groupID);
@@ -57,7 +57,7 @@ namespace Artesian.SDK.Service
         /// </summary>
         /// <param name="groupID">the entity Identifier</param>
         /// <param name="ctk">CancellationToken</param>
-        /// <returns>client.Exec() <see cref="Client.Exec{TResult}(HttpMethod, string, CancellationToken)"/></returns>
+        /// <returns>AuthGroup entity</returns>
         public Task<AuthGroup> ReadAuthGroup(int groupID, CancellationToken ctk = default)
         {
             var url = "/group".AppendPathSegment(groupID);
@@ -70,7 +70,7 @@ namespace Artesian.SDK.Service
         /// <param name="page">the requested page</param>
         /// <param name="pageSize">the size of the page</param>
         /// <param name="ctk">CancellationToken</param>
-        /// <returns></returns>
+        /// <returns>Paged result of Auth Group entity</returns>
         public Task<PagedResult<AuthGroup>> ReadAuthGroups(int page, int pageSize, CancellationToken ctk = default)
         {
             var url = "/group"
@@ -84,7 +84,7 @@ namespace Artesian.SDK.Service
         /// </summary>
         /// <param name="user">the user name</param>
         /// <param name="ctk">CancellationToken</param>
-        /// <returns></returns>
+        /// <returns>List of Principals entity</returns>
         public Task<List<Principals>> ReadUserPrincipals(string user, CancellationToken ctk = default)
         {
             var url = "/user/principals"

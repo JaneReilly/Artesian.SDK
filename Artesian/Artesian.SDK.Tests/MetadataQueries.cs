@@ -358,7 +358,7 @@ namespace Artesian.SDK.Tests
 
         #region UpsertCurve
         [Test]
-        public void UpsertCurve_UpsertCurveDataAsync()
+        public void UpsertCurve_UpsertCurveDataAsync_MarketAssessment()
         {
             using (var httpTest = new HttpTest())
             {
@@ -366,8 +366,8 @@ namespace Artesian.SDK.Tests
 
                 var data = new UpsertCurveData()
                 {
-                    ID = new MarketDataIdentifier(),
-                    Timezone = null,
+                    ID = new MarketDataIdentifier("test", "testName"),
+                    Timezone = "CET",
                     DownloadedAt = new Instant(),
                     MarketAssessment = new Dictionary<LocalDateTime, IDictionary<string, MarketAssessmentValue>>()
                 };
@@ -376,6 +376,31 @@ namespace Artesian.SDK.Tests
 
                 data.MarketAssessment.Add(localDateTime, new Dictionary<string, MarketAssessmentValue>());
                 data.MarketAssessment[localDateTime].Add("test", new MarketAssessmentValue());
+
+                mds.UpsertCurveDataAsync(data).ConfigureAwait(true).GetAwaiter().GetResult();
+
+                httpTest.ShouldHaveCalled($"{_cfg.BaseAddress}v2.1/marketdata/upsertdata")
+                    .WithVerb(HttpMethod.Post)
+                    .Times(1);
+            }
+        }
+
+        [Test]
+        public void UpsertCurve_UpsertCurveDataAsync_Versioned()
+        {
+            using (var httpTest = new HttpTest())
+            {
+                var mds = new MetadataService(_cfg);
+
+                //Create Version
+                var data = new UpsertCurveData()
+                {
+                    ID = new MarketDataIdentifier("test", "testName"),
+                    Timezone = "CET",
+                    DownloadedAt = SystemClock.Instance.GetCurrentInstant(),
+                    Rows = new Dictionary<LocalDateTime, double?>() { { new LocalDateTime(2018, 01, 01, 0, 0), 21.4 } },
+                    Version = new LocalDateTime(2018, 09, 25, 12, 0, 0, 123).PlusNanoseconds(100)
+                };
 
                 mds.UpsertCurveDataAsync(data).ConfigureAwait(true).GetAwaiter().GetResult();
 

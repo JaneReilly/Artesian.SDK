@@ -116,7 +116,7 @@ namespace Artesian.SDK.Service
         /// Execute MasQuery
         /// </summary>
         /// <param name="ctk"></param>
-        /// <returns>client.Exec() <see cref="Client.Exec{TResult}(HttpMethod, string, CancellationToken)"/></returns>
+        /// <returns>Enumerable of AssessmentRow</returns>
         public async Task<IEnumerable<AssessmentRow>> ExecuteAsync(CancellationToken ctk = default)
         {
             return await _client.Exec<IEnumerable<AssessmentRow>>(HttpMethod.Get, _buildRequest(), ctk: ctk);
@@ -135,6 +135,9 @@ namespace Artesian.SDK.Service
             return url;
         }
 
+        /// <summary>
+        /// Validate Query override
+        /// </summary>
         protected override void _validateQuery()
         {
             base._validateQuery();

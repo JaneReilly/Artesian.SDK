@@ -7,9 +7,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using Artesian.SDK.Dto;
 using Flurl;
-using NodaTime;
-using System;
-using System.Collections.Generic;
 
 namespace Artesian.SDK.Service
 {
@@ -20,7 +17,7 @@ namespace Artesian.SDK.Service
         /// </summary>
         /// <param name="filter">ArtesianSearchFilter containing the search params</param>
         /// <param name="ctk">CancellationToken</param>
-        /// <returns></returns>
+        /// <returns>ArtesianSearchResults entity</returns>
         public Task<ArtesianSearchResults> SearchFacetAsync(ArtesianSearchFilter filter, CancellationToken ctk = default)
         {
             filter.Validate();

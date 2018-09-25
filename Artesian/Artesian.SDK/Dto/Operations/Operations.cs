@@ -14,6 +14,9 @@ namespace Artesian.SDK.Dto
     [MessagePackObject]
     public class Operations
     {
+        /// <summary>
+        /// The Operations constructor
+        /// </summary>
         public Operations()
         {
             IDS = new HashSet<MarketDataETag>();
@@ -36,7 +39,7 @@ namespace Artesian.SDK.Dto
     }
 
 
-    public static class OperationsExt
+    internal static class OperationsExt
     {
         public static void Validate(this Operations operations)
         {

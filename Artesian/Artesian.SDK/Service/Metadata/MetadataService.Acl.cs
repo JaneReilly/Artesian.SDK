@@ -1,7 +1,6 @@
 ﻿// Copyright (c) ARK LTD. All rights reserved.
 // Licensed under the MIT License. See LICENSE in the project root for
 // license information. 
-using System.Linq;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
@@ -13,6 +12,9 @@ using System.Collections.Generic;
 
 namespace Artesian.SDK.Service
 {
+    /// <summary>
+    /// Metadata service
+    /// </summary>
     public partial class MetadataService : IMetadataService
     {
         /// <summary>
@@ -20,7 +22,7 @@ namespace Artesian.SDK.Service
         /// </summary>
         /// <param name="path">The path (starting with "/" char. Ex. "/marketdata/system/" identifies folder "marketdata" with a subfolder "system", roles are assigned to "system" subfolder. Ex. "/marketdata/genoacurve" identifies folder "marketdata" with entity "genoacurve", roles are assigned to "genoacurve" entity.</param>
         /// <param name="ctk"></param>
-        /// <returns>client.Exec() <see cref="Client.Exec{TResult}(HttpMethod, string, CancellationToken)"/></returns>
+        /// <returns>Enumerable of AuthorizationPath Output entity</returns>
         public Task<IEnumerable<AuthorizationPath.Output>> ReadRolesByPath(PathString path, CancellationToken ctk = default)
         {
             var url = "/acl/me".AppendPathSegment(path);
@@ -36,7 +38,7 @@ namespace Artesian.SDK.Service
         /// <param name="principalIds">The principal ids I want to inspect, encoded.( ex. u:user@example.com for users and clients,g:1001 for groups)</param>
         /// <param name="asOf">LocalDateTime we want to inspect</param>
         /// <param name="ctk"></param>
-        /// <returns>client.Exec() <see cref="Client.Exec{TResult}(HttpMethod, string, CancellationToken)"/></returns>
+        /// <returns>AuthorizationPath Output entity</returns>
         public Task<PagedResult<AuthorizationPath.Output>> GetRoles(int page, int pageSize, string[] principalIds, LocalDateTime? asOf = null, CancellationToken ctk = default)
         {
             if (page < 1 || pageSize < 1)
@@ -60,7 +62,7 @@ namespace Artesian.SDK.Service
         /// </remarks>
         /// <param name="upsert">the entity we want to upsert</param>
         /// <param name="ctk"></param>
-        /// <returns>client.Exec() <see cref="Client.Exec{TResult}(HttpMethod, string, CancellationToken)"/></returns>
+        /// <returns></returns>
         public Task UpsertRoles(AuthorizationPath.Input upsert, CancellationToken ctk = default)
         {
             var url = "/acl";
@@ -73,7 +75,7 @@ namespace Artesian.SDK.Service
         /// </summary>
         /// <param name="add">the entity we want to add. At the path add.Path we add the add.Roles</param>
         /// <param name="ctk"></param>
-        /// <returns>client.Exec() <see cref="Client.Exec{TResult}(HttpMethod, string, CancellationToken)"/></returns>
+        /// <returns></returns>
         public Task AddRoles(AuthorizationPath.Input add, CancellationToken ctk = default)
         {
             var url = "/acl/roles";
@@ -86,7 +88,7 @@ namespace Artesian.SDK.Service
         /// </summary>
         /// <param name="remove">the entity we want to remove. At the path remove.Path we remove the remove.Roles</param>
         /// <param name="ctk"></param>
-        /// <returns>client.Exec() <see cref="Client.Exec{TResult}(HttpMethod, string, CancellationToken)"/></returns>
+        /// <returns></returns>
         public Task RemoveRoles(AuthorizationPath.Input remove, CancellationToken ctk = default)
         {
             var url = "/acl/roles";

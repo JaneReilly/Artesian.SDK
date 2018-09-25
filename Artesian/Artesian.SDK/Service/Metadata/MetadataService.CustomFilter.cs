@@ -20,7 +20,7 @@ namespace Artesian.SDK.Service
         /// </summary>
         /// <param name="filter">the entity we are going to insert</param>
         /// <param name="ctk">CancellationToken</param>
-        /// <returns>client.Exec() <see cref="Client.Exec{TResult}(HttpMethod, string, CancellationToken)"/></returns>
+        /// <returns>Custom Filter Entity</returns>
         public Task<CustomFilter> CreateFilter(CustomFilter filter, CancellationToken ctk = default)
         {
             filter.Validate();
@@ -34,7 +34,7 @@ namespace Artesian.SDK.Service
         /// <param name="filterId">the entity id</param>
         /// <param name="filter">the entity we are going to update</param>
         /// <param name="ctk">CancellationToken</param>
-        /// <returns>client.Exec() <see cref="Client.Exec{TResult}(HttpMethod, string, CancellationToken)"/></returns>
+        /// <returns>Custom Filter Entity</returns>
         public Task<CustomFilter> UpdateFilter(int filterId, CustomFilter filter, CancellationToken ctk = default)
         {
             filter.Validate();
@@ -47,7 +47,7 @@ namespace Artesian.SDK.Service
         /// </summary>
         /// <param name="filterId">the entity id to get</param>
         /// <param name="ctk">CancellationToken</param>
-        /// <returns>client.Exec() <see cref="Client.Exec{TResult}(HttpMethod, string, CancellationToken)"/></returns>
+        /// <returns>Custom Filter Entity</returns>
         public Task<CustomFilter> ReadFilter(int filterId, CancellationToken ctk = default)
         {
             var url = "/filter".AppendPathSegment(filterId);
@@ -59,7 +59,7 @@ namespace Artesian.SDK.Service
         /// </summary>
         /// <param name="filterId">the entity id to be removed</param>
         /// <param name="ctk">CancellationToken</param>
-        /// <returns>client.Exec() <see cref="Client.Exec{TResult}(HttpMethod, string, CancellationToken)"/></returns>
+        /// <returns>Custom Filter Entity</returns>
         public Task<CustomFilter> RemoveFilter(int filterId, CancellationToken ctk = default)
         {
             var url = "/filter".AppendPathSegment(filterId);
@@ -72,7 +72,7 @@ namespace Artesian.SDK.Service
         /// <param name="page">int</param>
         /// <param name="pageSize">int</param>
         /// <param name="ctk">CancellationToken</param>
-        /// <returns>client.Exec() <see cref="Client.Exec{TResult}(HttpMethod, string, CancellationToken)"/></returns>
+        /// <returns>Paged Result of Custom Filter Entity</returns>
         public Task<PagedResult<CustomFilter>> ReadFilters(int page, int pageSize, CancellationToken ctk = default)
         {
             if (page < 1 || pageSize < 1)

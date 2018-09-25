@@ -257,13 +257,16 @@ namespace Artesian.SDK.Service
         /// Execute VersionedQuery
         /// </summary>
         /// <param name="ctk"></param>
-        /// <returns>client.Exec() <see cref="Client.Exec{TResult}(HttpMethod, string, CancellationToken)"/></returns>
+        /// <returns>Enumerable of TimeSerieRow Versioned</returns>
         public async Task<IEnumerable<TimeSerieRow.Versioned>> ExecuteAsync(CancellationToken ctk = default)
         {
             return await _client.Exec<IEnumerable<TimeSerieRow.Versioned>>(HttpMethod.Get, _buildRequest(), ctk: ctk);
         }
 
         #region private
+        /// <summary>
+        /// Validate Query override
+        /// </summary>
         protected override void _validateQuery()
         {
             base._validateQuery();

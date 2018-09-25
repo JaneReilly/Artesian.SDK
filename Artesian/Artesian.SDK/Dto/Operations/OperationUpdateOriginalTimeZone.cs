@@ -3,6 +3,9 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Artesian.SDK.Dto
 {
+    /// <summary>
+    /// The OriginalTimeZone Update
+    /// </summary>
     [MessagePackObject]
     public class OperationUpdateOriginalTimeZone : IOperationParamsPayload
     {

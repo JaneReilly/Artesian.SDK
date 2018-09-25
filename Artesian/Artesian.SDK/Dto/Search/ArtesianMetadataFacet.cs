@@ -6,6 +6,9 @@ using System.Collections.Generic;
 
 namespace Artesian.SDK.Dto
 {
+    /// <summary>
+    /// Facet Entity
+    /// </summary>
     [MessagePackObject]
     public class ArtesianMetadataFacet
     {
@@ -26,18 +29,32 @@ namespace Artesian.SDK.Dto
         public List<ArtesianMetadataFacetCount> Values { get; set; }
     }
 
+    /// <summary>
+    /// Metadata Facet Entity
+    /// </summary>
     [MessagePackObject]
     public class ArtesianMetadataFacetCount
     {
+        /// <summary>
+        /// Metadata Facet Entity Value
+        /// </summary>
         [Key(0)]
         public string Value { get; set; }
+        /// <summary>
+        /// Metadata Facet Entity Count
+        /// </summary>
         [Key(1)]
         public long? Count { get; set; }
     }
 
+    /// <summary>
+    /// Metadata Facet Entity Type
+    /// </summary>
     public enum ArtesianMetadataFacetType
     {
-        Property = 0
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
+          Property = 0
         , Tag
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
     }
 }

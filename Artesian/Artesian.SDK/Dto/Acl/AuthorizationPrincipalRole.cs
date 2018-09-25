@@ -3,20 +3,35 @@ using System;
 
 namespace Artesian.SDK.Dto
 {
+    /// <summary>
+    /// The Principal Type Enum
+    /// </summary>
     public enum PrincipalType
     {
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         Group,
         User
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
     }
 
+    /// <summary>
+    /// The Principal Entity
+    /// </summary>
     [MessagePackObject]
     public struct Principal : IEquatable<Principal>
     {
+        /// <summary>
+        /// The Principal Type
+        /// </summary>
         [Key(0)]
         public PrincipalType PrincipalType { get; set; }
+        /// <summary>
+        /// The Principal Identifier
+        /// </summary>
         [Key(1)]
         public string PrincipalId { get; set; }
 
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         public bool Equals(Principal other)
         {
             return PrincipalType == other.PrincipalType && PrincipalId == other.PrincipalId;
@@ -49,18 +64,34 @@ namespace Artesian.SDK.Dto
         public static implicit operator string(Principal url) { return url.ToString(); }
 
         public static implicit operator Principal(string url) { return new Principal(url); }
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
     }
 
+    /// <summary>
+    /// The AuthorizationPrincipalRole Entity
+    /// </summary>
     [MessagePackObject]
     public class AuthorizationPrincipalRole
     {
+        /// <summary>
+        /// The Role
+        /// </summary>
         [Key(0)]
         public string Role { get; set; }
+        /// <summary>
+        /// The Principal
+        /// </summary>
         [Key(1)]
         public Principal Principal { get; set; }
+        /// <summary>
+        /// The information regarding Inheritance
+        /// </summary>
         [Key(2)]
         public string InheritedFrom { get; set; }
 
+        /// <summary>
+        /// Encode principal Enum
+        /// </summary>
         public static string EncodePrincipalEnum(PrincipalType principalEnum)
         {
             switch (principalEnum)
@@ -74,6 +105,9 @@ namespace Artesian.SDK.Dto
             throw new InvalidOperationException("unexpected PrincipalType");
         }
 
+        /// <summary>
+        /// Dencode principal Enum
+        /// </summary>
         public static PrincipalType DecodePrincipalEnum(string encoded)
         {
             switch (encoded)

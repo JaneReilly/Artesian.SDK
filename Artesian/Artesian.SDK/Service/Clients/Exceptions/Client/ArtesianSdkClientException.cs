@@ -5,8 +5,12 @@ using System;
 
 namespace Artesian.SDK.Service
 {
+    /// <summary>
+    /// Client Exception
+    /// </summary>
     public class ArtesianSdkClientException : Exception
     {
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         public ArtesianSdkClientException(string message)
             : base(message)
         {
@@ -21,5 +25,6 @@ namespace Artesian.SDK.Service
             : base(string.Format(format, args))
         {
         }
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
     }
 }

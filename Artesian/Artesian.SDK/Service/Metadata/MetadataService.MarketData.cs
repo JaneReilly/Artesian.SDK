@@ -1,7 +1,6 @@
 ﻿// Copyright (c) ARK LTD. All rights reserved.
 // Licensed under the MIT License. See LICENSE in the project root for
 // license information. 
-using System.Linq;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
@@ -9,7 +8,6 @@ using Artesian.SDK.Dto;
 using Flurl;
 using NodaTime;
 using System;
-using System.Collections.Generic;
 
 namespace Artesian.SDK.Service
 {
@@ -20,7 +18,7 @@ namespace Artesian.SDK.Service
         /// </summary>
         /// <param name="id">MarketDataIdentifier of markedata to be retrieved</param>
         /// <param name="ctk">CancellationToken</param>
-        /// <returns>client.Exec() <see cref="Client.Exec{TResult}(HttpMethod, string, CancellationToken)"/></returns>
+        /// <returns>MarketData Entity Output</returns>
         public Task<MarketDataEntity.Output> ReadMarketDataRegistryAsync(MarketDataIdentifier id, CancellationToken ctk = default)
         {
             id.Validate();
@@ -35,7 +33,7 @@ namespace Artesian.SDK.Service
         /// </summary>
         /// <param name="id">Id of the marketdata to be retrieved</param>
         /// <param name="ctk">CancellationToken</param>
-        /// <returns>client.Exec() <see cref="Client.Exec{TResult}(HttpMethod, string, CancellationToken)"/></returns>
+        /// <returns>MarketData Entity Output</returns>
         public Task<MarketDataEntity.Output> ReadMarketDataRegistryAsync(int id, CancellationToken ctk = default)
         {
             if (id < 1)
@@ -54,7 +52,7 @@ namespace Artesian.SDK.Service
         /// <param name="versionFrom">Start date of version range</param>
         /// <param name="versionTo">End date of version range</param>
         /// <param name="ctk">CancellationToken</param>
-        /// <returns>client.Exec() <see cref="Client.Exec{TResult}(HttpMethod, string, CancellationToken)"/></returns>
+        /// <returns>Paged result of CurveRange entity</returns>
         public Task<PagedResult<CurveRange>> ReadCurveRangeAsync(int id, int page, int pageSize, string product = null, LocalDateTime? versionFrom = null, LocalDateTime? versionTo = null, CancellationToken ctk = default)
         {
 
@@ -73,7 +71,7 @@ namespace Artesian.SDK.Service
         /// </summary>
         /// <param name="metadata">MarketDataEntity</param>
         /// <param name="ctk">CancellationToken</param>
-        /// <returns></returns>
+        /// <returns>MarketData Entity Output</returns>
         public Task<MarketDataEntity.Output> RegisterMarketDataAsync(MarketDataEntity.Input metadata, CancellationToken ctk = default)
         {
             metadata.ValidateRegister();
@@ -87,7 +85,7 @@ namespace Artesian.SDK.Service
         /// </summary>
         /// <param name="metadata">MarketDataEntity</param>
         /// <param name="ctk">CancellationToken</param>
-        /// <returns></returns>
+        /// <returns>MarketData Entity Output</returns>
         public Task<MarketDataEntity.Output> UpdateMarketDataAsync(MarketDataEntity.Input metadata, CancellationToken ctk = default)
         {
             metadata.ValidateUpdate();

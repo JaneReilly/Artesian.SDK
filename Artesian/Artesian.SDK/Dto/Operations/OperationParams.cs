@@ -26,6 +26,9 @@ namespace Artesian.SDK.Dto
         public IOperationParamsPayload Params { get; set; }
     }
 
+    /// <summary>
+    /// The Operation Param Payload interface
+    /// </summary>
     [Union(0, typeof(OperationEnableDisableTag))]
     [Union(1, typeof(OperationUpdateOriginalTimeZone))]
     [Union(2, typeof(OperationUpdateTimeTransform))]

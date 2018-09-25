@@ -8,6 +8,9 @@ namespace Artesian.SDK.Dto
     /// </summary>
     public static class AuthorizationPath
     {
+        /// <summary>
+        /// The Authorization Path entity Input
+        /// </summary>
         [MessagePackObject]
         public class Input
         {
@@ -23,6 +26,9 @@ namespace Artesian.SDK.Dto
             public IEnumerable<AuthorizationPrincipalRole> Roles { get; set; }
         }
 
+        /// <summary>
+        /// The Authorization Path entity Output
+        /// </summary>
         [MessagePackObject]
         public class Output : Input
         {

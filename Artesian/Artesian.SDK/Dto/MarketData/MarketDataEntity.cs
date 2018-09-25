@@ -14,12 +14,20 @@ namespace Artesian.SDK.Dto
     /// </summary>
     public static class MarketDataEntity
     {
-
+        /// <summary>
+        /// The MarketData Entity Input
+        /// </summary>
         [MessagePackObject]
         public class Input
         {
+            /// <summary>
+            /// The MarketData Default Constructor
+            /// </summary>
             public Input() { }
 
+            /// <summary>
+            /// The MarketData Constructor by MarketDataEntity.Output
+            /// </summary>
             public Input(MarketDataEntity.Output output)
             {
                 if (output != null)
@@ -118,16 +126,28 @@ namespace Artesian.SDK.Dto
 
         }
 
+        /// <summary>
+        /// Helpers evaluating path 
+        /// </summary>
         public static bool IsPathNull(Input input)
         {
             return string.IsNullOrWhiteSpace(input._path);
         }
 
+        /// <summary>
+        /// The MarketData Default Constructor
+        /// </summary>
         [MessagePackObject]
         public class Output : Input
         {
+            /// <summary>
+            /// The MarketData Default Constructor
+            /// </summary>
             public Output() { }
 
+            /// <summary>
+            /// The MarketData Constructor by MarketDataEntity.Input
+            /// </summary>
             public Output(MarketDataEntity.Input input)
             {
                 if (input != null)
@@ -179,6 +199,9 @@ namespace Artesian.SDK.Dto
             public Instant Created { get; set; }
         }
 
+        /// <summary>
+        /// The Curve Ranges class
+        /// </summary>
         public class WithRange : Output
         {
             /// <summary>
@@ -188,7 +211,7 @@ namespace Artesian.SDK.Dto
         }
     }
 
-    public static class MarketDataEntityInputExt
+    internal static class MarketDataEntityInputExt
     {
         public static void ValidateRegister(this MarketDataEntity.Input marketDataEntityInput)
         {

@@ -5,8 +5,12 @@ using System.Text.RegularExpressions;
 
 namespace Artesian.SDK.Dto
 {
+    /// <summary>
+    /// The PathString entity
+    /// </summary>
     public class PathString : IEquatable<PathString>
     {
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         private static Regex _regexSplit = new Regex(@"(?<!\\)\/");
         public const int MaxLenghtPaths = 10;
         public const int MaxTokenLen = 50;
@@ -115,28 +119,6 @@ namespace Artesian.SDK.Dto
 
         public static implicit operator PathString(string url) { return PathString.Parse(url); }
 
-        /*
-        public bool IsAncestorOf(PathString currPath)
-        {
-            if (this._tokens.Length > currPath._tokens.Length)
-                return false;
-
-            for (int i = 0; i < this._tokens.Length; i++)
-            {
-                if (i == this._tokens.Length - 1 && this._tokens[i] == String.Empty)
-                    break;
-
-                if (
-                       !(this._tokens[i] == PathString.Star )
-                    && !(this._tokens[i] == currPath._tokens[i])
-                    && !(this._tokens[i].Length > 1 && this._tokens[i].EndsWith(PathString.Star) && currPath._tokens[i].StartsWith(this._tokens[i].Substring(0, this._tokens[i].Length - 1)))
-                    )
-                    return false;
-            }
-            return true;
-        }
-        */
-
         public static bool operator ==(PathString obj1, PathString obj2)
         {
             return obj1.Equals(obj2);
@@ -163,43 +145,11 @@ namespace Artesian.SDK.Dto
             hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(ToString());
             return hashCode;
         }
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
     }
 
-    public static class Ex
+    internal static class Ex
     {
-        /*
-        public static bool IsAncestorOf(this string anc, string path)
-        {
-            PathString ancestor;
-            PathString currPath;
-
-            if (PathString.TryParse(anc, out ancestor) && PathString.TryParse(path, out currPath))
-                return ancestor.IsAncestorOf(currPath);
-
-            return false;
-        }
-
-        public static bool IsAncestorOf(this string anc, PathString currPath)
-        {
-            PathString ancestor;
-
-            if (PathString.TryParse(anc, out ancestor))
-                return ancestor.IsAncestorOf(currPath);
-
-            return false;
-        }
-
-        public static bool IsAncestorOf(this PathString ancestor, string path)
-        {
-            PathString currPath;
-
-            if (PathString.TryParse(path, out currPath))
-                return ancestor.IsAncestorOf(currPath);
-
-            return false;
-        }
-        */
-
         public static IEnumerable<object> ToPathDbParameter(this IEnumerable<PathString> pathStrings)
         {
             return pathStrings.Select((s, i) => new{
@@ -219,8 +169,6 @@ namespace Artesian.SDK.Dto
             });
         }
     }
-
-
 
     /// <summary>
     /// Helpers for delimited string, with support for escaping the delimiter

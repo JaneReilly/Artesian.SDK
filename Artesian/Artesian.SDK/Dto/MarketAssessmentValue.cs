@@ -11,6 +11,9 @@ namespace Artesian.SDK.Dto
     [MessagePackObject]
     public class MarketAssessmentValue
     {
+        /// <summary>
+        /// Market Assessment Value Construtor by parameters
+        /// </summary>
         public MarketAssessmentValue(
             double? settlement = null,
             double? open = null,

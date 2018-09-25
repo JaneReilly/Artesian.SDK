@@ -20,7 +20,7 @@ namespace Artesian.SDK.Service
         /// </summary>
         /// <param name="apiKeyRecord">the entity we are going to insert</param>
         /// <param name="ctk">CancellationToken</param>
-        /// <returns></returns>
+        /// <returns>ApiKey Output entity</returns>
         public Task<ApiKey.Output> CreateApiKeyAsync(ApiKey.Input apiKeyRecord, CancellationToken ctk = default)
         {
             apiKeyRecord.Validate();
@@ -33,7 +33,8 @@ namespace Artesian.SDK.Service
         /// Retrieve the ApiKey entity
         /// </summary>
         /// <param name="key">The Key</param>
-        /// <returns></returns>
+        /// <param name="ctk">CancellationToken</param>
+        /// <returns>ApiKey Output entity</returns>
         public Task<ApiKey.Output> ReadApiKeyByKeyAsync(string key, CancellationToken ctk = default)
         {
             var url = "/apikey/entity"
@@ -47,7 +48,7 @@ namespace Artesian.SDK.Service
         /// </summary>
         /// <param name="id">The id</param>
         /// <param name="ctk">CancellationToken</param>
-        /// <returns></returns>
+        /// <returns>ApiKey Output entity</returns>
         public Task<ApiKey.Output> ReadApiKeyByIdAsync(int id, CancellationToken ctk = default)
         {
             var url = "/apikey/entity".AppendPathSegment(id);
@@ -59,8 +60,9 @@ namespace Artesian.SDK.Service
         /// </summary>
         /// <param name="page">the requested page</param>
         /// <param name="pageSize">the size of the page</param>
-        /// <param name="userId">the userid we want to filter for</param>y</param>
-        /// <returns></returns>
+        /// <param name="userId">the userid we want to filter for</param>
+        /// <param name="ctk">CancellationToken</param>
+        /// <returns>Paged result of ApiKey Output entity</returns>
         public Task<PagedResult<ApiKey.Output>> ReadApiKeysAsync(int page, int pageSize, string userId, CancellationToken ctk = default)
         {
             if (page < 1 || pageSize < 1)

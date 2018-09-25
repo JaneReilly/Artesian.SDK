@@ -28,11 +28,14 @@ namespace Artesian.SDK.Dto
         [Key("<")]
         public string NegativeShift { get; set; }
 
+        /// <summary>
+        /// The Transform Type
+        /// </summary>
         [IgnoreMember]
         public override TransformType Type => TransformType.SimpleShift;
     }
 
-    public static class TimeTransformSimpleShiftExt
+    internal static class TimeTransformSimpleShiftExt
     {
         public static void Validate(this TimeTransformSimpleShift timeTransform)
         {

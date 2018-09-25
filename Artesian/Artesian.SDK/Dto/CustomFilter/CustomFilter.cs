@@ -37,7 +37,7 @@ namespace Artesian.SDK.Dto
         public string ETag { get; set; }
     }
 
-    public static class CustomFilterExt
+    internal static class CustomFilterExt
     {
         public static void Validate(this CustomFilter customfilter)
         {

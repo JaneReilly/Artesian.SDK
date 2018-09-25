@@ -8,8 +8,10 @@ namespace Artesian.SDK.Dto
     /// </summary>
     public enum AggregationRule
     {
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         Undefined = 0,
         SumAndDivide,
         AverageAndReplicate
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
     }
 }

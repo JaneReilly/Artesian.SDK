@@ -17,8 +17,14 @@ namespace Artesian.SDK.Service
     /// </summary>
     public class ActualQuery : Query, IActualQuery<ActualQuery>
     {
+        /// <summary>
+        /// Granularity
+        /// </summary>
         protected Granularity? _granularity;
         private Client _client;
+        /// <summary>
+        /// timerange
+        /// </summary>
         protected int? _tr;
         private string _routePrefix = "ts";
 
@@ -137,7 +143,7 @@ namespace Artesian.SDK.Service
         /// Execute ActualQuery
         /// </summary>
         /// <param name="ctk">CancellationToken</param>
-        /// <returns>client.Exec() <see cref="Client.Exec{TResult}(HttpMethod, string, CancellationToken)"/></returns>
+        /// <returns>Enumerable of TimeSerieRow Actual</returns>
         public async Task<IEnumerable<TimeSerieRow.Actual>> ExecuteAsync(CancellationToken ctk = default)
         {
             return await _client.Exec<IEnumerable<TimeSerieRow.Actual>>(HttpMethod.Get, _buildRequest(), ctk: ctk);
@@ -156,6 +162,9 @@ namespace Artesian.SDK.Service
             return url;
         }
 
+        /// <summary>
+        /// Validate Query override
+        /// </summary>
         protected sealed override void _validateQuery()
         {
             base._validateQuery();

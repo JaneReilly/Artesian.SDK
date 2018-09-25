@@ -37,7 +37,7 @@ namespace Artesian.SDK.Dto
         public int Page { get; set; }
     }
 
-    public static class ArtesianSearchFilterExt
+    internal static class ArtesianSearchFilterExt
     {
         public static void Validate(this ArtesianSearchFilter artesianSearchFilter)
         {

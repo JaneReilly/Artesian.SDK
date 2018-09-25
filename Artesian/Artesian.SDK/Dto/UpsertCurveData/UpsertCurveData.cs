@@ -12,16 +12,24 @@ namespace Artesian.SDK.Dto
     [MessagePackObject]
     public class UpsertCurveData
     {
-
+        /// <summary>
+        /// The default constructor
+        /// </summary>
         public UpsertCurveData()
         {
         }
 
+        /// <summary>
+        /// The constructor with id
+        /// </summary>
         public UpsertCurveData(MarketDataIdentifier id)
         {
             ID = id;
         }
 
+        /// <summary>
+        /// The constructor with id and version
+        /// </summary>
         public UpsertCurveData(MarketDataIdentifier id, LocalDateTime version )
         {
             ID = id;
@@ -83,7 +91,7 @@ namespace Artesian.SDK.Dto
         public bool DeferDataGeneration { get; set; } = true;
     }
 
-    public static class UpsertCurveDataExt
+    internal static class UpsertCurveDataExt
     {
         public static void Validate(this UpsertCurveData upsertCurveData)
         {

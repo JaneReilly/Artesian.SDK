@@ -3,6 +3,9 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Artesian.SDK.Dto
 {
+    /// <summary>
+    /// The Operation for Update Time Transform
+    /// </summary>
     [MessagePackObject]
     public class OperationUpdateTimeTransform : IOperationParamsPayload
     {

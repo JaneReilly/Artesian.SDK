@@ -20,6 +20,7 @@ namespace Artesian.SDK.Dto
         [Key("Type")]
         public string Type { get; set; }
 
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         public override bool Equals(object obj)
         {
             var principals = obj as Principals;
@@ -35,5 +36,6 @@ namespace Artesian.SDK.Dto
             hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(Type);
             return hashCode;
         }
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
     }
 }

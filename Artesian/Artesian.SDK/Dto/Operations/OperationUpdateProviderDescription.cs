@@ -3,6 +3,9 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Artesian.SDK.Dto
 {
+    /// <summary>
+    /// The Operation for Update Provider Description
+    /// </summary>
     [MessagePackObject]
     public class OperationUpdateProviderDescription : IOperationParamsPayload
     {

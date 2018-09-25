@@ -1,14 +1,10 @@
 ﻿// Copyright (c) ARK LTD. All rights reserved.
 // Licensed under the MIT License. See LICENSE in the project root for
 // license information. 
-using System.Linq;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using Artesian.SDK.Dto;
-using Flurl;
-using NodaTime;
-using System;
 using System.Collections.Generic;
 
 namespace Artesian.SDK.Service
@@ -20,7 +16,7 @@ namespace Artesian.SDK.Service
         /// </summary>
         /// <param name="operations"></param>
         /// <param name="ctk"></param>
-        /// <returns></returns>
+        /// <returns>MarketData Entity Output</returns>
         public Task<List<MarketDataEntity.Output>> PerformOperationsAsync(Operations operations, CancellationToken ctk = default)
         {
             operations.Validate();

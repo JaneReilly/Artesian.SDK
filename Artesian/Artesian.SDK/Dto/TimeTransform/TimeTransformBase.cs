@@ -37,6 +37,9 @@ namespace Artesian.SDK.Dto
         [Key("DefinedBy")]
         public TransformDefinitionType DefinedBy { get; set; }
 
+        /// <summary>
+        /// The Transform Type
+        /// </summary>
         [IgnoreMember]
         public abstract TransformType Type { get; }
 

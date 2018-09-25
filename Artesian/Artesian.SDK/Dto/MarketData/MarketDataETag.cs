@@ -13,6 +13,9 @@ namespace Artesian.SDK.Dto
     [MessagePackObject]
     public class MarketDataETag
     {
+        /// <summary>
+        /// The MarketData Constructor by id and Etag
+        /// </summary>
         public MarketDataETag(int id, string eTag)
         {
             //  Ensure.Bool.IsTrue(id >= ArtesianConstants.CurveIDMin, "id out of accepted Range");
@@ -38,6 +41,7 @@ namespace Artesian.SDK.Dto
         [MessagePack.Key(1)]
         public string ETag { get; protected set; }
 
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         public override bool Equals(object obj)
         {
             var item = obj as MarketDataETag;
@@ -74,5 +78,6 @@ namespace Artesian.SDK.Dto
             else
                 return true;
         }
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
     }
 }

@@ -11,6 +11,9 @@ namespace Artesian.SDK.Dto
     /// </summary>
     public static class ApiKey
     {
+        /// <summary>
+        /// The ApiKey Entity Input
+        /// </summary>
         [MessagePackObject]
         public class Input
         {
@@ -42,11 +45,12 @@ namespace Artesian.SDK.Dto
 
         }
 
+        /// <summary>
+        /// The ApiKey Entity Output
+        /// </summary>
         [MessagePackObject]
         public class Output
         {
-            public Output() { }
-
             /// <summary>
             /// The ApiKey Id
             /// </summary>
@@ -90,7 +94,7 @@ namespace Artesian.SDK.Dto
         }
     }
 
-    public static class ApiKeyExt
+    internal static class ApiKeyExt
     {
         public static void Validate(this ApiKey.Input apiKey)
         {

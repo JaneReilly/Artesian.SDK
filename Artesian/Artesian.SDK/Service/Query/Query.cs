@@ -14,7 +14,7 @@ namespace Artesian.SDK.Service
         private ExtractionRangeSelectionConfig _extractionRangeCfg = new ExtractionRangeSelectionConfig();
         private ExtractionRangeType? _extractionRangeType = null;
         private static LocalDatePattern _localDatePattern = LocalDatePattern.Iso;
-        private static LocalDateTimePattern _localDateTimePattern = LocalDateTimePattern.GeneralIso;
+        private static LocalDateTimePattern _localDateTimePattern = LocalDateTimePattern.ExtendedIso;
 
         protected IEnumerable<int> _ids;
         protected string _tz;

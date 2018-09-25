@@ -174,7 +174,7 @@ namespace Artesian.SDK.Tests
 
         #region Operations
         [Test]
-        public void Operations_PerformOperationsAsync()
+        public void Operations_PerformOperationsAsync_Enable()
         {
             using (var httpTest = new HttpTest())
             {
@@ -192,6 +192,157 @@ namespace Artesian.SDK.Tests
                                 TagValue = "Valore"
                             },
                             Type = OperationType.EnableTag,
+                        }
+                    }
+                };
+
+                var mdq = mds.PerformOperationsAsync(operations).ConfigureAwait(true).GetAwaiter().GetResult();
+
+                httpTest.ShouldHaveCalled($"{_cfg.BaseAddress}v2.1/marketdata/operations")
+                    .WithVerb(HttpMethod.Post)
+                    .Times(1);
+            }
+        }
+
+        [Test]
+        public void Operations_PerformOperationsAsync_Disable()
+        {
+            using (var httpTest = new HttpTest())
+            {
+                var mds = new MetadataService(_cfg);
+
+                var operations = new Operations()
+                {
+                    IDS = new HashSet<MarketDataETag>() { (new MarketDataETag(0, "provaEtag")) },
+                    OperationList = new List<OperationParams>() {
+                        new  OperationParams()
+                        {
+                            Params = new OperationEnableDisableTag()
+                            {
+                                TagKey = "Pippo",
+                                TagValue = "Valore"
+                            },
+                            Type = OperationType.DisableTag,
+                        }
+                    }
+                };
+
+                var mdq = mds.PerformOperationsAsync(operations).ConfigureAwait(true).GetAwaiter().GetResult();
+
+                httpTest.ShouldHaveCalled($"{_cfg.BaseAddress}v2.1/marketdata/operations")
+                    .WithVerb(HttpMethod.Post)
+                    .Times(1);
+            }
+        }
+
+        [Test]
+        public void Operations_PerformOperationsAsync_Aggregation()
+        {
+            using (var httpTest = new HttpTest())
+            {
+                var mds = new MetadataService(_cfg);
+
+                var operations = new Operations()
+                {
+                    IDS = new HashSet<MarketDataETag>() { (new MarketDataETag(0, "provaEtag")) },
+                    OperationList = new List<OperationParams>() {
+                        new  OperationParams()
+                        {
+                            Params = new OperationUpdateAggregationRule()
+                            {
+                                Value = AggregationRule.Undefined
+                            },
+                            Type = OperationType.UpdateAggregationRule,
+                        }
+                    }
+                };
+
+                var mdq = mds.PerformOperationsAsync(operations).ConfigureAwait(true).GetAwaiter().GetResult();
+
+                httpTest.ShouldHaveCalled($"{_cfg.BaseAddress}v2.1/marketdata/operations")
+                    .WithVerb(HttpMethod.Post)
+                    .Times(1);
+            }
+        }
+
+        [Test]
+        public void Operations_PerformOperationsAsync_TimeZone()
+        {
+            using (var httpTest = new HttpTest())
+            {
+                var mds = new MetadataService(_cfg);
+
+                var operations = new Operations()
+                {
+                    IDS = new HashSet<MarketDataETag>() { (new MarketDataETag(0, "provaEtag")) },
+                    OperationList = new List<OperationParams>() {
+                        new  OperationParams()
+                        {
+                            Params = new OperationUpdateOriginalTimeZone()
+                            {
+                                Value = "CET"
+                            },
+                            Type = OperationType.UpdateOriginalTimeZone,
+                        }
+                    }
+                };
+
+                var mdq = mds.PerformOperationsAsync(operations).ConfigureAwait(true).GetAwaiter().GetResult();
+
+                httpTest.ShouldHaveCalled($"{_cfg.BaseAddress}v2.1/marketdata/operations")
+                    .WithVerb(HttpMethod.Post)
+                    .Times(1);
+            }
+        }
+
+        [Test]
+        public void Operations_PerformOperationsAsync_TimeTransform()
+        {
+            using (var httpTest = new HttpTest())
+            {
+                var mds = new MetadataService(_cfg);
+
+                var operations = new Operations()
+                {
+                    IDS = new HashSet<MarketDataETag>() { (new MarketDataETag(0, "provaEtag")) },
+                    OperationList = new List<OperationParams>() {
+                        new  OperationParams()
+                        {
+                            Params = new OperationUpdateTimeTransform()
+                            {
+                                Value = 0
+                            },
+                            Type = OperationType.UpdateTimeTransformID,
+                        }
+                    }
+                };
+
+                var mdq = mds.PerformOperationsAsync(operations).ConfigureAwait(true).GetAwaiter().GetResult();
+
+                httpTest.ShouldHaveCalled($"{_cfg.BaseAddress}v2.1/marketdata/operations")
+                    .WithVerb(HttpMethod.Post)
+                    .Times(1);
+            }
+        }
+
+        [Test]
+        public void Operations_PerformOperationsAsync_ProviderDescription()
+        {
+            using (var httpTest = new HttpTest())
+            {
+                var mds = new MetadataService(_cfg);
+
+                var operations = new Operations()
+                {
+                    IDS = new HashSet<MarketDataETag>() { (new MarketDataETag(0, "provaEtag")) },
+                    OperationList = new List<OperationParams>() {
+                        new  OperationParams()
+                        {
+                            Params = new OperationUpdateProviderDescription()
+                            {
+                                Value = "prova"
+                            },
+                            Type = OperationType.UpdateProviderDescription,
                         }
                     }
                 };

@@ -69,11 +69,9 @@ namespace Artesian.SDK.Dto
                                 if (!p.TagKey.IsValidTagKey())
                                     throw new ArgumentException("Operations: any single Params TagKey must have specific values");
 
-                                if (!p.TagKey.IsValidString(3, 50))
-                                    throw new ArgumentException("Operations: any single Params TagKey must match internal format");
+                                ArtesianUtils.IsValidString(p.TagKey, 3, 50);
 
-                                if (!p.TagValue.IsValidString(1, 50))
-                                    throw new ArgumentException("Operations: any single Params TagValue must match internal format");
+                                ArtesianUtils.IsValidString(p.TagValue, 1, 50);
 
                                 break;
                             }
@@ -84,11 +82,9 @@ namespace Artesian.SDK.Dto
                                 if (!p.TagKey.IsValidTagKey())
                                     throw new ArgumentException("Operations: any single Params TagKey must have specific values");
 
-                                if (!p.TagKey.IsValidString(3, 50))
-                                    throw new ArgumentException("Operations: any single Params TagKey must match internal format");
+                                ArtesianUtils.IsValidString(p.TagKey, 3, 50);
 
-                                if (!p.TagValue.IsValidString(1, 50))
-                                    throw new ArgumentException("Operations: any single Params TagValue must match internal format");
+                                ArtesianUtils.IsValidString(p.TagValue, 1, 50);
 
                                 break;
                             }
@@ -106,28 +102,27 @@ namespace Artesian.SDK.Dto
                             }
                         case OperationType.UpdateOriginalTimeZone:
                             {
-                                var p = op.Params as OperationUpdateOriginalTimeZone;
+                                if (op.Params is OperationUpdateOriginalTimeZone p)
+                                {
+                                    if (!String.IsNullOrWhiteSpace(p.Value) && DateTimeZoneProviders.Tzdb.GetZoneOrNull(p.Value) == null)
+                                        throw new ArgumentException("Operations: any single Params Value must be in IANA database if valorized");
+                                }
+                                else
+                                    throw new InvalidOperationException("Operations: Data cannot be used as OperationUpdateOriginalTimeZone");
 
-                                if (!String.IsNullOrWhiteSpace(p.Value) && DateTimeZoneProviders.Tzdb.GetZoneOrNull(p.Value) == null)
-                                    throw new ArgumentException("Operations: any single Params Value must be in IANA database if valorized");
+                                break;
+                            }
+                        case OperationType.UpdateProviderDescription:
+                            {
+                                var p = op.Params as OperationUpdateProviderDescription;
 
                                 break;
                             }
                         default:
-                            throw new ArgumentException("Operations: any single Params TagKey must have specific values");
+                            throw new NotSupportedException("Operations: The Operation Type is not supported");
                     }
                 }
             }
-        }
-
-        private static bool IsValidString(this string stringToEvaluate, int minLenght, int maxLenght)
-        {
-            if (stringToEvaluate != null && (stringToEvaluate.Length > minLenght && stringToEvaluate.Length < maxLenght) && Regex.IsMatch(stringToEvaluate, ArtesianConstants.CharacterValidatorRegEx))
-            {
-                return true;
-            }
-            else
-                return false;
         }
 
         private static bool IsValidTagKey(this string stringToEvaluate)

@@ -627,6 +627,27 @@ namespace Artesian.SDK.Tests
         }
 
         [Test]
+        public void VerInRelativeIntervalVersion_Millisecond()
+        {
+            using (var httpTest = new HttpTest())
+            {
+                var qs = new QueryService(_cfg);
+
+                var ver = qs.CreateVersioned()
+                        .ForMarketData(new int[] { 100000001 })
+                        .InGranularity(Granularity.Day)
+                        .ForVersion(new LocalDateTime(2018, 07, 19, 12, 0, 0, 123))
+                        .InRelativeInterval(RelativeInterval.RollingMonth)
+                        .ExecuteAsync().Result;
+
+                httpTest.ShouldHaveCalled($"{_cfg.BaseAddress}query/v1.0/vts/Version/2018-07-19T12:00:00.123/Day/RollingMonth"
+                   .SetQueryParam("id", 100000001))
+                   .WithVerb(HttpMethod.Get)
+                   .Times(1);
+            }
+        }
+
+        [Test]
         public void VerInAbsoluteDateRangeVersion()
         {
             using (var httpTest = new HttpTest())

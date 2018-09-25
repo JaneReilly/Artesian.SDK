@@ -21,14 +21,14 @@ namespace Artesian.SDK.Service
         /// <param name="id">MarketDataIdentifier</param>
         /// <param name="ctk">CancellationToken</param>
         /// <returns>client.Exec() <see cref="Client.Exec{TResult}(HttpMethod, string, CancellationToken)"/></returns>
-        Task<MarketDataEntity.Output> ReadMarketDataRegistryAsync(MarketDataIdentifier id, CancellationToken ctk = default(CancellationToken));
+        Task<MarketDataEntity.Output> ReadMarketDataRegistryAsync(MarketDataIdentifier id, CancellationToken ctk = default);
         /// <summary>
         /// Read Metadata by curve id
         /// </summary>
         /// <param name="id">An Int</param>
         /// <param name="ctk">CancellationToken</param>
         /// <returns>client.Exec() <see cref="Client.Exec{TResult}(HttpMethod, string, CancellationToken)"/></returns>
-        Task<MarketDataEntity.Output> ReadMarketDataRegistryAsync(int id, CancellationToken ctk = default(CancellationToken));
+        Task<MarketDataEntity.Output> ReadMarketDataRegistryAsync(int id, CancellationToken ctk = default);
         /// <summary>
         /// Get the metadata versions by id
         /// </summary>
@@ -40,28 +40,28 @@ namespace Artesian.SDK.Service
         /// <param name="versionTo">LocalDateTime</param>
         /// <param name="ctk">CancellationToken</param>
         /// <returns>client.Exec() <see cref="Client.Exec{TResult}(HttpMethod, string, CancellationToken)"/></returns>
-        Task<PagedResult<CurveRange>> ReadCurveRangeAsync(int id, int page, int pageSize, string product = null, LocalDateTime? versionFrom = null, LocalDateTime? versionTo = null, CancellationToken ctk = default(CancellationToken));
+        Task<PagedResult<CurveRange>> ReadCurveRangeAsync(int id, int page, int pageSize, string product = null, LocalDateTime? versionFrom = null, LocalDateTime? versionTo = null, CancellationToken ctk = default);
         /// <summary>
         /// Register the given MarketData entity
         /// </summary>
         /// <param name="metadata">MarketDataEntity</param>
         /// <param name="ctk">CancellationToken</param>
         /// <returns></returns>
-        Task<MarketDataEntity.Output> RegisterMarketDataAsync(MarketDataEntity.Input metadata, CancellationToken ctk = default(CancellationToken));
+        Task<MarketDataEntity.Output> RegisterMarketDataAsync(MarketDataEntity.Input metadata, CancellationToken ctk = default);
         /// <summary>
         /// Save the given MarketData entity
         /// </summary>
         /// <param name="metadata">MarketDataEntity</param>
         /// <param name="ctk">CancellationToken</param>
         /// <returns></returns>
-        Task<MarketDataEntity.Output> UpdateMarketDataAsync(MarketDataEntity.Input metadata, CancellationToken ctk = default(CancellationToken));
+        Task<MarketDataEntity.Output> UpdateMarketDataAsync(MarketDataEntity.Input metadata, CancellationToken ctk = default);
         /// <summary>
         /// Delete the specific MarketData entity by id
         /// </summary>
         /// <param name="id">int</param>
         /// <param name="ctk">CancellationToken</param>
         /// <returns></returns>
-        Task DeleteMarketDataAsync(int id, CancellationToken ctk = default(CancellationToken));
+        Task DeleteMarketDataAsync(int id, CancellationToken ctk = default);
         #endregion
 
         #region SearchFacet
@@ -71,7 +71,7 @@ namespace Artesian.SDK.Service
         /// <param name="filter">ArtesianSearchFilter</param>
         /// <param name="ctk">CancellationToken</param>
         /// <returns></returns>
-        Task<ArtesianSearchResults> SearchFacetAsync(ArtesianSearchFilter filter, CancellationToken ctk = default(CancellationToken));
+        Task<ArtesianSearchResults> SearchFacetAsync(ArtesianSearchFilter filter, CancellationToken ctk = default);
         #endregion
 
         #region Operations
@@ -94,7 +94,7 @@ namespace Artesian.SDK.Service
         /// <param name="timeTransformId">An Int</param>
         /// <param name="ctk">CancellationToken</param>
         /// <returns>client.Exec() <see cref="Client.Exec{TResult}(HttpMethod, string, CancellationToken)"/></returns>
-        Task<TimeTransform> ReadTimeTransformBaseAsync(int timeTransformId, CancellationToken ctk = default(CancellationToken));
+        Task<TimeTransform> ReadTimeTransformBaseAsync(int timeTransformId, CancellationToken ctk = default);
         /// <summary>
         /// Read the TimeTransform entity from the database paged
         /// </summary>
@@ -103,28 +103,28 @@ namespace Artesian.SDK.Service
         /// <param name="userDefined">bool</param>
         /// <param name="ctk">CancellationToken</param>
         /// <returns>client.exec() <see cref="Client.Exec{TResult}(HttpMethod, string, CancellationToken)"/></returns>
-        Task<PagedResult<TimeTransform>> ReadTimeTransformsAsync(int page, int pageSize, bool userDefined, CancellationToken ctk = default(CancellationToken));
+        Task<PagedResult<TimeTransform>> ReadTimeTransformsAsync(int page, int pageSize, bool userDefined, CancellationToken ctk = default);
         /// <summary>
         /// Register a new TimeTransform
         /// </summary>
         /// <param name="timeTransform">the entity we are going to insert</param>
         /// <param name="ctk">CancellationToken</param>
         /// <returns>client.Exec() <see cref="Client.Exec{TResult}(HttpMethod, string, CancellationToken)"/></returns>
-        Task<TimeTransform> RegisterTimeTransformBaseAsync(TimeTransform timeTransform, CancellationToken ctk = default(CancellationToken));
+        Task<TimeTransform> RegisterTimeTransformBaseAsync(TimeTransform timeTransform, CancellationToken ctk = default);
         /// <summary>
         /// Update the TimeTransform
         /// </summary>
         /// <param name="timeTransform">the entity we are going to update</param>
         /// <param name="ctk">CancellationToken</param>
         /// <returns>client.Exec() <see cref="Client.Exec{TResult}(HttpMethod, string, CancellationToken)"/></returns>
-        Task<TimeTransform> UpdateTimeTransformBaseAsync(TimeTransform timeTransform, CancellationToken ctk = default(CancellationToken));
+        Task<TimeTransform> UpdateTimeTransformBaseAsync(TimeTransform timeTransform, CancellationToken ctk = default);
         /// <summary>
         /// Delete the TimeTransform
         /// </summary>
         /// <param name="timeTransformId">the entity id we are going to delete</param>
         /// <param name="ctk">CancellationToken</param>
         /// <returns>client.Exec() <see cref="Client.Exec{TResult}(HttpMethod, string, CancellationToken)"/></returns>
-        Task DeleteTimeTransformSimpleShiftAsync(int timeTransformId, CancellationToken ctk = default(CancellationToken));
+        Task DeleteTimeTransformSimpleShiftAsync(int timeTransformId, CancellationToken ctk = default);
         #endregion
 
         #region Filters
@@ -134,7 +134,7 @@ namespace Artesian.SDK.Service
         /// <param name="filter">the entity we are going to insert</param>
         /// <param name="ctk">CancellationToken</param>
         /// <returns>client.Exec() <see cref="Client.Exec{TResult}(HttpMethod, string, CancellationToken)"/></returns>
-        Task<CustomFilter> CreateFilter(CustomFilter filter, CancellationToken ctk = default(CancellationToken));
+        Task<CustomFilter> CreateFilter(CustomFilter filter, CancellationToken ctk = default);
         /// <summary>
         /// Update specific Filter
         /// </summary>
@@ -142,21 +142,21 @@ namespace Artesian.SDK.Service
         /// <param name="filter">the entity we are going to update</param>
         /// <param name="ctk">CancellationToken</param>
         /// <returns>client.Exec() <see cref="Client.Exec{TResult}(HttpMethod, string, CancellationToken)"/></returns>
-        Task<CustomFilter> UpdateFilter(int filterId, CustomFilter filter, CancellationToken ctk = default(CancellationToken));
+        Task<CustomFilter> UpdateFilter(int filterId, CustomFilter filter, CancellationToken ctk = default);
         /// <summary>
         /// Read specific filter
         /// </summary>
         /// <param name="filterId">the entity id to get</param>
         /// <param name="ctk">CancellationToken</param>
         /// <returns>client.Exec() <see cref="Client.Exec{TResult}(HttpMethod, string, CancellationToken)"/></returns>
-        Task<CustomFilter> ReadFilter(int filterId, CancellationToken ctk = default(CancellationToken));
+        Task<CustomFilter> ReadFilter(int filterId, CancellationToken ctk = default);
         /// <summary>
         /// Remove specific Filter
         /// </summary>
         /// <param name="filterId">the entity id to be removed</param>
         /// <param name="ctk">CancellationToken</param>
         /// <returns>client.Exec() <see cref="Client.Exec{TResult}(HttpMethod, string, CancellationToken)"/></returns>
-        Task<CustomFilter> RemoveFilter(int filterId, CancellationToken ctk = default(CancellationToken));
+        Task<CustomFilter> RemoveFilter(int filterId, CancellationToken ctk = default);
         /// <summary>
         /// Read all filters
         /// </summary>
@@ -164,7 +164,7 @@ namespace Artesian.SDK.Service
         /// <param name="pageSize">int</param>
         /// <param name="ctk">CancellationToken</param>
         /// <returns>client.Exec() <see cref="Client.Exec{TResult}(HttpMethod, string, CancellationToken)"/></returns>
-        Task<PagedResult<CustomFilter>> ReadFilters(int page, int pageSize, CancellationToken ctk = default(CancellationToken));
+        Task<PagedResult<CustomFilter>> ReadFilters(int page, int pageSize, CancellationToken ctk = default);
         #endregion
 
         #region Acl

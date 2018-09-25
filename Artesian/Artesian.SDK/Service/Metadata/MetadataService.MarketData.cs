@@ -74,7 +74,7 @@ namespace Artesian.SDK.Service
         /// <param name="metadata">MarketDataEntity</param>
         /// <param name="ctk">CancellationToken</param>
         /// <returns></returns>
-        public Task<MarketDataEntity.Output> RegisterMarketDataAsync(MarketDataEntity.Input metadata, CancellationToken ctk = default(CancellationToken))
+        public Task<MarketDataEntity.Output> RegisterMarketDataAsync(MarketDataEntity.Input metadata, CancellationToken ctk = default)
         {
             metadata.ValidateRegister();
 

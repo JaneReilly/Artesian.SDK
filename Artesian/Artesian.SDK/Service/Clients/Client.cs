@@ -102,7 +102,7 @@ namespace Artesian.SDK.Service
 
         }
 
-        public async Task<TResult> Exec<TResult, TBody>(HttpMethod method, string resource, TBody body = default(TBody), CancellationToken ctk = default(CancellationToken))
+        public async Task<TResult> Exec<TResult, TBody>(HttpMethod method, string resource, TBody body = default, CancellationToken ctk = default)
         {
             try
             {
@@ -153,13 +153,13 @@ namespace Artesian.SDK.Service
             }
         }
 
-        public async Task Exec(HttpMethod method, string resource, CancellationToken ctk = default(CancellationToken))
+        public async Task Exec(HttpMethod method, string resource, CancellationToken ctk = default)
             => await Exec<object, object>(method, resource, null, ctk);
 
-        public Task<TResult> Exec<TResult>(HttpMethod method, string resource, CancellationToken ctk = default(CancellationToken))
+        public Task<TResult> Exec<TResult>(HttpMethod method, string resource, CancellationToken ctk = default)
             => Exec<TResult, object>(method, resource, null, ctk);
 
-        public async Task Exec<TBody>(HttpMethod method, string resource, TBody body, CancellationToken ctk = default(CancellationToken))
+        public async Task Exec<TBody>(HttpMethod method, string resource, TBody body, CancellationToken ctk = default)
             => await Exec<object, TBody>(method, resource, body, ctk);
 
         #region private methods

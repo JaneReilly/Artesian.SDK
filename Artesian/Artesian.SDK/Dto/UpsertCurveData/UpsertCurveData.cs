@@ -117,17 +117,6 @@ namespace Artesian.SDK.Dto
 
                 if (upsertCurveData.MarketAssessment == null || upsertCurveData.MarketAssessment.Count == 0)
                     throw new ArgumentException("UpsertCurveData MarketAssessment must be valorized if Rows is NULL");
-
-                //foreach (var mkt in upsertCurveData.MarketAssessment)
-                //{
-                //    IMarketProduct dummy;
-
-                //    foreach (var i in mkt.Value)
-                //    {
-                //        if (!MarketProductBuilder.TryParse(i.Key, out dummy))
-                //            throw new ArgumentException($"MarketAssessment.{mkt.Key}", "Invalid product string");
-                //    }
-                //}
             }
             else
             {

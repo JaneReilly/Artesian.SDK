@@ -20,16 +20,20 @@ namespace Artesian.SDK.Service
         private static LocalDateTimePattern _localDateTimePattern = LocalDateTimePattern.ExtendedIso;
 
         /// <summary>
-        /// identifiers
+        /// MarketData identifiers
         /// </summary>
         protected IEnumerable<int> _ids;
         /// <summary>
         /// timezone
         /// </summary>
         protected string _tz;
+        /// <summary>
+        /// filterId
+        /// </summary>
+        protected int? _filterId;
 
         /// <summary>
-        /// Query by Id
+        /// Set the marketData id to be queried
         /// </summary>
         /// <param name="ids"></param>
         /// <returns>Query</returns>
@@ -38,9 +42,18 @@ namespace Artesian.SDK.Service
             _ids = ids;
             return this;
         }
-
         /// <summary>
-        /// Query by timezone
+        /// Set the filter id to be queried
+        /// </summary>
+        /// <param name="filterId">The filter id to be queried</param>
+        /// <returns>Query</returns>
+        protected Query _forFilterId(int filterId)
+        {
+            _filterId = filterId;
+            return this;
+        }
+        /// <summary>
+        /// Set the timezone to be queried
         /// </summary>
         /// <param name="tz"></param>
         /// <returns>Query</returns>
@@ -144,8 +157,11 @@ namespace Artesian.SDK.Service
             if (_extractionRangeType == null)
                 throw new ApplicationException("Data extraction range must be provided. Provide a date range , period or period range or a interval eg .InAbsoluteDateRange()");
 
-            if (_ids == null)
-                throw new ApplicationException("Marketadata ids must be provided for extraction. Use .ForMarketData() and provide a integer or integer array as an argument");
+            if (_ids == null && _filterId == null)
+                throw new ApplicationException("Marketadata ids OR filterId must be provided for extraction. Use .ForMarketData() OR .ForFilterId() and provide a integer or integer array as an argument");
+
+            if (_ids != null && _filterId != null)
+                throw new ApplicationException("Marketadata ids AND filterId cannot be valorized at same time, choose one");
         }
 
         internal string _toUrlParam(LocalDate start, LocalDate end)

@@ -48,6 +48,16 @@ namespace Artesian.SDK.Service
             return this;
         }
         /// <summary>
+        /// Set the filter id to be queried
+        /// </summary>
+        /// <param name="filterId">The filter id to be queried</param>
+        /// <returns>MasQuery</returns>
+        public MasQuery ForFilterId(int filterId)
+        {
+            _filterId = filterId;
+            return this;
+        }
+        /// <summary>
         /// Specify the timezone of extracted marketdata. Defaults to UTC
         /// </summary>
         /// <param name="tz">Timezone in which to extract eg UTC/CET</param>
@@ -127,10 +137,22 @@ namespace Artesian.SDK.Service
         {
             _validateQuery();
 
-            var url = $"/{_routePrefix}/{_buildExtractionRangeRoute()}"
-            .SetQueryParam("id", _ids)
-            .SetQueryParam("p", _products)
-            .SetQueryParam("tz", _tz);
+            string url = null;
+
+            if (_ids != null)
+            {
+                url = $"/{_routePrefix}/{_buildExtractionRangeRoute()}"
+                    .SetQueryParam("id", _ids)
+                    .SetQueryParam("p", _products)
+                    .SetQueryParam("tz", _tz);
+            }
+            else
+            {
+                url = $"/{_routePrefix}/{_buildExtractionRangeRoute()}"
+                    .SetQueryParam("filterId", _filterId)
+                    .SetQueryParam("p", _products)
+                    .SetQueryParam("tz", _tz);
+            }
 
             return url;
         }

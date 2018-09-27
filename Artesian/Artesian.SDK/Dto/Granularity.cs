@@ -8,7 +8,8 @@ namespace Artesian.SDK.Dto
     /// </summary>
     public enum Granularity
     {
-        Hour = 0
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
+          Hour = 0
         , Day = 1
         , Week = 2
         , Month = 3
@@ -18,6 +19,7 @@ namespace Artesian.SDK.Dto
         , FifteenMinute = 7
         , Minute = 8
         , ThirtyMinute = 9
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
     }
 
 }

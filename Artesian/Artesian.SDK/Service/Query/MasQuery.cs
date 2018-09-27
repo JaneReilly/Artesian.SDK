@@ -48,6 +48,16 @@ namespace Artesian.SDK.Service
             return this;
         }
         /// <summary>
+        /// Set the filter id to be queried
+        /// </summary>
+        /// <param name="filterId">The filter id to be queried</param>
+        /// <returns>MasQuery</returns>
+        public MasQuery ForFilterId(int filterId)
+        {
+            _filterId = filterId;
+            return this;
+        }
+        /// <summary>
         /// Specify the timezone of extracted marketdata. Defaults to UTC
         /// </summary>
         /// <param name="tz">Timezone in which to extract eg UTC/CET</param>
@@ -116,25 +126,40 @@ namespace Artesian.SDK.Service
         /// Execute MasQuery
         /// </summary>
         /// <param name="ctk"></param>
-        /// <returns>client.Exec() <see cref="Client.Exec{TResult}(HttpMethod, string, CancellationToken)"/></returns>
+        /// <returns>Enumerable of AssessmentRow</returns>
         public async Task<IEnumerable<AssessmentRow>> ExecuteAsync(CancellationToken ctk = default)
         {
             return await _client.Exec<IEnumerable<AssessmentRow>>(HttpMethod.Get, _buildRequest(), ctk: ctk);
         }
 
         #region private
-        string _buildRequest()
+        private string _buildRequest()
         {
             _validateQuery();
 
-            var url = $"/{_routePrefix}/{_buildExtractionRangeRoute()}"
-            .SetQueryParam("id", _ids)
-            .SetQueryParam("p", _products)
-            .SetQueryParam("tz", _tz);
+            string url = null;
 
-            return url.ToString();
+            if (_ids != null)
+            {
+                url = $"/{_routePrefix}/{_buildExtractionRangeRoute()}"
+                    .SetQueryParam("id", _ids)
+                    .SetQueryParam("p", _products)
+                    .SetQueryParam("tz", _tz);
+            }
+            else
+            {
+                url = $"/{_routePrefix}/{_buildExtractionRangeRoute()}"
+                    .SetQueryParam("filterId", _filterId)
+                    .SetQueryParam("p", _products)
+                    .SetQueryParam("tz", _tz);
+            }
+
+            return url;
         }
 
+        /// <summary>
+        /// Validate Query override
+        /// </summary>
         protected override void _validateQuery()
         {
             base._validateQuery();

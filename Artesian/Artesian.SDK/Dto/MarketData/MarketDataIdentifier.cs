@@ -7,13 +7,22 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Artesian.SDK.Dto
 {
+    /// <summary>
+    /// The MarketData identifier entity
+    /// </summary>
     [MessagePackObject]
     public class MarketDataIdentifier : IEquatable<MarketDataIdentifier>
     {
+        /// <summary>
+        /// The MarketData identifier default constructor
+        /// </summary>
         public MarketDataIdentifier()
         {
         }
 
+        /// <summary>
+        /// The MarketData identifier constructor by provider and name
+        /// </summary>
         public MarketDataIdentifier(string provider, string name)
         {
             Provider = provider;
@@ -34,12 +43,15 @@ namespace Artesian.SDK.Dto
         [MessagePack.Key(1)]
         public virtual string Name { get; set; }
 
+        /// <summary>
+        /// The Market Data override for ToString()
+        /// </summary>
         public override string ToString()
         {
             return string.Format("Provider: {0} Name: {1}", Provider, Name);
         }
 
-
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         public bool Equals(MarketDataIdentifier other)
         {
             if (ReferenceEquals(this, other))
@@ -90,9 +102,10 @@ namespace Artesian.SDK.Dto
                 return hash;
             }
         }
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
     }
 
-    public static class MarketDataIdentifierExt
+    internal static class MarketDataIdentifierExt
     {
         public static void Validate(this MarketDataIdentifier marketDataIdentifier)
         {

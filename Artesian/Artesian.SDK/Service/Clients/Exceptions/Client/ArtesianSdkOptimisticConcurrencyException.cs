@@ -5,8 +5,12 @@ using System;
 
 namespace Artesian.SDK.Service
 {
+    /// <summary>
+    /// Concurrency Exception
+    /// </summary>
     public class ArtesianSdkOptimisticConcurrencyException : ArtesianSdkRemoteException
     {
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         public ArtesianSdkOptimisticConcurrencyException(string message)
             : base(message)
         {
@@ -21,5 +25,6 @@ namespace Artesian.SDK.Service
             : base(string.Format(format, args))
         {
         }
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
     }
 }

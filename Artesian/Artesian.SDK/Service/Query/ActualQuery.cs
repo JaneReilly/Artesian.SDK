@@ -17,8 +17,14 @@ namespace Artesian.SDK.Service
     /// </summary>
     public class ActualQuery : Query, IActualQuery<ActualQuery>
     {
+        /// <summary>
+        /// Granularity
+        /// </summary>
         protected Granularity? _granularity;
         private Client _client;
+        /// <summary>
+        /// timerange
+        /// </summary>
         protected int? _tr;
         private string _routePrefix = "ts";
 
@@ -46,6 +52,16 @@ namespace Artesian.SDK.Service
         public ActualQuery ForMarketData(int id)
         {
             _ids = new int[] { id };
+            return this;
+        }
+        /// <summary>
+        /// Set the filter id to be queried
+        /// </summary>
+        /// <param name="filterId">The filter id to be queried</param>
+        /// <returns>ActualQuery</returns>
+        public ActualQuery ForFilterId(int filterId)
+        {
+            _filterId = filterId;
             return this;
         }
         /// <summary>
@@ -137,25 +153,40 @@ namespace Artesian.SDK.Service
         /// Execute ActualQuery
         /// </summary>
         /// <param name="ctk">CancellationToken</param>
-        /// <returns>client.Exec() <see cref="Client.Exec{TResult}(HttpMethod, string, CancellationToken)"/></returns>
+        /// <returns>Enumerable of TimeSerieRow Actual</returns>
         public async Task<IEnumerable<TimeSerieRow.Actual>> ExecuteAsync(CancellationToken ctk = default)
         {
             return await _client.Exec<IEnumerable<TimeSerieRow.Actual>>(HttpMethod.Get, _buildRequest(), ctk: ctk);
         }
 
         #region private
-        string _buildRequest()
+        private string _buildRequest()
         {
             _validateQuery();
 
-            var url = $"/{_routePrefix}/{_granularity}/{_buildExtractionRangeRoute()}"
-                .SetQueryParam("id", _ids)
-                .SetQueryParam("tz", _tz)
-                .SetQueryParam("tr", _tr);
+            string url = null;
 
-            return url.ToString();
+            if (_ids != null)
+            {
+                url = $"/{_routePrefix}/{_granularity}/{_buildExtractionRangeRoute()}"
+                        .SetQueryParam("id", _ids)
+                        .SetQueryParam("tz", _tz)
+                        .SetQueryParam("tr", _tr);
+            }
+            else
+            {
+                url = $"/{_routePrefix}/{_granularity}/{_buildExtractionRangeRoute()}"
+                        .SetQueryParam("filterId", _filterId)
+                        .SetQueryParam("tz", _tz)
+                        .SetQueryParam("tr", _tr);
+            }
+
+            return url;
         }
 
+        /// <summary>
+        /// Validate Query override
+        /// </summary>
         protected sealed override void _validateQuery()
         {
             base._validateQuery();

@@ -15,6 +15,7 @@ namespace Artesian.SDK.Tests
     {
         private ArtesianServiceConfig _cfg = new ArtesianServiceConfig(new Uri(TestConstants.BaseAddress), TestConstants.APIKey);
 
+        #region MarketData ids
         [Test]
         public void ActInRelativeIntervalExtractionWindow()
         {
@@ -234,6 +235,192 @@ namespace Artesian.SDK.Tests
                     .Times(1);
             }
         }
+        #endregion
 
+        #region FilterId
+        [Test]
+        public void ActInRelativeIntervalExtractionWindow_FilterId()
+        {
+            using (var httpTest = new HttpTest())
+            {
+                var qs = new QueryService(_cfg);
+
+                var act = qs.CreateActual()
+                       .ForFilterId(1)
+                       .InGranularity(Granularity.Day)
+                       .InRelativeInterval(RelativeInterval.RollingMonth)
+                       .ExecuteAsync().Result;
+
+                httpTest.ShouldHaveCalled($"{_cfg.BaseAddress}query/v1.0/ts/Day/RollingMonth")
+                    .WithVerb(HttpMethod.Get)
+                    .WithQueryParamValue("filterId", 1)
+                    .Times(1);
+            }
+        }
+
+        [Test]
+        public void ActInAbsoluteDateRangeExtractionWindow_FilterId()
+        {
+            using (var httpTest = new HttpTest())
+            {
+                var qs = new QueryService(_cfg);
+
+                var act = qs.CreateActual()
+                       .ForFilterId(1)
+                       .InGranularity(Granularity.Day)
+                       .InAbsoluteDateRange(new LocalDate(2018, 1, 1), new LocalDate(2018, 1, 10))
+                       .ExecuteAsync().Result;
+
+                httpTest.ShouldHaveCalled($"{_cfg.BaseAddress}query/v1.0/ts/Day/2018-01-01/2018-01-10")
+                    .WithVerb(HttpMethod.Get)
+                    .WithQueryParamValue("filterId", 1)
+                    .Times(1);
+            }
+        }
+
+        [Test]
+        public void ActInRelativePeriodExtractionWindow_FilterId()
+        {
+            using (var httpTest = new HttpTest())
+            {
+                var qs = new QueryService(_cfg);
+
+                var act = qs.CreateActual()
+                       .ForFilterId(1)
+                       .InGranularity(Granularity.Day)
+                       .InRelativePeriod(Period.FromDays(5))
+                       .ExecuteAsync().Result;
+
+                httpTest.ShouldHaveCalled($"{_cfg.BaseAddress}query/v1.0/ts/Day/P5D")
+                    .WithVerb(HttpMethod.Get)
+                    .WithQueryParamValue("filterId", 1)
+                    .Times(1);
+            }
+        }
+
+        [Test]
+        public void ActInRelativePeriodRangeExtractionWindow_FilterId()
+        {
+            using (var httpTest = new HttpTest())
+            {
+                var qs = new QueryService(_cfg);
+
+                var act = qs.CreateActual()
+                       .ForFilterId(1)
+                       .InGranularity(Granularity.Day)
+                       .InRelativePeriodRange(Period.FromWeeks(2), Period.FromDays(20))
+                       .ExecuteAsync().Result;
+
+                httpTest.ShouldHaveCalled($"{_cfg.BaseAddress}query/v1.0/ts/Day/P2W/P20D")
+                    .WithVerb(HttpMethod.Get)
+                    .WithQueryParamValue("filterId", 1)
+                    .Times(1);
+            }
+        }
+
+        [Test]
+        public void ActWithTimeZone_FilterId()
+        {
+            using (var httpTest = new HttpTest())
+            {
+                var qs = new QueryService(_cfg);
+
+                var act = qs.CreateActual()
+                       .ForFilterId(1)
+                       .InGranularity(Granularity.Day)
+                       .InAbsoluteDateRange(new LocalDate(2018, 1, 1), new LocalDate(2018, 1, 10))
+                       .InTimezone("UTC")
+                       .ExecuteAsync().Result;
+
+                httpTest.ShouldHaveCalled($"{_cfg.BaseAddress}query/v1.0/ts/Day/2018-01-01/2018-01-10")
+                    .WithVerb(HttpMethod.Get)
+                    .WithQueryParamValue("filterId", 1)
+                    .WithQueryParamValue("tz", "UTC")
+                    .Times(1);
+            }
+
+            using (var httpTest = new HttpTest())
+            {
+                var qs = new QueryService(_cfg);
+
+                var act = qs.CreateActual()
+                       .ForFilterId(1)
+                       .InGranularity(Granularity.Hour)
+                       .InAbsoluteDateRange(new LocalDate(2018, 1, 1), new LocalDate(2018, 1, 10))
+                       .InTimezone("WET")
+                       .ExecuteAsync().Result;
+
+                httpTest.ShouldHaveCalled($"{_cfg.BaseAddress}query/v1.0/ts/Hour/2018-01-01/2018-01-10")
+                    .WithVerb(HttpMethod.Get)
+                    .WithQueryParamValue("filterId", 1)
+                    .WithQueryParamValue("tz", "WET")
+                    .Times(1);
+            }
+        }
+
+        [Test]
+        public void ActWithTimeTransfrom_FilterId()
+        {
+            using (var httpTest = new HttpTest())
+            {
+                var qs = new QueryService(_cfg);
+
+                var act = qs.CreateActual()
+                       .ForFilterId(1)
+                       .InGranularity(Granularity.Day)
+                       .InAbsoluteDateRange(new LocalDate(2018, 1, 1), new LocalDate(2018, 1, 10))
+                       .WithTimeTransform(1)
+                       .ExecuteAsync().Result;
+
+                httpTest.ShouldHaveCalled($"{_cfg.BaseAddress}query/v1.0/ts/Day/2018-01-01/2018-01-10")
+                    .WithVerb(HttpMethod.Get)
+                    .WithQueryParamValue("filterId", 1)
+                    .WithQueryParamValue("tr", 1)
+                    .Times(1);
+            }
+
+            using (var httpTest = new HttpTest())
+            {
+                var qs = new QueryService(_cfg);
+
+                var act = qs.CreateActual()
+                       .ForFilterId(1)
+                       .InGranularity(Granularity.Day)
+                       .InAbsoluteDateRange(new LocalDate(2018, 1, 1), new LocalDate(2018, 1, 10))
+                       .WithTimeTransform(SystemTimeTransform.THERMALYEAR)
+                       .ExecuteAsync().Result;
+
+                httpTest.ShouldHaveCalled($"{_cfg.BaseAddress}query/v1.0/ts/Day/2018-01-01/2018-01-10")
+                    .WithVerb(HttpMethod.Get)
+                    .WithQueryParamValue("filterId", 1)
+                    .WithQueryParamValue("tr", 2)
+                    .Times(1);
+            }
+        }
+
+        [Test]
+        public void ActWithHeaders_FilterId()
+        {
+            using (var httpTest = new HttpTest())
+            {
+                var qs = new QueryService(_cfg);
+
+                var act = qs.CreateActual()
+                       .ForFilterId(1)
+                       .InGranularity(Granularity.Day)
+                       .InRelativePeriodRange(Period.FromWeeks(2), Period.FromDays(20))
+                       .ExecuteAsync().Result;
+
+                httpTest.ShouldHaveCalled($"{_cfg.BaseAddress}query/v1.0/ts/Day/P2W/P20D"
+                    .SetQueryParam("filterId", 1))
+                    .WithVerb(HttpMethod.Get)
+                    .WithHeader("Accept", "application/x.msgpacklz4; q=1.0")
+                    .WithHeader("Accept", "application/x-msgpack; q=0.75")
+                    .WithHeader("Accept", "application/json; q=0.5")
+                    .WithHeader("X-Api-Key", TestConstants.APIKey)
+                    .Times(1);
+            }
+        }
+        #endregion
     }
 }

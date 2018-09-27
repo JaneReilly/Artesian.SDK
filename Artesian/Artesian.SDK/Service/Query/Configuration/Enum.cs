@@ -31,6 +31,7 @@ namespace Artesian.SDK.Service
     /// </summary>
     public enum RelativeInterval
     {
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         RollingWeek,
         RollingMonth,
         RollingQuarter,
@@ -39,5 +40,6 @@ namespace Artesian.SDK.Service
         MonthToDate,
         QuarterToDate,
         YearToDate
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
     }
 }

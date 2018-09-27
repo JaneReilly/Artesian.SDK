@@ -3,10 +3,15 @@
 // license information. 
 namespace Artesian.SDK.Dto
 {
+    /// <summary>
+    /// The MarketData Type
+    /// </summary>
     public enum MarketDataType
     {
-        ActualTimeSerie
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
+          ActualTimeSerie
         , VersionedTimeSerie
         , MarketAssessment
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
     }
 }

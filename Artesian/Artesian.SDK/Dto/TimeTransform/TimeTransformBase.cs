@@ -8,20 +8,38 @@ using System;
 
 namespace Artesian.SDK.Dto
 {
+    /// <summary>
+    /// The TimeTransform base entity with Etag
+    /// </summary>
     [MessagePackObject]
     [Union(0, typeof(TimeTransformSimpleShift))]
     [JsonConverter(typeof(TimeTransformConverter))]
     public abstract class TimeTransform
     {
+        /// <summary>
+        /// The Time transform Identifier
+        /// </summary>
         [Key("ID")]
         public int ID { get; set; }
+        /// <summary>
+        /// The Time transform Name
+        /// </summary>
         [Key("Name")]
         public string Name { get; set; }
+        /// <summary>
+        /// The Time transform Etag
+        /// </summary>
         [Key("Etag")]
         public Guid ETag { get; set; }
+        /// <summary>
+        /// The information regarding who defined a time transformation
+        /// </summary>
         [Key("DefinedBy")]
         public TransformDefinitionType DefinedBy { get; set; }
 
+        /// <summary>
+        /// The Transform Type
+        /// </summary>
         [IgnoreMember]
         public abstract TransformType Type { get; }
 

@@ -3,6 +3,7 @@
 // license information. 
 using MessagePack;
 using NodaTime;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
@@ -11,13 +12,22 @@ namespace Artesian.SDK.Dto
     /// <summary>
     /// The MarketData Entity with Etag
     /// </summary>
-    [MessagePackObject]
-    public class MarketDataEntity
+    public static class MarketDataEntity
     {
+        /// <summary>
+        /// The MarketData Entity Input
+        /// </summary>
+        [MessagePackObject]
         public class Input
         {
+            /// <summary>
+            /// The MarketData Default Constructor
+            /// </summary>
             public Input() { }
 
+            /// <summary>
+            /// The MarketData Constructor by MarketDataEntity.Output
+            /// </summary>
             public Input(MarketDataEntity.Output output)
             {
                 if (output != null)
@@ -116,16 +126,28 @@ namespace Artesian.SDK.Dto
 
         }
 
+        /// <summary>
+        /// Helpers evaluating path 
+        /// </summary>
         public static bool IsPathNull(Input input)
         {
             return string.IsNullOrWhiteSpace(input._path);
         }
 
+        /// <summary>
+        /// The MarketData Default Constructor
+        /// </summary>
         [MessagePackObject]
         public class Output : Input
         {
+            /// <summary>
+            /// The MarketData Default Constructor
+            /// </summary>
             public Output() { }
 
+            /// <summary>
+            /// The MarketData Constructor by MarketDataEntity.Input
+            /// </summary>
             public Output(MarketDataEntity.Input input)
             {
                 if (input != null)
@@ -177,12 +199,33 @@ namespace Artesian.SDK.Dto
             public Instant Created { get; set; }
         }
 
+        /// <summary>
+        /// The Curve Ranges class
+        /// </summary>
         public class WithRange : Output
         {
             /// <summary>
             /// The Curve Ranges
             /// </summary>
             public IEnumerable<CurveRange> Curves { get; set; }
+        }
+    }
+
+    internal static class MarketDataEntityInputExt
+    {
+        public static void ValidateRegister(this MarketDataEntity.Input marketDataEntityInput)
+        {
+            if (marketDataEntityInput.MarketDataId != 0)
+                throw new ArgumentException("MarketDataId must be 0");
+
+            if (marketDataEntityInput.Type == MarketDataType.MarketAssessment && marketDataEntityInput.TransformID != null)
+                throw new ArgumentException("No transform possible when Type is MarketAssessment");
+        }
+
+        public static void ValidateUpdate(this MarketDataEntity.Input marketDataEntityInput)
+        {
+            if (marketDataEntityInput.Type == MarketDataType.MarketAssessment && marketDataEntityInput.TransformID != null)
+                throw new ArgumentException("No transform possible when Type is MarketAssessment");
         }
     }
 }

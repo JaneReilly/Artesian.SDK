@@ -39,6 +39,8 @@ namespace Artesian.SDK.Service
         /// <returns>Query</returns>
         protected Query _forMarketData(int[] ids)
         {
+            _filterId = null;
+
             _ids = ids;
             return this;
         }
@@ -49,6 +51,8 @@ namespace Artesian.SDK.Service
         /// <returns>Query</returns>
         protected Query _forFilterId(int filterId)
         {
+            _ids = null;
+
             _filterId = filterId;
             return this;
         }

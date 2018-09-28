@@ -2223,5 +2223,80 @@ namespace Artesian.SDK.Tests
             }
         }
         #endregion
+
+        #region partialQueryChanges
+        [Test]
+        public void Ver_PeriodRelativeIntervalChange()
+        {
+            using (var httpTest = new HttpTest())
+            {
+                var qs = new QueryService(_cfg);
+
+                var partialQuery = qs.CreateVersioned()
+                                    .ForMarketData(new int[] { 100000001 })
+                                    .InGranularity(Granularity.Day)
+                                    .ForLastOfMonths(Period.FromMonths(-4))
+                                    .InRelativeInterval(RelativeInterval.RollingMonth);
+
+                var test1 = partialQuery
+                            .ExecuteAsync().Result; ;
+
+                httpTest.ShouldHaveCalled($"{_cfg.BaseAddress}query/v1.0/vts/LastOfMonths/P-4M/Day/RollingMonth"
+                           .SetQueryParam("id", 100000001))
+                           .WithVerb(HttpMethod.Get)
+                           .Times(1);
+
+                var test2 = partialQuery
+                            .ForLastOfDays(Period.FromDays(-20))
+                            .ExecuteAsync().Result;
+
+                httpTest.ShouldHaveCalled($"{_cfg.BaseAddress}query/v1.0/vts/LastOfDays/P-20D/Day/RollingMonth"
+                           .SetQueryParam("id", 100000001))
+                           .WithVerb(HttpMethod.Get)
+                           .Times(1);
+            }
+        }
+
+        public void Ver_RelativePeriodExtractionWindowChange()
+        {
+            using (var httpTest = new HttpTest())
+            {
+                var qs = new QueryService(_cfg);
+
+                var partialQuery = qs.CreateVersioned()
+                                    .ForMarketData(new int[] { 100000001 })
+                                    .InGranularity(Granularity.Day)
+                                    .ForLastNVersions(3)
+                                    .InRelativePeriod(Period.FromDays(5));
+
+                var test1 = partialQuery
+                            .ExecuteAsync().Result; ;
+
+                httpTest.ShouldHaveCalled($"{_cfg.BaseAddress}query/v1.0/vts/Last3/Day/P5D"
+                           .SetQueryParam("id", 100000001))
+                           .WithVerb(HttpMethod.Get)
+                           .Times(1);
+
+                var test2 = partialQuery
+                            .ForVersion(new LocalDateTime(2018, 07, 19, 12, 0))
+                            .ExecuteAsync().Result;
+
+                httpTest.ShouldHaveCalled($"{_cfg.BaseAddress}query/v1.0/vts/Version/2018-07-19T12:00:00/Day/P5D"
+                           .SetQueryParam("id", 100000001))
+                           .WithVerb(HttpMethod.Get)
+                           .Times(1);
+
+                var test3 = partialQuery
+                            .ForMUV()
+                            .ExecuteAsync().Result;
+
+                httpTest.ShouldHaveCalled($"{_cfg.BaseAddress}query/v1.0/vts/MUV/Day/P5D"
+                           .SetQueryParam("id", 100000001))
+                           .WithVerb(HttpMethod.Get)
+                           .Times(1);
+
+            }
+        }
+        #endregion
     }
 }

@@ -357,5 +357,106 @@ namespace Artesian.SDK.Tests
             }
         }
         #endregion
+
+        [Test]
+        public void MasExtractionWindow_MktChange()
+        {
+            using (var httpTest = new HttpTest())
+            {
+                var qs = new QueryService(_cfg);
+
+                var partialQuery = qs.CreateMarketAssessment()
+                           .ForMarketData(new int[] { 100000001 })
+                           .ForProducts(new string[] { "M+1", "GY+1" })
+                           .InRelativeInterval(RelativeInterval.RollingMonth);
+
+
+                var test1 = partialQuery
+                    .ExecuteAsync().Result; ;
+
+                httpTest.ShouldHaveCalled($"{_cfg.BaseAddress}query/v1.0/mas/RollingMonth"
+                    .SetQueryParam("id", 100000001)
+                    .SetQueryParam("p", new string[] { "M+1", "GY+1" }))
+                    .WithVerb(HttpMethod.Get)
+                    .Times(1);
+
+                var test2 = partialQuery
+                            .ForFilterId(1)
+                            .ExecuteAsync().Result; ;
+
+                httpTest.ShouldHaveCalled($"{_cfg.BaseAddress}query/v1.0/mas/RollingMonth"
+                        .SetQueryParam("filterId", 1)
+                        .SetQueryParam("p", new string[] { "M+1", "GY+1" }))
+                        .WithVerb(HttpMethod.Get)
+                        .Times(1);
+
+
+                var test3 = partialQuery
+                            .ForMarketData(new int[] { 100000004, 100000005, 100000006 })
+                            .ExecuteAsync().Result; ;
+
+                httpTest.ShouldHaveCalled($"{_cfg.BaseAddress}query/v1.0/mas/RollingMonth"
+                        .SetQueryParam("id", new int[] { 100000004, 100000005, 100000006 })
+                        .SetQueryParam("p", new string[] { "M+1", "GY+1" }))
+                        .WithVerb(HttpMethod.Get)
+                        .Times(1);
+            }
+        }
+
+        [Test]
+        public void MasExtractionWindow_RelativeIntervalChange()
+        {
+            using (var httpTest = new HttpTest())
+            {
+                var qs = new QueryService(_cfg);
+
+                var partialQuery = qs.CreateMarketAssessment()
+                           .ForMarketData(new int[] { 100000001 })
+                           .ForProducts(new string[] { "M+1", "GY+1" })
+                           .InRelativeInterval(RelativeInterval.RollingMonth);
+
+
+                var test1 = partialQuery
+                            .ExecuteAsync().Result; ;
+
+                httpTest.ShouldHaveCalled($"{_cfg.BaseAddress}query/v1.0/mas/RollingMonth"
+                        .SetQueryParam("id", 100000001)
+                        .SetQueryParam("p", new string[] { "M+1", "GY+1" }))
+                        .WithVerb(HttpMethod.Get)
+                        .Times(1);
+
+                var test2 = partialQuery
+                            .InRelativePeriod(Period.FromDays(5))
+                            .ExecuteAsync().Result; ;
+
+                httpTest.ShouldHaveCalled($"{_cfg.BaseAddress}query/v1.0/mas/P5D"
+                        .SetQueryParam("id", 100000001)
+                        .SetQueryParam("p", new string[] { "M+1", "GY+1" }))
+                        .WithVerb(HttpMethod.Get)
+                        .Times(1);
+
+                var test3 = partialQuery
+                            .InRelativePeriodRange(Period.FromWeeks(2), Period.FromDays(20))
+                            .ExecuteAsync().Result; ;
+
+                httpTest.ShouldHaveCalled($"{_cfg.BaseAddress}query/v1.0/mas/P2W/P20D"
+                        .SetQueryParam("id", 100000001)
+                        .SetQueryParam("p", new string[] { "M+1", "GY+1" }))
+                        .WithVerb(HttpMethod.Get)
+                        .Times(1);
+
+                var test4 = partialQuery
+                            .InAbsoluteDateRange(new LocalDate(2018, 1, 1), new LocalDate(2018, 1, 10))
+                            .ExecuteAsync().Result;
+
+                httpTest.ShouldHaveCalled($"{_cfg.BaseAddress}query/v1.0/mas/2018-01-01/2018-01-10"
+                        .SetQueryParam("id", 100000001)
+                        .SetQueryParam("p", new string[] { "M+1", "GY+1" }))
+                        .WithVerb(HttpMethod.Get)
+                        .Times(1);
+
+
+            }
+        }
     }
 }

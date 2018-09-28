@@ -41,7 +41,7 @@ namespace Artesian.SDK.Service
         /// <returns>ActualQuery</returns>
         public ActualQuery ForMarketData(int[] ids)
         {
-            _ids = ids;
+            _forMarketData(ids);
             return this;
         }
         /// <summary>
@@ -51,7 +51,7 @@ namespace Artesian.SDK.Service
         /// <returns>ActualQuery</returns>
         public ActualQuery ForMarketData(int id)
         {
-            _ids = new int[] { id };
+            _forMarketData(new int[] { id });
             return this;
         }
         /// <summary>
@@ -61,7 +61,7 @@ namespace Artesian.SDK.Service
         /// <returns>ActualQuery</returns>
         public ActualQuery ForFilterId(int filterId)
         {
-            _filterId = filterId;
+            _forFilterId(filterId);
             return this;
         }
         /// <summary>

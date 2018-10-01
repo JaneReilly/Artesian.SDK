@@ -15,20 +15,25 @@ namespace Artesian.SDK.Factory
         VersionedTimeSerie = 3
     }
 
-    public enum AddOperationResult
+    //TODO DA RIVEDERE
+    public enum AddTimeSerieOperationResult
+    {
+        ValueAdded = 0
+      , TimeAlreadyPresent = 1
+    }
+
+    public enum AddAssessmentOperationResult
     {
         AssessmentAdded = 0
       , ProductAlreadyPresent = 1
       , IllegalReferenceDate = 2
-      , ValueAdded = 3
-      , TimeAlreadyPresent = 4
     }
 
     public interface IMarketData
     {
         //Metadata members
         int MarketDataId { get; }
-        MarketDataIdentifier Id { get; }
+        MarketDataIdentifier Identifier { get; }
         string DataTimezone { get; }
         MarketDataType Type { get; }
         Granularity Granularity { get; }
@@ -37,23 +42,17 @@ namespace Artesian.SDK.Factory
 
 
         //Methods
-        Task Create(MarketDataIdentifier id);
-        AddOperationResult AddData<T>(LocalDate localDate, T value) where T : IDictionary, new();
-        //Aggiungere altri tipi
+        //Task Create(string provider, string name);
+        //Task Create(MarketDataIdentifier id);
 
+        void ClearData();
 
+        Task <MarketDataEntity.Input> LoadMetadata();
+        Task Update();
+        Task Register(MarketDataEntity.Input metadata);
+        Task<(IMarketData, bool)> IsRegistered();
 
-        ////Versioned
-        //public LocalDateTime? SelectedVersion { get; protected set; }
-        //private Dictionary<LocalDateTime, double?> _values = new Dictionary<LocalDateTime, double?>();
-        //public IReadOnlyDictionary<LocalDateTime, double?> Values { get; private set; }
-
-        ////Actual
-        //private Dictionary<LocalDateTime, double?> _values = new Dictionary<LocalDateTime, double?>();
-        //public IReadOnlyDictionary<LocalDateTime, double?> Values { get; private set; }
-
-        ////Assessment
-        //public List<AssessmentElement> Assessments { get; protected set; }
+        Task Save(Instant downloadedAt, bool deferCommandExecution = false, bool deferDataGeneration = true);
     }
 
 }

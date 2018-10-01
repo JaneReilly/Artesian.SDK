@@ -23,7 +23,9 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Ark.Tools.Nodatime" Version="1.0.5" />
     <PackageReference Include="Auth0.AuthenticationApi" Version="5.6.0" />
+    <PackageReference Include="Ensure.That" Version="8.0.0" />
     <PackageReference Include="Flurl.Http" Version="2.3.2" />
     <PackageReference Include="JWT" Version="4.0.0" />
     <PackageReference Include="MessagePack.NodaTime" Version="1.0.0" />
@@ -31,6 +33,10 @@
     <PackageReference Include="NodaTime.Serialization.JsonNet" Version="2.0.0" />
     <PackageReference Include="Polly.Caching.Memory" Version="2.0.0" />
     <PackageReference Include="System.ComponentModel.Annotations" Version="4.5.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Factory\Exception\" />
   </ItemGroup>
 
   <Target Name="PushNugetPackage" AfterTargets="Pack" Condition="('$(Configuration)' == 'Release' And $(VersionSuffix) == '') Or ('$(Configuration)' == 'Debug' And $(VersionSuffix) != '')">

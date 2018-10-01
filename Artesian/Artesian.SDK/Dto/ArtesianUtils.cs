@@ -1,6 +1,7 @@
 ﻿// Copyright (c) ARK LTD. All rights reserved.
 // Licensed under the MIT License. See LICENSE in the project root for
 // license information. 
+using Ark.Tools.Nodatime.Intervals;
 using Artesian.SDK.Service;
 using System;
 
@@ -11,6 +12,76 @@ namespace Artesian.SDK.Dto
     /// </summary>
     public class ArtesianUtils
     {
+        public static DatePeriod MapDatePeriod(Granularity granularity)
+        {
+            DatePeriod selectedPeriod = DatePeriod.Day;
+
+            switch (granularity)
+            {
+                case Granularity.Week:
+                    {
+                        selectedPeriod = DatePeriod.Week;
+                        break;
+                    }
+                case Granularity.Month:
+                    {
+                        selectedPeriod = DatePeriod.Month;
+                        break;
+                    }
+                case Granularity.Quarter:
+                    {
+                        selectedPeriod = DatePeriod.Trimestral;
+                        break;
+                    }
+                case Granularity.Year:
+                    {
+                        selectedPeriod = DatePeriod.Calendar;
+                        break;
+                    }
+            }
+
+            return selectedPeriod;
+        }
+
+        public static TimePeriod MapTimePeriod(Granularity granularity)
+        {
+            if (!granularity.IsTimeGranularity())
+                throw new ArgumentException("not a time granularity", nameof(granularity));
+
+            TimePeriod selectedPeriod = TimePeriod.Hour;
+
+            switch (granularity)
+            {
+                case Granularity.Hour:
+                    {
+                        selectedPeriod = TimePeriod.Hour;
+                        break;
+                    }
+                case Granularity.ThirtyMinute:
+                    {
+                        selectedPeriod = TimePeriod.HalfHour;
+                        break;
+                    }
+                case Granularity.FifteenMinute:
+                    {
+                        selectedPeriod = TimePeriod.QuarterHour;
+                        break;
+                    }
+                case Granularity.TenMinute:
+                    {
+                        selectedPeriod = TimePeriod.TenMinutes;
+                        break;
+                    }
+                case Granularity.Minute:
+                    {
+                        selectedPeriod = TimePeriod.Minute;
+                        break;
+                    }
+            }
+
+            return selectedPeriod;
+        }
+
         /// <summary>
         /// Is valid string checks to see if the string provided is between the provided min and max lenght
         /// </summary>

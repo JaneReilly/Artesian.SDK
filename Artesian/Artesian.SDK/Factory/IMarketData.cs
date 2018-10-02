@@ -8,50 +8,111 @@ using System.Threading.Tasks;
 
 namespace Artesian.SDK.Factory
 {
-    public enum MarketDataType
-    {
-        ActualTimeSerie = 1,
-        MarketAssessment = 2,
-        VersionedTimeSerie = 3
-    }
-
-    //TODO DA RIVEDERE
+    /// <summary>
+    /// Add TimeSerie OperationResult enums
+    /// </summary>
     public enum AddTimeSerieOperationResult
     {
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         ValueAdded = 0
       , TimeAlreadyPresent = 1
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
     }
 
+    /// <summary>
+    /// Add Assessment OperationResult enums
+    /// </summary>
     public enum AddAssessmentOperationResult
     {
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         AssessmentAdded = 0
       , ProductAlreadyPresent = 1
       , IllegalReferenceDate = 2
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
     }
 
+    /// <summary>
+    /// Market Data Interface
+    /// </summary>
     public interface IMarketData
     {
-        //Metadata members
+        /// <summary>
+        /// MarketData Id
+        /// </summary>
         int MarketDataId { get; }
+        /// <summary>
+        /// MarketData Identifier
+        /// </summary>
         MarketDataIdentifier Identifier { get; }
+        /// <summary>
+        /// MarketData DataTimezone
+        /// </summary>
         string DataTimezone { get; }
+        /// <summary>
+        /// MarketData Type
+        /// </summary>
         MarketDataType Type { get; }
+        /// <summary>
+        /// MarketData Granularity
+        /// </summary>
         Granularity Granularity { get; }
+        /// <summary>
+        /// MarketData Timezone
+        /// </summary>
         string Timezone { get; }
+        /// <summary>
+        /// MarketData Tags
+        /// </summary>
         Dictionary<string, List<string>> Tags { get; }
 
 
-        //Methods
-        //Task Create(string provider, string name);
-        //Task Create(MarketDataIdentifier id);
-
+        /// <summary>
+        /// ActualTimeSerie ClearData
+        /// </summary>
         void ClearData();
-
-        Task <MarketDataEntity.Input> LoadMetadata();
-        Task Update();
+        /// <summary>
+        /// MarketData Load Metadata
+        /// </summary>
+        /// <remarks>
+        /// Update the MarketData 
+        /// </remarks>
+        /// <returns></returns>
+        MarketDataEntity.Input LoadMetadata();
+        /// <summary>
+        /// MarketData Update
+        /// </summary>
+        /// <remarks>
+        /// Update the MarketData 
+        /// </remarks>
+        /// <returns></returns>
+        Task Update(MarketDataEntity.Input metadata);
+        /// <summary>
+        /// MarketData Register
+        /// </summary>
+        /// <remarks>
+        /// Register a MarketData
+        /// </remarks>
+        /// <param name="metadata">the entity of metadata</param>
+        /// <returns></returns>
         Task Register(MarketDataEntity.Input metadata);
-        Task<(IMarketData, bool)> IsRegistered();
-
+        /// <summary>
+        /// MarketData IsRegister
+        /// </summary>
+        /// <remarks>
+        /// Register a MarketData
+        /// </remarks>
+        /// <returns> Marketdata if true, null and false if not found </returns>
+        Task<(MarketDataEntity.Output, bool)> IsRegistered();
+        /// <summary>
+        /// MarketData Save
+        /// </summary>
+        /// <remarks>
+        /// Save the Data of the current MarketData
+        /// </remarks>
+        /// <param name="downloadedAt">downloaded at</param>
+        /// <param name="deferCommandExecution">deferCommandExecution</param>
+        /// <param name="deferDataGeneration">deferDataGeneration</param>
+        /// <returns></returns>
         Task Save(Instant downloadedAt, bool deferCommandExecution = false, bool deferDataGeneration = true);
     }
 

@@ -28,14 +28,14 @@ namespace Artesian.SDK.Dto
         }
 
         /// <summary>
-        /// The Market Data Identifier
+        /// The MarketData Identifier
         /// </summary>
         [Required]
         [MessagePack.Key(0)]
         public int ID { get; protected set; }
 
         /// <summary>
-        /// The Market Data ETag
+        /// The MarketData ETag
         /// </summary>
         [Required]
         [MessagePack.Key(1)]

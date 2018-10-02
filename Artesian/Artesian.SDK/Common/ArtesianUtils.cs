@@ -1,17 +1,21 @@
 ﻿// Copyright (c) ARK LTD. All rights reserved.
 // Licensed under the MIT License. See LICENSE in the project root for
 // license information. 
-using Ark.Tools.Nodatime.Intervals;
 using Artesian.SDK.Service;
 using System;
+using Artesian.SDK.Dto;
 
-namespace Artesian.SDK.Dto
+namespace Artesian.SDK.Common
 {
     /// <summary>
     /// Artesian Utils class for validation
     /// </summary>
     public class ArtesianUtils
     {
+        /// <summary>
+        /// Mapping the Date Period based on Granularity
+        /// </summary>
+        /// <param name="granularity">Granularity</param>
         public static DatePeriod MapDatePeriod(Granularity granularity)
         {
             DatePeriod selectedPeriod = DatePeriod.Day;
@@ -43,6 +47,10 @@ namespace Artesian.SDK.Dto
             return selectedPeriod;
         }
 
+        /// <summary>
+        /// Mapping the Time Period based on Granularity
+        /// </summary>
+        /// <param name="granularity">Granularity</param>
         public static TimePeriod MapTimePeriod(Granularity granularity)
         {
             if (!granularity.IsTimeGranularity())

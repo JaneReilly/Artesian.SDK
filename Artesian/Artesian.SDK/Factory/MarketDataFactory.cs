@@ -9,118 +9,81 @@ using System.Threading.Tasks;
 
 namespace Artesian.SDK.Factory
 {
-    public class MarketDataFactory
+    /// <summary>
+    /// MetadataService Extension
+    /// </summary>
+    public static class MetadataServiceExtension
     {
-        private readonly IMetadataService _metadataService;
-
-        public MarketDataFactory(IMetadataService metadataService)
+        /// <summary>
+        /// Read marketdata entity by id and returns an istance of IMarketData if exists
+        /// </summary>
+        /// <param name="metadataService">MarketDataIdentifier of markedata to be retrieved</param>
+        /// <param name="id">MarketDataIdentifier of markedata to be retrieved</param>
+        /// <param name="ctk">CancellationToken</param>
+        /// <returns>IMarketData</returns>
+        public static async Task<IMarketData> GetMarketDataReferenceAsync(this IMetadataService metadataService, MarketDataIdentifier id, CancellationToken ctk = default)
         {
-            EnsureArg.IsNotNull(metadataService);
+            var entity = await metadataService.ReadMarketDataRegistryAsync(id, ctk);
 
-            _metadataService = metadataService;
+            if (entity == null)
+                return null;
 
-        }
-
-        public async Task CreateMarketData(MarketDataType type, MarketDataIdentifier id, CancellationToken ctk = default)
-        {
-            //var md = await _metadataService.GetMarketDataReferenceAsync(type, id, ctk);
-
-            //var tupla = await md.IsRegistered();
-
-            //var metadata = await md.LoadMetadata();
-
-            //await md.Register(metadata);
-
-            //await md.Update();
-
-            //var wMd = (md as ActualTimeSerie).EditActual();
-
-            //wMd.AddData()
-
-
-        }
-
-        public async Task<IMarketData> CreateMarketData(MarketDataType type, string provider, string name, CancellationToken ctk = default)
-        {
-            switch (type)
+            switch (entity.Type)
             {
                 case MarketDataType.ActualTimeSerie:
                     {
-                        var actual = new ActualTimeSerie(_metadataService);
-                        await actual.Create(provider, name, ctk);
+                        var actual = new ActualTimeSerie(metadataService, entity);
                         return actual;
                     }
                 case MarketDataType.MarketAssessment:
                     {
-                        var actual = new MarketAssessment(_metadataService);
-                        await actual.Create(provider, name);
+                        var actual = new MarketAssessment(metadataService, entity);
                         return actual;
                     }
                 case MarketDataType.VersionedTimeSerie:
                     {
-                        var actual = new VersionedTimeSerie(_metadataService);
-                        await actual.Create(provider, name);
+                        var actual = new VersionedTimeSerie(metadataService, entity);
                         return actual;
                     }
                 default:
-                    throw new ArgumentException("type");
-            }
-        }
-    }
-
-    public static class MarketDataServiceExt
-    {
-        public static async Task<IMarketData> GetMarketDataReferenceAsync(this IMetadataService metadataService, MarketDataType type, MarketDataIdentifier id, CancellationToken ctk = default)
-        {
-            switch (type)
-            {
-                case MarketDataType.ActualTimeSerie:
-                    {
-                        var actual = new ActualTimeSerie(metadataService);
-                        await actual.Create(id);
-                        return actual;
-                    }
-                case MarketDataType.MarketAssessment:
-                    {
-                        var actual = new MarketAssessment(metadataService);
-                        await actual.Create(id);
-                        return actual;
-                    }
-                case MarketDataType.VersionedTimeSerie:
-                    {
-                        var actual = new VersionedTimeSerie(metadataService);
-                        await actual.Create(id);
-                        return actual;
-                    }
-                default:
-                    throw new ArgumentException("type");
+                    throw new NotSupportedException($"The Type '{entity.Type}'is not present");
             }
         }
 
-        public static async Task<IMarketData> GetMarketDataReferenceAsync(this IMetadataService metadataService, MarketDataType type, string provider, string name, CancellationToken ctk = default)
+        /// <summary>
+        /// Read marketdata entity by MarketDataIdentifier and returns an istance of IMarketData if exists
+        /// </summary>
+        /// <param name="metadataService">MarketDataIdentifier of markedata to be retrieved</param>
+        /// <param name="provider">MarketDataIdentifier provider</param>
+        /// <param name="name">MarketDataIdentifier name</param>
+        /// <param name="ctk">CancellationToken</param>
+        /// <returns>IMarketData</returns>
+        public static async Task<IMarketData> GetMarketDataReferenceAsync(this IMetadataService metadataService, string provider, string name, CancellationToken ctk = default)
         {
-            switch (type)
+            var entity = await metadataService.ReadMarketDataRegistryAsync(new MarketDataIdentifier(provider, name), ctk);
+
+            if (entity == null)
+                return null;
+
+            switch (entity.Type)
             {
                 case MarketDataType.ActualTimeSerie:
                     {
-                        var actual = new ActualTimeSerie(metadataService);
-                        await actual.Create(provider, name , ctk);
+                        var actual = new ActualTimeSerie(metadataService, entity);
                         return actual;
                     }
                 case MarketDataType.MarketAssessment:
                     {
-                        var actual = new MarketAssessment(metadataService);
-                        await actual.Create(provider, name);
+                        var actual = new MarketAssessment(metadataService, entity);
                         return actual;
                     }
                 case MarketDataType.VersionedTimeSerie:
                     {
-                        var actual = new VersionedTimeSerie(metadataService);
-                        await actual.Create(provider, name);
+                        var actual = new VersionedTimeSerie(metadataService, entity);
                         return actual;
                     }
                 default:
-                    throw new ArgumentException("type");
+                    throw new NotSupportedException($"The Type '{entity.Type}'is not present");
             }
         }
     }

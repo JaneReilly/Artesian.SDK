@@ -15,15 +15,8 @@ namespace Artesian.SDK.Factory
     /// <summary>
     /// MarketAssessment entity
     /// </summary>
-    public class MarketAssessment : IMarketData
+    public sealed class MarketAssessment : MarketData
     {
-        //private static Logger _logger = LogManager.GetCurrentClassLogger();
-
-        //Class members
-        private readonly IMetadataService _metadataService;
-        private MarketDataEntity.Output _entity = null;
-        private MarketDataEntity.Input _metadata = null;
-
         private bool _isInWriteMode = false;
 
         /// <summary>
@@ -32,59 +25,10 @@ namespace Artesian.SDK.Factory
         public List<AssessmentElement> Assessments { get; protected set; }
 
         /// <summary>
-        /// MarketData Id
-        /// </summary>
-        public int MarketDataId { get { return _entity == null ? 0 : _entity.MarketDataId; } }
-
-        /// <summary>
-        /// MarketData Identifier
-        /// </summary>
-        public MarketDataIdentifier Identifier { get; protected set; }
-
-        /// <summary>
-        /// MarketData DataTimezone
-        /// </summary>
-        public string DataTimezone
-        {
-            get
-            {
-                if (_entity?.OriginalGranularity.IsTimeGranularity() == true)
-                    return "UTC";
-                else
-                    return _entity?.OriginalTimezone;
-            }
-        }
-
-        /// <summary>
-        /// MarketData Type
-        /// </summary>
-        public MarketDataType Type => MarketDataType.MarketAssessment;
-
-        /// <summary>
-        /// MarketData Granularity
-        /// </summary>
-        public Granularity Granularity { get { return _entity == null ? default : _entity.OriginalGranularity; } }
-
-        /// <summary>
-        /// MarketData Timezone
-        /// </summary>
-        public string Timezone => _entity?.OriginalTimezone;
-
-        /// <summary>
-        /// MarketData Tags
-        /// </summary>
-        public Dictionary<string, List<string>> Tags { get { return _entity?.Tags; } }
-
-        /// <summary>
         /// MarketAssessment Constructor
         /// </summary>
-        public MarketAssessment(IMetadataService metadataService, MarketDataEntity.Output entity)
+        public MarketAssessment(IMetadataService metadataService, MarketDataEntity.Output entity) : base (metadataService, entity)
         {
-            EnsureArg.IsNotNull(metadataService, nameof(metadataService));
-
-            _metadataService = metadataService;
-            _create(entity);
-
             Assessments = new List<AssessmentElement>();
         }
 

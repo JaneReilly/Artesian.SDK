@@ -26,7 +26,9 @@ namespace Artesian.SDK.Factory
             var entity = await metadataService.ReadMarketDataRegistryAsync(id, ctk);
 
             if (entity == null)
-                return null;
+            {
+
+            }
 
             switch (entity.Type)
             {

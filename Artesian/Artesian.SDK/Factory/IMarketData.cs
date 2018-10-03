@@ -67,10 +67,6 @@ namespace Artesian.SDK.Factory
 
 
         /// <summary>
-        /// ActualTimeSerie ClearData
-        /// </summary>
-        void ClearData();
-        /// <summary>
         /// MarketData Load Metadata
         /// </summary>
         /// <remarks>
@@ -103,17 +99,6 @@ namespace Artesian.SDK.Factory
         /// </remarks>
         /// <returns> Marketdata if true, null and false if not found </returns>
         Task<(MarketDataEntity.Output, bool)> IsRegistered();
-        /// <summary>
-        /// MarketData Save
-        /// </summary>
-        /// <remarks>
-        /// Save the Data of the current MarketData
-        /// </remarks>
-        /// <param name="downloadedAt">downloaded at</param>
-        /// <param name="deferCommandExecution">deferCommandExecution</param>
-        /// <param name="deferDataGeneration">deferDataGeneration</param>
-        /// <returns></returns>
-        Task Save(Instant downloadedAt, bool deferCommandExecution = false, bool deferDataGeneration = true);
     }
 
 }

@@ -28,7 +28,7 @@ namespace Artesian.SDK.Service
         /// <param name="data">
         /// An object that rappresent MarketDataAssessment, ActualTimeSerie or VersionedTimeSerie
         /// </param>
-        /// <param name="ctk"></param>
+        /// <param name="ctk">CancellationToken</param>
         /// <returns></returns>
         public Task UpsertCurveDataAsync(UpsertCurveData data, CancellationToken ctk = default)
         {

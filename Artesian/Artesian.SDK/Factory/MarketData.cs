@@ -6,6 +6,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Artesian.SDK.Factory
@@ -55,7 +56,7 @@ namespace Artesian.SDK.Factory
         /// <summary>
         /// MarketData Type
         /// </summary>
-        public MarketDataType? Type => null;
+        public MarketDataType? Type { get { return _entity?.Type; } }
 
         /// <summary>
         /// MarketData Granularity
@@ -75,8 +76,12 @@ namespace Artesian.SDK.Factory
         /// <summary>
         /// MarketData Constructor by Id
         /// </summary>
-        public MarketData(MarketDataIdentifier id)
+        public MarketData(IMetadataService metadataService, MarketDataIdentifier id)
         {
+            EnsureArg.IsNotNull(metadataService, nameof(metadataService));
+
+            _metadataService = metadataService;
+
             Identifier = id;
         }
 
@@ -105,8 +110,9 @@ namespace Artesian.SDK.Factory
         /// Register a MarketData
         /// </remarks>
         /// <param name="metadata">the entity of metadata</param>
+        /// <param name="ctk">CancellationToken</param>
         /// <returns></returns>
-        public async Task Register(MarketDataEntity.Input metadata)
+        public async Task Register(MarketDataEntity.Input metadata, CancellationToken ctk = default)
         {
             EnsureArg.IsNotNull(metadata, nameof(metadata));
             EnsureArg.IsTrue(metadata.ProviderName == null || metadata.ProviderName == this.Identifier.Provider);
@@ -120,7 +126,7 @@ namespace Artesian.SDK.Factory
             if (_entity != null)
                 throw new ActualTimeSerieException("Actual Time Serie is already registered with ID {0}", _entity.MarketDataId);
 
-            _entity = await _metadataService.RegisterMarketDataAsync(metadata);
+            _entity = await _metadataService.RegisterMarketDataAsync(metadata, ctk);
         }
         /// <summary>
         /// MarketData IsRegister
@@ -162,12 +168,46 @@ namespace Artesian.SDK.Factory
         /// Update the MarketData 
         /// </remarks>
         /// <returns></returns>
-        public async Task Update(MarketDataEntity.Input metadata)
+        public async Task Update(MarketDataEntity.Input metadata, CancellationToken ctk = default)
         {
             if (_entity == null)
                 throw new ActualTimeSerieException("Actual Time Serie is not yet registered");
 
-            _entity = await _metadataService.UpdateMarketDataAsync(metadata);
+            _entity = await _metadataService.UpdateMarketDataAsync(metadata, ctk);
+        }
+
+        /// <summary>
+        /// MarketData Edit
+        /// </summary>
+        /// <remarks>
+        /// Start write mode for MarketData
+        /// </remarks>
+        /// <returns> IMarketData </returns>
+        public IMarketData Edit()
+        {
+            if (_entity == null)
+                throw new ActualTimeSerieException("Actual Time Serie is not yet registered");
+
+            switch (_entity.Type)
+            {
+                case MarketDataType.ActualTimeSerie:
+                    {
+                        var actual = new ActualTimeSerie(_metadataService, _entity);
+                        return actual;
+                    }
+                case MarketDataType.MarketAssessment:
+                    {
+                        var marketAssessment = new MarketAssessment(_metadataService, _entity);
+                        return marketAssessment;
+                    }
+                case MarketDataType.VersionedTimeSerie:
+                    {
+                        var versioned = new VersionedTimeSerie(_metadataService, _entity);
+                        return versioned;
+                    }
+                default:
+                    throw new NotSupportedException($"The Type '{_entity.Type}'is not present");
+            }
         }
         #endregion
     }

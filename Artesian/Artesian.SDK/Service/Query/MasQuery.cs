@@ -125,7 +125,7 @@ namespace Artesian.SDK.Service
         /// <summary>
         /// Execute MasQuery
         /// </summary>
-        /// <param name="ctk"></param>
+        /// <param name="ctk">CancellationToken</param>
         /// <returns>Enumerable of AssessmentRow</returns>
         public async Task<IEnumerable<AssessmentRow>> ExecuteAsync(CancellationToken ctk = default)
         {

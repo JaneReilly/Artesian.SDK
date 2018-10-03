@@ -17,8 +17,6 @@ namespace Artesian.SDK.Factory
     /// </summary>
     public sealed class MarketAssessment : MarketData
     {
-        private bool _isInWriteMode = false;
-
         /// <summary>
         /// MarketData AssessmentElement
         /// </summary>
@@ -61,8 +59,6 @@ namespace Artesian.SDK.Factory
         /// <returns>AddAssessmentOperationResult</returns>
         public AddAssessmentOperationResult AddData(LocalDate localDate, string product, MarketAssessmentValue value)
         {
-            Ensure.Bool.IsTrue(_isInWriteMode);
-
             if (_entity.OriginalGranularity.IsTimeGranularity())
                 throw new MarketAssessmentException("This MarketData has Time granularity. Use AddData(Instant time...)");
 
@@ -77,8 +73,6 @@ namespace Artesian.SDK.Factory
         /// <returns>AddAssessmentOperationResult</returns>
         public AddAssessmentOperationResult AddData(Instant time, string product, MarketAssessmentValue value)
         {
-            Ensure.Bool.IsTrue(_isInWriteMode);
-
             if (!_entity.OriginalGranularity.IsTimeGranularity())
                 throw new MarketAssessmentException("This MarketData has Date granularity. Use AddData(LocalDate date...)");
 
@@ -126,20 +120,6 @@ namespace Artesian.SDK.Factory
         }
 
         /// <summary>
-        /// MarketAssessment Edit
-        /// </summary>
-        /// <remarks>
-        /// Returns the MarketAssessment to start write operations
-        /// </remarks>
-        /// <returns>MarketAssessment</returns>
-        public MarketAssessment EditActual()
-        {
-            Ensure.Any.IsNotNull(_entity);
-            _isInWriteMode = true;
-
-            return this;
-        }
-        /// <summary>
         /// MarketData Save
         /// </summary>
         /// <remarks>
@@ -152,7 +132,6 @@ namespace Artesian.SDK.Factory
         public async Task Save(Instant downloadedAt, bool deferCommandExecution = false, bool deferDataGeneration = true)
         {
             Ensure.Any.IsNotNull(_entity);
-            Ensure.Bool.IsTrue(_isInWriteMode);
 
             if (Assessments.Any())
             {

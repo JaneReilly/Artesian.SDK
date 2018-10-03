@@ -4,6 +4,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Artesian.SDK.Factory
@@ -80,8 +81,10 @@ namespace Artesian.SDK.Factory
         /// <remarks>
         /// Update the MarketData 
         /// </remarks>
+        /// <param name="metadata">the entity of metadata</param>
+        /// <param name="ctk">Cancellation token</param>
         /// <returns></returns>
-        Task Update(MarketDataEntity.Input metadata);
+        Task Update(MarketDataEntity.Input metadata, CancellationToken ctk = default);
         /// <summary>
         /// MarketData Register
         /// </summary>
@@ -89,8 +92,9 @@ namespace Artesian.SDK.Factory
         /// Register a MarketData
         /// </remarks>
         /// <param name="metadata">the entity of metadata</param>
+        /// <param name="ctk">Cancellation token</param>
         /// <returns></returns>
-        Task Register(MarketDataEntity.Input metadata);
+        Task Register(MarketDataEntity.Input metadata, CancellationToken ctk = default);
         /// <summary>
         /// MarketData IsRegister
         /// </summary>
@@ -99,6 +103,14 @@ namespace Artesian.SDK.Factory
         /// </remarks>
         /// <returns> Marketdata if true, null and false if not found </returns>
         Task<(MarketDataEntity.Output, bool)> IsRegistered();
+        /// <summary>
+        /// MarketData Edit
+        /// </summary>
+        /// <remarks>
+        /// Start write mode for MarketData
+        /// </remarks>
+        /// <returns> Marketdata </returns>
+        IMarketData Edit();
     }
 
 }

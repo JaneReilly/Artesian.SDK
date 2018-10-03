@@ -21,12 +21,12 @@ namespace Artesian.SDK.Factory
         /// <param name="id">MarketDataIdentifier of markedata to be retrieved</param>
         /// <param name="ctk">CancellationToken</param>
         /// <returns>IMarketData</returns>
-        public static async Task<MarketData> GetMarketDataReferenceAsync(this IMetadataService metadataService, MarketDataIdentifier id, CancellationToken ctk = default)
+        public static async Task<IMarketData> GetMarketDataReferenceAsync(this IMetadataService metadataService, MarketDataIdentifier id, CancellationToken ctk = default)
         {
             var entity = await metadataService.ReadMarketDataRegistryAsync(id, ctk);
 
             if (entity == null)
-                return new MarketData(id);
+                return new MarketData(metadataService, id);
 
             switch (entity.Type)
             {
@@ -37,13 +37,13 @@ namespace Artesian.SDK.Factory
                     }
                 case MarketDataType.MarketAssessment:
                     {
-                        var actual = new MarketAssessment(metadataService, entity);
-                        return actual;
+                        var marketAssessment = new MarketAssessment(metadataService, entity);
+                        return marketAssessment;
                     }
                 case MarketDataType.VersionedTimeSerie:
                     {
-                        var actual = new VersionedTimeSerie(metadataService, entity);
-                        return actual;
+                        var versioned = new VersionedTimeSerie(metadataService, entity);
+                        return versioned;
                     }
                 default:
                     throw new NotSupportedException($"The Type '{entity.Type}'is not present");
@@ -58,12 +58,12 @@ namespace Artesian.SDK.Factory
         /// <param name="name">MarketDataIdentifier name</param>
         /// <param name="ctk">CancellationToken</param>
         /// <returns>IMarketData</returns>
-        public static async Task<MarketData> GetMarketDataReferenceAsync(this IMetadataService metadataService, string provider, string name, CancellationToken ctk = default)
+        public static async Task<IMarketData> GetMarketDataReferenceAsync(this IMetadataService metadataService, string provider, string name, CancellationToken ctk = default)
         {
             var entity = await metadataService.ReadMarketDataRegistryAsync(new MarketDataIdentifier(provider, name), ctk);
 
             if (entity == null)
-                return new MarketData(new MarketDataIdentifier(provider, name));
+                return new MarketData(metadataService, new MarketDataIdentifier(provider, name));
 
             switch (entity.Type)
             {
@@ -74,13 +74,13 @@ namespace Artesian.SDK.Factory
                     }
                 case MarketDataType.MarketAssessment:
                     {
-                        var actual = new MarketAssessment(metadataService, entity);
-                        return actual;
+                        var marketAssessment = new MarketAssessment(metadataService, entity);
+                        return marketAssessment;
                     }
                 case MarketDataType.VersionedTimeSerie:
                     {
-                        var actual = new VersionedTimeSerie(metadataService, entity);
-                        return actual;
+                        var versioned = new VersionedTimeSerie(metadataService, entity);
+                        return versioned;
                     }
                 default:
                     throw new NotSupportedException($"The Type '{entity.Type}'is not present");

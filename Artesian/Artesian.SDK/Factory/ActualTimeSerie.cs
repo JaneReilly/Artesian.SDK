@@ -18,8 +18,6 @@ namespace Artesian.SDK.Factory
     /// </summary>
     public sealed class ActualTimeSerie : MarketData
     {
-        private bool _isInWriteMode = false;
-
         private Dictionary<LocalDateTime, double?> _values = new Dictionary<LocalDateTime, double?>();
 
         /// <summary>
@@ -66,7 +64,6 @@ namespace Artesian.SDK.Factory
         public AddTimeSerieOperationResult AddData(LocalDate localDate, double? value)
         {
             Ensure.Any.IsNotNull(_entity);
-            Ensure.Bool.IsTrue(_isInWriteMode);
 
             if (_entity.OriginalGranularity.IsTimeGranularity())
                 throw new ActualTimeSerieException("This MarketData has Time granularity. Use AddData(Instant time, double? value)");
@@ -85,7 +82,6 @@ namespace Artesian.SDK.Factory
         public AddTimeSerieOperationResult AddData(Instant time, double? value)
         {
             Ensure.Any.IsNotNull(_entity);
-            Ensure.Bool.IsTrue(_isInWriteMode);
 
             if (!_entity.OriginalGranularity.IsTimeGranularity())
                 throw new ActualTimeSerieException("This MarketData has Date granularity. Use AddData(LocalDate date, double? value)");
@@ -118,20 +114,6 @@ namespace Artesian.SDK.Factory
         }
 
         /// <summary>
-        /// ActualTimeSerie Edit
-        /// </summary>
-        /// <remarks>
-        /// Returns the ActualTimeSerie to start write operations
-        /// </remarks>
-        /// <returns>ActualTimeSerie</returns>
-        public ActualTimeSerie EditActual()
-        {
-            Ensure.Any.IsNotNull(_entity);
-            _isInWriteMode = true;
-
-            return this;
-        }
-        /// <summary>
         /// MarketData Save
         /// </summary>
         /// <remarks>
@@ -144,7 +126,6 @@ namespace Artesian.SDK.Factory
         public async Task Save(Instant downloadedAt, bool deferCommandExecution = false, bool deferDataGeneration = true)
         {
             Ensure.Any.IsNotNull(_entity);
-            Ensure.Bool.IsTrue(_isInWriteMode);
 
             if (_values.Any())
             {

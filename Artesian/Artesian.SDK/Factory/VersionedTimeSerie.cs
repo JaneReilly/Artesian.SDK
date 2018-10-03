@@ -18,7 +18,6 @@ namespace Artesian.SDK.Factory
     /// </summary>
     public sealed class VersionedTimeSerie : MarketData
     {
-        private bool _isInWriteMode = false;
         private Dictionary<LocalDateTime, double?> _values = new Dictionary<LocalDateTime, double?>();
 
         /// <summary>
@@ -80,7 +79,6 @@ namespace Artesian.SDK.Factory
         public AddTimeSerieOperationResult AddData(LocalDate localDate, double? value)
         {
             Ensure.Any.IsNotNull(_entity);
-            Ensure.Bool.IsTrue(_isInWriteMode);
 
             if (_entity.OriginalGranularity.IsTimeGranularity())
                 throw new VersionedTimeSerieException("This MarketData has Time granularity. Use AddData(Instant time, double? value)");
@@ -99,7 +97,6 @@ namespace Artesian.SDK.Factory
         public AddTimeSerieOperationResult AddData(Instant time, double? value)
         {
             Ensure.Any.IsNotNull(_entity);
-            Ensure.Bool.IsTrue(_isInWriteMode);
 
             if (!_entity.OriginalGranularity.IsTimeGranularity())
                 throw new VersionedTimeSerieException("This MarketData has Date granularity. Use AddData(LocalDate date, double? value)");
@@ -132,20 +129,6 @@ namespace Artesian.SDK.Factory
         }
 
         /// <summary>
-        /// VersionedTimeSerie Edit
-        /// </summary>
-        /// <remarks>
-        /// Returns the VersionedTimeSerie to start write operations
-        /// </remarks>
-        /// <returns>VersionedTimeSerie</returns>
-        public VersionedTimeSerie EditVersioned()
-        {
-            Ensure.Any.IsNotNull(_entity);
-            _isInWriteMode = true;
-
-            return this;
-        }
-        /// <summary>
         /// MarketData Save
         /// </summary>
         /// <remarks>
@@ -158,11 +141,10 @@ namespace Artesian.SDK.Factory
         public async Task Save(Instant downloadedAt, bool deferCommandExecution = false, bool deferDataGeneration = true)
         {
             Ensure.Any.IsNotNull(_entity);
-            Ensure.Bool.IsTrue(_isInWriteMode);
 
-            if (_values.Any())
+            if (Values.Any())
             {
-                var data = new UpsertCurveData(this.Identifier)
+                var data = new UpsertCurveData(this.Identifier, SelectedVersion.Value)
                 {
                     Timezone = _entity.OriginalGranularity.IsTimeGranularity() ? "UTC" : _entity.OriginalTimezone,
                     DownloadedAt = downloadedAt,

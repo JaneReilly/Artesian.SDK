@@ -226,7 +226,6 @@ namespace Artesian.SDK.Factory
                         throw new MarketAssessmentException("Trying to insert Report Time {0} with wrong format to Assessment {1}. Should be of period {2}", reportTime, Identifier, period);
                 }
 
-                //TODO
                 //if (reportTime.Date >= product.ReferenceDate)
                 //    return AddAssessmentOperationResult.IllegalReferenceDate;
 

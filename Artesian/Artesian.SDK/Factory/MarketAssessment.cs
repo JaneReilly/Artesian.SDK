@@ -12,25 +12,6 @@ using System.Threading.Tasks;
 
 namespace Artesian.SDK.Factory
 {
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
-    //TODO
-    public interface IMarketProduct
-    {
-        string Type {get;}
-    }
-
-    public class ProductAbsolute: IMarketProduct
-    {
-        public string Type { get; set; }
-        public LocalDate ReferenceDate { get; set; }
-    }
-
-    public class ProductSpecial : IMarketProduct
-    {
-        public string Type { get; set; }
-    }
-#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
-
     /// <summary>
     /// MarketAssessment entity
     /// </summary>
@@ -204,6 +185,8 @@ namespace Artesian.SDK.Factory
         /// <returns>AddAssessmentOperationResult</returns>
         public AddAssessmentOperationResult AddData(LocalDate localDate, string product, MarketAssessmentValue value)
         {
+            Ensure.Bool.IsTrue(_isInWriteMode);
+
             if (_entity.OriginalGranularity.IsTimeGranularity())
                 throw new MarketAssessmentException("This MarketData has Time granularity. Use AddData(Instant time...)");
 
@@ -218,6 +201,8 @@ namespace Artesian.SDK.Factory
         /// <returns>AddAssessmentOperationResult</returns>
         public AddAssessmentOperationResult AddData(Instant time, string product, MarketAssessmentValue value)
         {
+            Ensure.Bool.IsTrue(_isInWriteMode);
+
             if (!_entity.OriginalGranularity.IsTimeGranularity())
                 throw new MarketAssessmentException("This MarketData has Date granularity. Use AddData(LocalDate date...)");
 
@@ -226,65 +211,43 @@ namespace Artesian.SDK.Factory
 
         private AddAssessmentOperationResult _addAssessment(LocalDateTime reportTime, string product, MarketAssessmentValue value)
         {
-            //TODO
-            IMarketProduct parsedProduct = default;
-            //if (!MarketProductBuilder.TryParse(product, out parsedProduct))
-            //    throw new MarketAssessmentException("Given Product <{0}> is invalid and cannot be added", product);
-
-            return _addAssessment(reportTime, parsedProduct, value);
-        }
-
-        private AddAssessmentOperationResult _addAssessment(LocalDateTime reportTime, IMarketProduct product, MarketAssessmentValue value)
-        {
-            //TODO
-            //switch (product.Type)
-            //{
-            //    case MarketProductType.Absolute:
-            //        return _addAssessment(reportTime, (ProductAbsolute)product, value);
-            //    case MarketProductType.Special:
-            //        return _addAssessment(reportTime, (ProductSpecial)product, value);
-            //    case MarketProductType.Relative:
-            //        throw new NotSupportedException("Relative Products are not supported");
-            //}
-
-            throw new NotSupportedException("Invalid Product Type");
-        }
-
-        private AddAssessmentOperationResult _addAssessment(LocalDateTime reportTime, ProductAbsolute product, MarketAssessmentValue value)
-        {
-            if (_entity.OriginalGranularity.IsTimeGranularity())
+            if (product.Contains("-"))
             {
-                var period = ArtesianUtils.MapTimePeriod(_entity.OriginalGranularity);
-                if (!reportTime.IsStartOfInterval(period))
-                    throw new MarketAssessmentException("Trying to insert Report Time {0} with wrong format to Assessment {1}. Should be of period {2}", reportTime, Identifier, period);
+                if (_entity.OriginalGranularity.IsTimeGranularity())
+                {
+                    var period = ArtesianUtils.MapTimePeriod(_entity.OriginalGranularity);
+                    if (!reportTime.IsStartOfInterval(period))
+                        throw new MarketAssessmentException("Trying to insert Report Time {0} with wrong format to Assessment {1}. Should be of period {2}", reportTime, Identifier, period);
+                }
+                else
+                {
+                    var period = ArtesianUtils.MapDatePeriod(_entity.OriginalGranularity);
+                    if (!reportTime.IsStartOfInterval(period))
+                        throw new MarketAssessmentException("Trying to insert Report Time {0} with wrong format to Assessment {1}. Should be of period {2}", reportTime, Identifier, period);
+                }
+
+                //TODO
+                //if (reportTime.Date >= product.ReferenceDate)
+                //    return AddAssessmentOperationResult.IllegalReferenceDate;
+
+                if (Assessments
+                        .Any(row => row.ReportTime == reportTime && row.Product.Equals(product)))
+                    return AddAssessmentOperationResult.ProductAlreadyPresent;
+
+                Assessments.Add(new AssessmentElement(reportTime, product, value));
+                return AddAssessmentOperationResult.AssessmentAdded;
             }
             else
             {
-                var period = ArtesianUtils.MapDatePeriod(_entity.OriginalGranularity);
-                if (!reportTime.IsStartOfInterval(period))
-                    throw new MarketAssessmentException("Trying to insert Report Time {0} with wrong format to Assessment {1}. Should be of period {2}", reportTime, Identifier, period);
+
+                if (Assessments.Any(row => row.ReportTime == reportTime && row.Product.Equals(product)))
+                    return AddAssessmentOperationResult.ProductAlreadyPresent;
+
+                Assessments.Add(new AssessmentElement(reportTime, product, value));
+                return AddAssessmentOperationResult.AssessmentAdded;
             }
 
-
-            if (reportTime.Date >= product.ReferenceDate)
-                return AddAssessmentOperationResult.IllegalReferenceDate;
-
-            if (Assessments
-                    .Any(row => row.ReportTime == reportTime && row.Product.Equals(product)))
-                return AddAssessmentOperationResult.ProductAlreadyPresent;
-
-            Assessments.Add(new AssessmentElement(reportTime, product, value));
-            return AddAssessmentOperationResult.AssessmentAdded;
-        }
-
-        private AddAssessmentOperationResult _addAssessment(LocalDateTime reportTime, ProductSpecial product, MarketAssessmentValue value)
-        {
-            if (Assessments
-                    .Any(row => row.ReportTime == reportTime && row.Product.Equals(product)))
-                return AddAssessmentOperationResult.ProductAlreadyPresent;
-
-            Assessments.Add(new AssessmentElement(reportTime, product, value));
-            return AddAssessmentOperationResult.AssessmentAdded;
+            throw new NotSupportedException("Invalid Product");
         }
 
         /// <summary>
@@ -314,6 +277,7 @@ namespace Artesian.SDK.Factory
         public async Task Save(Instant downloadedAt, bool deferCommandExecution = false, bool deferDataGeneration = true)
         {
             Ensure.Any.IsNotNull(_entity);
+            Ensure.Bool.IsTrue(_isInWriteMode);
 
             if (Assessments.Any())
             {
@@ -337,17 +301,32 @@ namespace Artesian.SDK.Factory
 
         #endregion
 
+        /// <summary>
+        /// AssessmentElement entity
+        /// </summary>
         public class AssessmentElement
         {
-            public AssessmentElement(LocalDateTime reportTime, IMarketProduct product, MarketAssessmentValue value)
+            /// <summary>
+            /// AssessmentElement constructor
+            /// </summary>
+            public AssessmentElement(LocalDateTime reportTime, string product, MarketAssessmentValue value)
             {
                 ReportTime = reportTime;
                 Product = product;
                 Value = value;
             }
 
+            /// <summary>
+            /// AssessmentElement ReportTime
+            /// </summary>
             public LocalDateTime ReportTime { get; set; }
-            public IMarketProduct Product { get; set; }
+            /// <summary>
+            /// AssessmentElement Product
+            /// </summary>
+            public string Product { get; set; }
+            /// <summary>
+            /// AssessmentElement MarketAssessmentValue
+            /// </summary>
             public MarketAssessmentValue Value { get; set; }
         }
     }

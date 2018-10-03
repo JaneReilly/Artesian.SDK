@@ -38,7 +38,6 @@ namespace Artesian.SDK.Factory
             _entity = entity;
         }
 
-        #region Interface Methods
         /// <summary>
         /// MarketData ClearData
         /// </summary>
@@ -46,78 +45,6 @@ namespace Artesian.SDK.Factory
         {
             Assessments.Clear();
         }
-        /// <summary>
-        /// MarketData Register
-        /// </summary>
-        /// <remarks>
-        /// Register a MarketData
-        /// </remarks>
-        /// <param name="metadata">the entity of metadata</param>
-        /// <returns></returns>
-        public async Task Register(MarketDataEntity.Input metadata)
-        {
-            EnsureArg.IsNotNull(metadata, nameof(metadata));
-            EnsureArg.IsTrue(metadata.ProviderName == null || metadata.ProviderName == this.Identifier.Provider);
-            EnsureArg.IsTrue(metadata.ProviderName == null || metadata.ProviderName == this.Identifier.Provider);
-            EnsureArg.IsTrue(metadata.MarketDataName == null || metadata.MarketDataName == this.Identifier.Name);
-            EnsureArg.IsNotNullOrWhiteSpace(metadata.OriginalTimezone);
-
-            metadata.ProviderName = this.Identifier.Provider;
-            metadata.MarketDataName = this.Identifier.Name;
-
-            if (_entity != null)
-                throw new MarketAssessmentException("Actual Time Serie is already registered with ID {0}", _entity.MarketDataId);
-
-            _entity = await _metadataService.RegisterMarketDataAsync(metadata);
-        }
-        /// <summary>
-        /// MarketData IsRegister
-        /// </summary>
-        /// <remarks>
-        /// Register a MarketData
-        /// </remarks>
-        /// <returns> Marketdata if true, null and false if not found </returns>
-        public async Task<(MarketDataEntity.Output, bool)> IsRegistered()
-        {
-            if (_entity == null)
-                _entity = await _metadataService.ReadMarketDataRegistryAsync(this.Identifier);
-
-            if (_entity != null)
-                return (_entity, true);
-
-            return (null, false);
-        }
-        /// <summary>
-        /// MarketData Load Metadata
-        /// </summary>
-        /// <remarks>
-        /// Update the MarketData 
-        /// </remarks>
-        /// <returns></returns>
-        public MarketDataEntity.Input LoadMetadata()
-        {
-            if (_entity == null)
-                throw new MarketAssessmentException("Actual Time Serie is not yet registered");
-
-            _metadata = _entity;
-
-            return _metadata;
-        }
-        /// <summary>
-        /// MarketData Update
-        /// </summary>
-        /// <remarks>
-        /// Update the MarketData 
-        /// </remarks>
-        /// <returns></returns>
-        public async Task Update(MarketDataEntity.Input metadata)
-        {
-            if (_entity == null)
-                throw new MarketAssessmentException("Actual Time Serie is not yet registered");
-
-            _entity = await _metadataService.UpdateMarketDataAsync(metadata);
-        }
-        #endregion
 
         #region Write
         /// <summary>

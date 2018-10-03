@@ -26,7 +26,7 @@ namespace Artesian.SDK.Factory
             var entity = await metadataService.ReadMarketDataRegistryAsync(id, ctk);
 
             if (entity == null)
-                return new MarketData(metadataService, null);
+                return new MarketData(id);
 
             switch (entity.Type)
             {
@@ -63,7 +63,7 @@ namespace Artesian.SDK.Factory
             var entity = await metadataService.ReadMarketDataRegistryAsync(new MarketDataIdentifier(provider, name), ctk);
 
             if (entity == null)
-                return new MarketData(metadataService, null);
+                return new MarketData(new MarketDataIdentifier(provider, name));
 
             switch (entity.Type)
             {

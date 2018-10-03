@@ -15,8 +15,17 @@ namespace Artesian.SDK.Factory
     /// </summary>
     public class MarketData : IMarketData
     {
+        /// <summary>
+        /// MarketData metadata service
+        /// </summary>
         protected IMetadataService _metadataService;
+        /// <summary>
+        /// MarketData entity
+        /// </summary>
         protected MarketDataEntity.Output _entity = null;
+        /// <summary>
+        /// MarketData metadata
+        /// </summary>
         protected MarketDataEntity.Input _metadata = null;
 
         /// <summary>
@@ -64,7 +73,15 @@ namespace Artesian.SDK.Factory
         public Dictionary<string, List<string>> Tags { get { return _entity?.Tags; } }
 
         /// <summary>
-        /// ActualTimeSerie Constructor
+        /// MarketData Constructor by Id
+        /// </summary>
+        public MarketData(MarketDataIdentifier id)
+        {
+            Identifier = id;
+        }
+
+        /// <summary>
+        /// MarketData Constructor
         /// </summary>
         public MarketData(IMetadataService metadataService, MarketDataEntity.Output entity)
         {

@@ -25,6 +25,11 @@ namespace Artesian.SDK.Factory
         public List<AssessmentElement> Assessments { get; protected set; }
 
         /// <summary>
+        /// MarketData Type
+        /// </summary>
+        public new MarketDataType? Type => MarketDataType.MarketAssessment;
+
+        /// <summary>
         /// MarketAssessment Constructor
         /// </summary>
         public MarketAssessment(IMetadataService metadataService, MarketDataEntity.Output entity) : base (metadataService, entity)

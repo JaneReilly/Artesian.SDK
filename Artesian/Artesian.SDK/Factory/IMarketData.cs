@@ -51,7 +51,7 @@ namespace Artesian.SDK.Factory
         /// <summary>
         /// MarketData Type
         /// </summary>
-        MarketDataType Type { get; }
+        MarketDataType? Type { get; }
         /// <summary>
         /// MarketData Granularity
         /// </summary>

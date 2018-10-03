@@ -21,7 +21,7 @@ namespace Artesian.SDK.Factory
         /// <param name="id">MarketDataIdentifier of markedata to be retrieved</param>
         /// <param name="ctk">CancellationToken</param>
         /// <returns>IMarketData</returns>
-        public static async Task<IMarketData> GetMarketDataReferenceAsync(this IMetadataService metadataService, MarketDataIdentifier id, CancellationToken ctk = default)
+        public static async Task<MarketData> GetMarketDataReferenceAsync(this IMetadataService metadataService, MarketDataIdentifier id, CancellationToken ctk = default)
         {
             var entity = await metadataService.ReadMarketDataRegistryAsync(id, ctk);
 
@@ -58,7 +58,7 @@ namespace Artesian.SDK.Factory
         /// <param name="name">MarketDataIdentifier name</param>
         /// <param name="ctk">CancellationToken</param>
         /// <returns>IMarketData</returns>
-        public static async Task<IMarketData> GetMarketDataReferenceAsync(this IMetadataService metadataService, string provider, string name, CancellationToken ctk = default)
+        public static async Task<MarketData> GetMarketDataReferenceAsync(this IMetadataService metadataService, string provider, string name, CancellationToken ctk = default)
         {
             var entity = await metadataService.ReadMarketDataRegistryAsync(new MarketDataIdentifier(provider, name), ctk);
 

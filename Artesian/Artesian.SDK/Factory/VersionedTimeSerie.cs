@@ -32,6 +32,11 @@ namespace Artesian.SDK.Factory
         public IReadOnlyDictionary<LocalDateTime, double?> Values { get; private set; }
 
         /// <summary>
+        /// MarketData Type
+        /// </summary>
+        public new MarketDataType? Type => MarketDataType.VersionedTimeSerie;
+
+        /// <summary>
         /// VersionedTimeSerie Constructor
         /// </summary>
         public VersionedTimeSerie(IMetadataService metadataService, MarketDataEntity.Output entity) : base(metadataService, entity)

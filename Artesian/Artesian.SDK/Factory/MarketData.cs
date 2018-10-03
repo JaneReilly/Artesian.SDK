@@ -55,7 +55,7 @@ namespace Artesian.SDK.Factory
         /// <summary>
         /// MarketData Type
         /// </summary>
-        public MarketDataType Type => MarketDataType.ActualTimeSerie;
+        public MarketDataType? Type => null;
 
         /// <summary>
         /// MarketData Granularity

@@ -70,7 +70,7 @@ namespace Artesian.SDK.Factory
 
         private AddAssessmentOperationResult _addAssessment(LocalDateTime reportTime, string product, MarketAssessmentValue value)
         {
-            if (product.Contains("-")) //TODO da rivedere questo
+            if (product.Contains("-"))
             {
                 if (_entity.OriginalGranularity.IsTimeGranularity())
                 {

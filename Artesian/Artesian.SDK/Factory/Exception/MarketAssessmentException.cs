@@ -3,7 +3,7 @@
 namespace Artesian.SDK.Factory
 {
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
-    public class MarketAssessmentException : ArtesianSdkClientException //TODO MEttici FACTORY
+    public class MarketAssessmentException : ArtesianSdkClientException
     {
         public MarketAssessmentException(string message)
             : base(message)

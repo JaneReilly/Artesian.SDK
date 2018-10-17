@@ -20,19 +20,11 @@ namespace Artesian.SDK.Factory
         /// MarketData metadata service
         /// </summary>
         protected IMetadataService _metadataService;
-        /// <summary>
-        /// MarketData entity
-        /// </summary>
-        protected MarketDataEntity.Output _entity = null;
-        /// <summary>
-        /// MarketData metadata
-        /// </summary>
-        protected MarketDataEntity.Input _metadata = null;
 
         /// <summary>
         /// MarketData Id
         /// </summary>
-        public int MarketDataId { get { return _entity == null ? 0 : _entity.MarketDataId; } }
+        public int? MarketDataId { get { return Entity?.MarketDataId; } }
 
         /// <summary>
         /// MarketData Identifier
@@ -40,38 +32,14 @@ namespace Artesian.SDK.Factory
         public MarketDataIdentifier Identifier { get; protected set; }
 
         /// <summary>
-        /// MarketData DataTimezone
+        /// MarketData Entity
         /// </summary>
-        public string DataTimezone
-        {
-            get
-            {
-                if (_entity?.OriginalGranularity.IsTimeGranularity() == true)
-                    return "UTC";
-                else
-                    return _entity?.OriginalTimezone;
-            }
-        }
+        public ReadOnlyMarketDataEntity Entity { get; protected set; }
 
         /// <summary>
-        /// MarketData Type
+        /// MarketData entity
         /// </summary>
-        public MarketDataType? Type { get { return _entity?.Type; } }
-
-        /// <summary>
-        /// MarketData Granularity
-        /// </summary>
-        public Granularity Granularity { get { return _entity == null ? default : _entity.OriginalGranularity; } }
-
-        /// <summary>
-        /// MarketData Timezone
-        /// </summary>
-        public string Timezone => _entity?.OriginalTimezone;
-
-        /// <summary>
-        /// MarketData Tags
-        /// </summary>
-        public Dictionary<string, List<string>> Tags { get { return _entity?.Tags; } }
+        protected MarketDataEntity.Output _entity = null;
 
         /// <summary>
         /// MarketData Constructor by Id
@@ -99,10 +67,10 @@ namespace Artesian.SDK.Factory
         private void _create(MarketDataEntity.Output entity)
         {
             Identifier = new MarketDataIdentifier(entity.ProviderName, entity.MarketDataName);
+            Entity = new ReadOnlyMarketDataEntity(entity);
             _entity = entity;
         }
 
-        #region Interface Methods
         /// <summary>
         /// MarketData Register
         /// </summary>
@@ -127,40 +95,47 @@ namespace Artesian.SDK.Factory
                 throw new ActualTimeSerieException("Actual Time Serie is already registered with ID {0}", _entity.MarketDataId);
 
             _entity = await _metadataService.RegisterMarketDataAsync(metadata, ctk);
+
+            Entity = new ReadOnlyMarketDataEntity(_entity);
         }
+
         /// <summary>
         /// MarketData IsRegister
         /// </summary>
         /// <remarks>
         /// Register a MarketData
         /// </remarks>
-        /// <returns> Marketdata if true, null and false if not found </returns>
-        public async Task<(MarketDataEntity.Output, bool)> IsRegistered()
+        /// <returns> true if  Marketdata si present, false if not found </returns>
+        public async Task<bool> IsRegistered()
         {
             if (_entity == null)
                 _entity = await _metadataService.ReadMarketDataRegistryAsync(this.Identifier);
 
             if (_entity != null)
-                return (_entity, true);
-
-            return (null, false);
+            {
+                Entity = new ReadOnlyMarketDataEntity(_entity);
+                return true;
+            }
+                
+            return false;
         }
+
         /// <summary>
-        /// MarketData Load Metadata
+        /// Loads MarketData Metadata
         /// </summary>
         /// <remarks>
-        /// Update the MarketData 
+        /// Loads MarketData Metadata
         /// </remarks>
         /// <returns></returns>
-        public MarketDataEntity.Input LoadMetadata()
+        public async Task LoadMetadata(CancellationToken ctk = default)
         {
             if (_entity == null)
-                throw new ActualTimeSerieException("Actual Time Serie is not yet registered");
+                _entity = await _metadataService.ReadMarketDataRegistryAsync(this.Identifier);
 
-            _metadata = _entity;
-
-            return _metadata;
+            if (_entity != null)
+                Entity = new ReadOnlyMarketDataEntity(_entity);
         }
+
         /// <summary>
         /// MarketData Update
         /// </summary>
@@ -168,48 +143,73 @@ namespace Artesian.SDK.Factory
         /// Update the MarketData 
         /// </remarks>
         /// <returns></returns>
-        public async Task Update(MarketDataEntity.Input metadata, CancellationToken ctk = default)
+        public async Task Update(CancellationToken ctk = default)
         {
             if (_entity == null)
                 throw new ActualTimeSerieException("Actual Time Serie is not yet registered");
 
+            var metadata = _entity;
             _entity = await _metadataService.UpdateMarketDataAsync(metadata, ctk);
+
+            Entity = new ReadOnlyMarketDataEntity(_entity);
         }
 
         /// <summary>
-        /// MarketData Edit
+        /// Actual Timeserie Edit
         /// </summary>
         /// <remarks>
-        /// Start write mode for MarketData
+        /// Start write mode for Actual Timeserie
         /// </remarks>
-        /// <returns> IMarketData </returns>
-        public IMarketData Edit()
+        /// <returns> ITimeserieWritable </returns>
+        public ITimeserieWritable EditActual()
         {
             if (_entity == null)
                 throw new ActualTimeSerieException("Actual Time Serie is not yet registered");
 
-            switch (_entity.Type)
-            {
-                case MarketDataType.ActualTimeSerie:
-                    {
-                        var actual = new ActualTimeSerie(_metadataService, _entity);
-                        return actual;
-                    }
-                case MarketDataType.MarketAssessment:
-                    {
-                        var marketAssessment = new MarketAssessment(_metadataService, _entity);
-                        return marketAssessment;
-                    }
-                case MarketDataType.VersionedTimeSerie:
-                    {
-                        var versioned = new VersionedTimeSerie(_metadataService, _entity);
-                        return versioned;
-                    }
-                default:
-                    throw new NotSupportedException($"The Type '{_entity.Type}'is not present");
-            }
+            if (_entity.Type != MarketDataType.ActualTimeSerie)
+                throw new MarketAssessmentException("Entity is not Actual Time Serie");
+
+            var actual = new ActualTimeSerie(_metadataService, _entity);
+            return actual;
         }
-        #endregion
+
+        /// <summary>
+        /// Versioned Timeserie Edit
+        /// </summary>
+        /// <remarks>
+        /// Start write mode for Versioned Timeserie
+        /// </remarks>
+        /// <returns> ITimeserieWritable </returns>
+        public ITimeserieWritable EditVersioned()
+        {
+            if (_entity == null)
+                throw new VersionedTimeSerieException("Versioned Time Serie is not yet registered");
+
+            if (_entity.Type != MarketDataType.VersionedTimeSerie)
+                throw new MarketAssessmentException("Entity is not Versioned Time Serie");
+
+            var versioned = new VersionedTimeSerie(_metadataService, _entity);
+            return versioned;
+        }
+
+        /// <summary>
+        /// Market Assessment Edit
+        /// </summary>
+        /// <remarks>
+        /// Start write mode for Market Assessment
+        /// </remarks>
+        /// <returns> IMarketAssessmentWritable </returns>
+        public IMarketAssessmentWritable EditMarketAssessment()
+        {
+            if (_entity == null)
+                throw new MarketAssessmentException("Market Assessement is not yet registered");
+
+            if(_entity.Type != MarketDataType.MarketAssessment)
+                throw new MarketAssessmentException("Entity is not Market Assessement");
+
+            var mas = new MarketAssessment(_metadataService, _entity);
+            return mas;
+        }
     }
 
 }

@@ -16,7 +16,7 @@ namespace Artesian.SDK.Factory
     /// <summary>
     /// VersionedTimeSerie entity
     /// </summary>
-    public sealed class VersionedTimeSerie : MarketData
+    public class VersionedTimeSerie : MarketData, ITimeserieWritable
     {
         private Dictionary<LocalDateTime, double?> _values = new Dictionary<LocalDateTime, double?>();
 
@@ -29,11 +29,6 @@ namespace Artesian.SDK.Factory
         /// MarketData Curve Values
         /// </summary>
         public IReadOnlyDictionary<LocalDateTime, double?> Values { get; private set; }
-
-        /// <summary>
-        /// MarketData Type
-        /// </summary>
-        public new MarketDataType? Type => MarketDataType.VersionedTimeSerie;
 
         /// <summary>
         /// VersionedTimeSerie Constructor
@@ -68,7 +63,6 @@ namespace Artesian.SDK.Factory
             Values = new ReadOnlyDictionary<LocalDateTime, double?>(_values);
         }
 
-        #region Write
         /// <summary>
         /// VersionedTimeSerie AddData
         /// </summary>
@@ -158,6 +152,5 @@ namespace Artesian.SDK.Factory
             //else
             //    _logger.Warn("No Data to be saved.");
         }
-        #endregion
     }
 }

@@ -15,7 +15,7 @@ namespace Artesian.SDK.Factory
     /// <summary>
     /// MarketAssessment entity
     /// </summary>
-    public sealed class MarketAssessment : MarketData
+    public class MarketAssessment : MarketData, IMarketAssessmentWritable
     {
         /// <summary>
         /// MarketData AssessmentElement
@@ -23,22 +23,11 @@ namespace Artesian.SDK.Factory
         public List<AssessmentElement> Assessments { get; protected set; }
 
         /// <summary>
-        /// MarketData Type
-        /// </summary>
-        public new MarketDataType? Type => MarketDataType.MarketAssessment;
-
-        /// <summary>
         /// MarketAssessment Constructor
         /// </summary>
         public MarketAssessment(IMetadataService metadataService, MarketDataEntity.Output entity) : base (metadataService, entity)
         {
             Assessments = new List<AssessmentElement>();
-        }
-
-        private void _create(MarketDataEntity.Output entity)
-        {
-            Identifier = new MarketDataIdentifier(entity.ProviderName, entity.MarketDataName);
-            _entity = entity;
         }
 
         /// <summary>
@@ -81,7 +70,7 @@ namespace Artesian.SDK.Factory
 
         private AddAssessmentOperationResult _addAssessment(LocalDateTime reportTime, string product, MarketAssessmentValue value)
         {
-            if (product.Contains("-"))
+            if (product.Contains("-")) //TODO da rivedere questo
             {
                 if (_entity.OriginalGranularity.IsTimeGranularity())
                 {
@@ -136,7 +125,7 @@ namespace Artesian.SDK.Factory
             if (Assessments.Any())
             {
                 var data = new UpsertCurveData(this.Identifier);
-                data.Timezone = DataTimezone;
+                data.Timezone = _entity.OriginalTimezone;
                 data.DownloadedAt = downloadedAt;
                 data.DeferCommandExecution = deferCommandExecution;
                 data.MarketAssessment = new Dictionary<LocalDateTime, IDictionary<string, MarketAssessmentValue>>();

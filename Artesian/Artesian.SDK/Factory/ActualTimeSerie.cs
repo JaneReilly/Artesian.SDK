@@ -16,7 +16,7 @@ namespace Artesian.SDK.Factory
     /// <summary>
     /// ActualTimeSerie entity
     /// </summary>
-    public sealed class ActualTimeSerie : MarketData
+    public class ActualTimeSerie : MarketData, ITimeserieWritable
     {
         private Dictionary<LocalDateTime, double?> _values = new Dictionary<LocalDateTime, double?>();
 
@@ -26,22 +26,11 @@ namespace Artesian.SDK.Factory
         public IReadOnlyDictionary<LocalDateTime, double?> Values { get; private set; }
 
         /// <summary>
-        /// MarketData Type
-        /// </summary>
-        public new MarketDataType? Type => MarketDataType.ActualTimeSerie;
-
-        /// <summary>
         /// ActualTimeSerie Constructor
         /// </summary>
         public ActualTimeSerie(IMetadataService metadataService, MarketDataEntity.Output entity) : base(metadataService, entity)
         {
             Values = new ReadOnlyDictionary<LocalDateTime, double?>(_values);
-        }
-
-        private void _create(MarketDataEntity.Output entity)
-        {
-            Identifier = new MarketDataIdentifier(entity.ProviderName, entity.MarketDataName);
-            _entity = entity;
         }
 
         /// <summary>
@@ -53,7 +42,6 @@ namespace Artesian.SDK.Factory
             Values = new ReadOnlyDictionary<LocalDateTime, double?>(_values);
         }
 
-        #region Write
         /// <summary>
         /// ActualTimeSerie AddData
         /// </summary>
@@ -143,6 +131,5 @@ namespace Artesian.SDK.Factory
             //else
             //    _logger.Warn("No Data to be saved.");
         }
-        #endregion
     }
 }

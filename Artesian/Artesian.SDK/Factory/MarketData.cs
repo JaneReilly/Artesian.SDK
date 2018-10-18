@@ -34,12 +34,7 @@ namespace Artesian.SDK.Factory
         /// <summary>
         /// MarketData Entity
         /// </summary>
-        public ReadOnlyMarketDataEntity Entity { get; protected set; }
-
-        /// <summary>
-        /// MarketData entity writable
-        /// </summary>
-        public WritableMarketDataEntity EntityWritable { get; set; } = null;
+        public CustomMarketDataEntity Entity { get; protected set; }
 
         /// <summary>
         /// MarketData entity
@@ -72,16 +67,8 @@ namespace Artesian.SDK.Factory
         private void _create(MarketDataEntity.Output entity)
         {
             Identifier = new MarketDataIdentifier(entity.ProviderName, entity.MarketDataName);
-            Entity = new ReadOnlyMarketDataEntity(entity);
+            Entity = new CustomMarketDataEntity(entity);
             _entity = entity;
-        }
-
-        /// <summary>
-        /// Market Data Entity Edit
-        /// </summary>
-        public void EditEntity()
-        {
-            EntityWritable = new WritableMarketDataEntity(_entity);
         }
 
         /// <summary>
@@ -109,7 +96,7 @@ namespace Artesian.SDK.Factory
 
             _entity = await _metadataService.RegisterMarketDataAsync(metadata, ctk);
 
-            Entity = new ReadOnlyMarketDataEntity(_entity);
+            Entity = new CustomMarketDataEntity(_entity);
         }
 
         /// <summary>
@@ -126,7 +113,7 @@ namespace Artesian.SDK.Factory
 
             if (_entity != null)
             {
-                Entity = new ReadOnlyMarketDataEntity(_entity);
+                Entity = new CustomMarketDataEntity(_entity);
                 return true;
             }
                 
@@ -146,7 +133,7 @@ namespace Artesian.SDK.Factory
                 _entity = await _metadataService.ReadMarketDataRegistryAsync(this.Identifier, ctk);
 
             if (_entity != null)
-                Entity = new ReadOnlyMarketDataEntity(_entity);
+                Entity = new CustomMarketDataEntity(_entity);
         }
 
         /// <summary>
@@ -161,12 +148,21 @@ namespace Artesian.SDK.Factory
             if (_entity == null)
                 throw new ArtesianFactoryException("Market Data is not yet registered");
 
-            if (EntityWritable == null)
-                throw new ArtesianFactoryException("Market Data Entity is not in edit mode!");
+            //if (Entity == null)
+            //    throw new ArtesianFactoryException("Market Data Entity is not in edit mode!");
 
-            _entity = await _metadataService.UpdateMarketDataAsync(EntityWritable, ctk);
+            var marketDataEntityInput = new MarketDataEntity.Input(_entity)
+            {
+                Tags = Entity.Tags,
+                OriginalTimezone = Entity.OriginalTimezone,
+                AggregationRule = Entity.AggregationRule,
+                ProviderDescription = Entity.ProviderDescription,
+                Path = Entity.Path,
+            };
 
-            Entity = new ReadOnlyMarketDataEntity(_entity);
+            _entity = await _metadataService.UpdateMarketDataAsync(marketDataEntityInput, ctk);
+
+            Entity = new CustomMarketDataEntity(_entity);
         }
 
         /// <summary>

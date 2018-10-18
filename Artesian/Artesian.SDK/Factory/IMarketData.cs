@@ -27,16 +27,7 @@ namespace Artesian.SDK.Factory
         /// <summary>
         /// MarketData ReadOnly Entity
         /// </summary>
-        ReadOnlyMarketDataEntity Entity { get; }
-        /// <summary>
-        /// MarketData Writable Entity
-        /// </summary>
-        WritableMarketDataEntity EntityWritable { get; }
-
-        /// <summary>
-        /// MarketData Entity Edit
-        /// </summary>
-        void EditEntity();
+        CustomMarketDataEntity Entity { get; }
 
         /// <summary>
         /// MarketData Load Metadata
@@ -197,20 +188,26 @@ namespace Artesian.SDK.Factory
     /// <summary>
     /// Read Only Class for MarketData Entity
     /// </summary>
-    public class ReadOnlyMarketDataEntity
+    public class CustomMarketDataEntity
     {
         private MarketDataEntity.Output _output;
-        private Lazy<IReadOnlyDictionary<string, IReadOnlyList<string>>> _tags;
+        //private Lazy<IReadOnlyDictionary<string, IReadOnlyList<string>>> _tags;
 
         /// <summary>
         /// Read Only Class for MarketData Entity constructor
         /// </summary>
-        internal ReadOnlyMarketDataEntity(MarketDataEntity.Output output)
+        internal CustomMarketDataEntity(MarketDataEntity.Output output)
         {
             _output = output;
-            _tags = new Lazy<IReadOnlyDictionary<string, IReadOnlyList<string>>>(
-                () => new ReadOnlyDictionary<string, IReadOnlyList<string>>(_output.Tags.ToDictionary(pair => pair.Key, pair => pair.Value.AsReadOnly() as IReadOnlyList<string>))
-            );
+            //_tags = new Lazy<IReadOnlyDictionary<string, IReadOnlyList<string>>>(
+            //    () => new ReadOnlyDictionary<string, IReadOnlyList<string>>(_output.Tags.ToDictionary(pair => pair.Key, pair => pair.Value.AsReadOnly() as IReadOnlyList<string>))
+            //);
+
+            this.Tags = output.Tags;
+            this.OriginalTimezone = output.OriginalTimezone;
+            this.AggregationRule = output.AggregationRule;
+            this.ProviderDescription = output.ProviderDescription;
+            this.Path = output.Path;
         }
 
         /// <summary>
@@ -240,31 +237,32 @@ namespace Artesian.SDK.Factory
         /// <summary>
         /// The Original Timezone
         /// </summary>
-        public string OriginalTimezone => _output.OriginalTimezone;
+        public string OriginalTimezone { get; set; }
         /// <summary>
         /// The Aggregation Rule
         /// </summary>
-        public AggregationRule AggregationRule => _output.AggregationRule;
+        public AggregationRule AggregationRule { get; set; }
         /// <summary>
         /// The TimeTransformID
         /// </summary>
-        public int? TransformID => _output.TransformID;
+        public int? TransformID => _output.TransformID; //ni
         /// <summary>
         /// The Provider description
         /// </summary>
-        public string ProviderDescription => _output.ProviderDescription;
+        public string ProviderDescription { get; set; }
         /// <summary>
         /// The custom Tags assigned to the data
         /// </summary>
-        public IReadOnlyDictionary<string, IReadOnlyList<string>> Tags => _tags.Value;
+        //public IReadOnlyDictionary<string, IReadOnlyList<string>> Tags => _tags.Value; //
+        public Dictionary<string, List<string>> Tags { get; set; }
         /// <summary>
         /// The Authorization Path
         /// </summary>
-        public string Path => _output.Path;
+        public string Path  { get; set; }
         /// <summary>
         /// The TimeTransform
         /// </summary>
-        public TimeTransform Transform => _output.Transform;
+        public TimeTransform Transform => _output.Transform; //ni
         /// <summary>
         /// The Last time the metadata has been updated
         /// </summary>
@@ -285,36 +283,5 @@ namespace Artesian.SDK.Factory
         /// The time the market data has been created
         /// </summary>
         public Instant Created => _output.Created;
-    }
-
-    /// <summary>
-    /// Writable Class for MarketData Entity
-    /// </summary>
-    public class WritableMarketDataEntity : MarketDataEntity.Output
-    {
-        /// <summary>
-        /// Writable Class for MarketData Entity constructor
-        /// </summary>
-        internal WritableMarketDataEntity(MarketDataEntity.Output ouput)
-        {
-            this.MarketDataId = ouput.MarketDataId;
-            this.ETag = ouput.ETag;
-            this.ProviderName = ouput.ProviderName;
-            this.MarketDataName = ouput.MarketDataName;
-            this.OriginalGranularity = ouput.OriginalGranularity;
-            this.Type = ouput.Type;
-            this.OriginalTimezone = ouput.OriginalTimezone;
-            this.AggregationRule = ouput.AggregationRule;
-            this.TransformID = ouput.TransformID;
-            this.ProviderDescription = ouput.ProviderDescription;
-            this.Tags = ouput.Tags;
-            this.Path = ouput.Path;
-            this.Transform = ouput.Transform;
-            this.LastUpdated = ouput.LastUpdated;
-            this.DataLastWritedAt = ouput.DataLastWritedAt;
-            this.DataRangeStart = ouput.DataRangeStart;
-            this.DataRangeEnd = ouput.DataRangeEnd;
-            this.Created = ouput.Created;
-        }
     }
 }

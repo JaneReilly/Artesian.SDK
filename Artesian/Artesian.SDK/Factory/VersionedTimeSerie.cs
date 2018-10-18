@@ -134,7 +134,12 @@ namespace Artesian.SDK.Factory
         /// <returns></returns>
         public async Task Save(Instant downloadedAt, bool deferCommandExecution = false, bool deferDataGeneration = true)
         {
-            Ensure.Any.IsNotNull(_entity);
+            //Quale dei due??
+            //Ensure.Any.IsNotNull(_entity);
+            Ensure.Bool.IsTrue(_entity != null, "Market Data is not registred in Arkive.");
+
+            if (!SelectedVersion.HasValue)
+                throw new VersionedTimeSerieException("No Version Has been selected to save Data");
 
             if (Values.Any())
             {

@@ -106,10 +106,10 @@ namespace Artesian.SDK.Factory
         /// Register a MarketData
         /// </remarks>
         /// <returns> true if  Marketdata si present, false if not found </returns>
-        public async Task<bool> IsRegistered()
+        public async Task<bool> IsRegistered(CancellationToken ctk = default)
         {
             if (_entity == null)
-                _entity = await _metadataService.ReadMarketDataRegistryAsync(this.Identifier);
+                _entity = await _metadataService.ReadMarketDataRegistryAsync(this.Identifier, ctk);
 
             if (_entity != null)
             {
@@ -130,7 +130,7 @@ namespace Artesian.SDK.Factory
         public async Task LoadMetadata(CancellationToken ctk = default)
         {
             if (_entity == null)
-                _entity = await _metadataService.ReadMarketDataRegistryAsync(this.Identifier);
+                _entity = await _metadataService.ReadMarketDataRegistryAsync(this.Identifier, ctk);
 
             if (_entity != null)
                 Entity = new ReadOnlyMarketDataEntity(_entity);
@@ -180,7 +180,7 @@ namespace Artesian.SDK.Factory
         /// Start write mode for Versioned Timeserie
         /// </remarks>
         /// <returns> ITimeserieWritable </returns>
-        public ITimeserieWritable EditVersioned()
+        public ITimeserieWritable EditVersioned(LocalDateTime version)
         {
             if (_entity == null)
                 throw new VersionedTimeSerieException("Versioned Time Serie is not yet registered");
@@ -189,6 +189,8 @@ namespace Artesian.SDK.Factory
                 throw new MarketAssessmentException("Entity is not Versioned Time Serie");
 
             var versioned = new VersionedTimeSerie(_metadataService, _entity);
+            versioned.SetSelectedVersion(version);
+
             return versioned;
         }
 

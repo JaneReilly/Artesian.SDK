@@ -3,6 +3,7 @@ using NodaTime;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -60,7 +61,7 @@ namespace Artesian.SDK.Factory
         /// Register a MarketData
         /// </remarks>
         /// <returns> Marketdata if true, null and false if not found </returns>
-        Task<bool> IsRegistered();
+        Task<bool> IsRegistered(CancellationToken ctk = default);
 
         /// <summary>
         /// Edit for Actual Timeserie
@@ -77,7 +78,7 @@ namespace Artesian.SDK.Factory
         /// Start write mode for Versioned Timeserie
         /// </remarks>
         /// <returns> Marketdata </returns>
-        ITimeserieWritable EditVersioned();
+        ITimeserieWritable EditVersioned(LocalDateTime version);
         /// <summary>
         /// Edit for Market Assessment
         /// </summary>
@@ -89,7 +90,7 @@ namespace Artesian.SDK.Factory
     }
 
     /// <summary>
-    /// Interface for M\rket Assessment Write
+    /// Interface for Market Assessment Write
     /// </summary>
     public interface IMarketAssessmentWritable
     {
@@ -116,7 +117,7 @@ namespace Artesian.SDK.Factory
         /// <returns></returns>
         AddAssessmentOperationResult AddData(Instant time, string product, MarketAssessmentValue value);
         /// <summary>
-        /// ClearData
+        /// MarketAssessment ClearData
         /// </summary>
         void ClearData();
         /// <summary>
@@ -223,11 +224,11 @@ namespace Artesian.SDK.Factory
         /// <summary>
         /// The Original Granularity
         /// </summary>
-        public Granularity? OriginalGranularity => _output?.OriginalGranularity; //Aggiunto il nullable
+        public Granularity? OriginalGranularity => _output?.OriginalGranularity; //Nullable Added
         /// <summary>
         /// The Type
         /// </summary>
-        public MarketDataType? Type => _output?.Type; //Aggiunto il nullable
+        public MarketDataType? Type => _output?.Type; //Nullable Added
         /// <summary>
         /// The Original Timezone
         /// </summary>
@@ -235,7 +236,7 @@ namespace Artesian.SDK.Factory
         /// <summary>
         /// The Aggregation Rule
         /// </summary>
-        public AggregationRule? AggregationRule => _output?.AggregationRule; //Aggiunto il nullable
+        public AggregationRule? AggregationRule => _output?.AggregationRule; //Nullable Added
         /// <summary>
         /// The TimeTransformID
         /// </summary>
@@ -247,7 +248,7 @@ namespace Artesian.SDK.Factory
         /// <summary>
         /// The custom Tags assigned to the data
         /// </summary>
-        public IReadOnlyDictionary<string, List<string>> Tags => _output.Tags;
+        public IReadOnlyDictionary<string, IReadOnlyList<string>> Tags => (IReadOnlyDictionary<string, IReadOnlyList<string>>)_output.Tags.ToDictionary(pair => pair.Key, pair => pair.Value.AsReadOnly());
         /// <summary>
         /// The Authorization Path
         /// </summary>

@@ -7,6 +7,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -38,7 +39,6 @@ namespace Artesian.SDK.Factory
             Assessments.Clear();
         }
 
-        #region Write
         /// <summary>
         /// MarketAssessment AddData
         /// </summary>
@@ -70,42 +70,31 @@ namespace Artesian.SDK.Factory
 
         private AddAssessmentOperationResult _addAssessment(LocalDateTime reportTime, string product, MarketAssessmentValue value)
         {
-            if (product.Contains("-"))
+            //Relative products
+            if (Regex.IsMatch(product, @"\+\d+$"))
+                throw new NotSupportedException("Relative Products are not supported");
+
+            if (_entity.OriginalGranularity.IsTimeGranularity())
             {
-                if (_entity.OriginalGranularity.IsTimeGranularity())
-                {
-                    var period = ArtesianUtils.MapTimePeriod(_entity.OriginalGranularity);
-                    if (!reportTime.IsStartOfInterval(period))
-                        throw new MarketAssessmentException("Trying to insert Report Time {0} with wrong format to Assessment {1}. Should be of period {2}", reportTime, Identifier, period);
-                }
-                else
-                {
-                    var period = ArtesianUtils.MapDatePeriod(_entity.OriginalGranularity);
-                    if (!reportTime.IsStartOfInterval(period))
-                        throw new MarketAssessmentException("Trying to insert Report Time {0} with wrong format to Assessment {1}. Should be of period {2}", reportTime, Identifier, period);
-                }
-
-                //if (reportTime.Date >= product.ReferenceDate)
-                //    return AddAssessmentOperationResult.IllegalReferenceDate;
-
-                if (Assessments
-                        .Any(row => row.ReportTime == reportTime && row.Product.Equals(product)))
-                    return AddAssessmentOperationResult.ProductAlreadyPresent;
-
-                Assessments.Add(new AssessmentElement(reportTime, product, value));
-                return AddAssessmentOperationResult.AssessmentAdded;
+                var period = ArtesianUtils.MapTimePeriod(_entity.OriginalGranularity);
+                if (!reportTime.IsStartOfInterval(period))
+                    throw new MarketAssessmentException("Trying to insert Report Time {0} with wrong format to Assessment {1}. Should be of period {2}", reportTime, Identifier, period);
             }
             else
             {
-
-                if (Assessments.Any(row => row.ReportTime == reportTime && row.Product.Equals(product)))
-                    return AddAssessmentOperationResult.ProductAlreadyPresent;
-
-                Assessments.Add(new AssessmentElement(reportTime, product, value));
-                return AddAssessmentOperationResult.AssessmentAdded;
+                var period = ArtesianUtils.MapDatePeriod(_entity.OriginalGranularity);
+                if (!reportTime.IsStartOfInterval(period))
+                    throw new MarketAssessmentException("Trying to insert Report Time {0} with wrong format to Assessment {1}. Should be of period {2}", reportTime, Identifier, period);
             }
 
-            throw new NotSupportedException("Invalid Product");
+            //if (reportTime.Date >= product.ReferenceDate)
+            //    return AddAssessmentOperationResult.IllegalReferenceDate;
+
+            if (Assessments.Any(row => row.ReportTime == reportTime && row.Product.Equals(product)))
+                return AddAssessmentOperationResult.ProductAlreadyPresent;
+
+            Assessments.Add(new AssessmentElement(reportTime, product, value));
+            return AddAssessmentOperationResult.AssessmentAdded;
         }
 
         /// <summary>
@@ -124,11 +113,13 @@ namespace Artesian.SDK.Factory
 
             if (Assessments.Any())
             {
-                var data = new UpsertCurveData(this.Identifier);
-                data.Timezone = _entity.OriginalTimezone;
-                data.DownloadedAt = downloadedAt;
-                data.DeferCommandExecution = deferCommandExecution;
-                data.MarketAssessment = new Dictionary<LocalDateTime, IDictionary<string, MarketAssessmentValue>>();
+                var data = new UpsertCurveData(this.Identifier)
+                {
+                    Timezone = _entity.OriginalTimezone,
+                    DownloadedAt = downloadedAt,
+                    DeferCommandExecution = deferCommandExecution,
+                    MarketAssessment = new Dictionary<LocalDateTime, IDictionary<string, MarketAssessmentValue>>()
+                };
 
                 foreach (var reportTime in Assessments.GroupBy(g => g.ReportTime))
                 {
@@ -141,8 +132,6 @@ namespace Artesian.SDK.Factory
             //else
             //    _logger.Warn("No Data to be saved.");
         }
-
-        #endregion
 
         /// <summary>
         /// AssessmentElement entity

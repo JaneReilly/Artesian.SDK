@@ -27,7 +27,7 @@ namespace Artesian.SDK.Factory
         /// <summary>
         /// MarketData ReadOnly Entity
         /// </summary>
-        CustomMarketDataEntity Entity { get; }
+        MarketDataEntityFactory Entity { get; }
 
         /// <summary>
         /// MarketData Load Metadata
@@ -183,105 +183,5 @@ namespace Artesian.SDK.Factory
         /// <param name="deferDataGeneration">defer Data Generation</param>
         /// <returns></returns>
         Task Save(Instant downloadedAt, bool deferCommandExecution = false, bool deferDataGeneration = true);
-    }
-
-    /// <summary>
-    /// Read Only Class for MarketData Entity
-    /// </summary>
-    public class CustomMarketDataEntity
-    {
-        private MarketDataEntity.Output _output;
-        //private Lazy<IReadOnlyDictionary<string, IReadOnlyList<string>>> _tags;
-
-        /// <summary>
-        /// Read Only Class for MarketData Entity constructor
-        /// </summary>
-        internal CustomMarketDataEntity(MarketDataEntity.Output output)
-        {
-            _output = output;
-            //_tags = new Lazy<IReadOnlyDictionary<string, IReadOnlyList<string>>>(
-            //    () => new ReadOnlyDictionary<string, IReadOnlyList<string>>(_output.Tags.ToDictionary(pair => pair.Key, pair => pair.Value.AsReadOnly() as IReadOnlyList<string>))
-            //);
-
-            this.Tags = output.Tags;
-            this.OriginalTimezone = output.OriginalTimezone;
-            this.AggregationRule = output.AggregationRule;
-            this.ProviderDescription = output.ProviderDescription;
-            this.Path = output.Path;
-        }
-
-        /// <summary>
-        /// The Market Data Identifier
-        /// </summary>
-        public int MarketDataId => _output.MarketDataId;
-        /// <summary>
-        /// The Market Data Etag
-        /// </summary>
-        public string ETag => _output.ETag;
-        /// <summary>
-        /// The Market Data Provider Name
-        /// </summary>
-        public string ProviderName => _output.ProviderName;
-        /// <summary>
-        /// The Market Data Name
-        /// </summary>
-        public string MarketDataName => _output.MarketDataName;
-        /// <summary>
-        /// The Original Granularity
-        /// </summary>
-        public Granularity OriginalGranularity => _output.OriginalGranularity;
-        /// <summary>
-        /// The Type
-        /// </summary>
-        public MarketDataType Type => _output.Type;
-        /// <summary>
-        /// The Original Timezone
-        /// </summary>
-        public string OriginalTimezone { get; set; }
-        /// <summary>
-        /// The Aggregation Rule
-        /// </summary>
-        public AggregationRule AggregationRule { get; set; }
-        /// <summary>
-        /// The TimeTransformID
-        /// </summary>
-        public int? TransformID => _output.TransformID; //ni
-        /// <summary>
-        /// The Provider description
-        /// </summary>
-        public string ProviderDescription { get; set; }
-        /// <summary>
-        /// The custom Tags assigned to the data
-        /// </summary>
-        //public IReadOnlyDictionary<string, IReadOnlyList<string>> Tags => _tags.Value; //
-        public Dictionary<string, List<string>> Tags { get; set; }
-        /// <summary>
-        /// The Authorization Path
-        /// </summary>
-        public string Path  { get; set; }
-        /// <summary>
-        /// The TimeTransform
-        /// </summary>
-        public TimeTransform Transform => _output.Transform; //ni
-        /// <summary>
-        /// The Last time the metadata has been updated
-        /// </summary>
-        public Instant LastUpdated => _output.LastUpdated;
-        /// <summary>
-        /// The Last time the data has been writed
-        /// </summary>
-        public Instant? DataLastWritedAt => _output.DataLastWritedAt;
-        /// <summary>
-        /// Date start of range for this curve  
-        /// </summary>
-        public LocalDate? DataRangeStart => _output.DataRangeStart;
-        /// <summary>
-        /// Date end of range for this curve  
-        /// </summary>
-        public LocalDate? DataRangeEnd => _output.DataRangeEnd;
-        /// <summary>
-        /// The time the market data has been created
-        /// </summary>
-        public Instant Created => _output.Created;
     }
 }

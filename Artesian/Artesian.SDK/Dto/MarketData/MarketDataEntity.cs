@@ -226,6 +226,9 @@ namespace Artesian.SDK.Dto
         {
             if (marketDataEntityInput.Type == MarketDataType.MarketAssessment && marketDataEntityInput.TransformID != null)
                 throw new ArgumentException("No transform possible when Type is MarketAssessment");
+
+            if (marketDataEntityInput.Type == MarketDataType.MarketAssessment && marketDataEntityInput.AggregationRule != AggregationRule.Undefined)
+                throw new ArgumentException("Aggregation Rule must be Undefined if Type is MarketAssessment");
         }
     }
 }

@@ -16,20 +16,28 @@ namespace Artesian.SDK.Factory
     /// <summary>
     /// MarketAssessment entity
     /// </summary>
-    public class MarketAssessment : MarketData, IMarketAssessmentWritable
+    internal sealed class MarketAssessment : IMarketAssessmentWritable
     {
-        /// <summary>
-        /// MarketData AssessmentElement
-        /// </summary>
-        public List<AssessmentElement> Assessments { get; protected set; }
+        private IMetadataService _metadataService;
+        private MarketDataEntity.Output _entity = null;
+        private readonly MarketDataIdentifier _identifier = null;
 
         /// <summary>
         /// MarketAssessment Constructor
         /// </summary>
-        public MarketAssessment(IMetadataService metadataService, MarketDataEntity.Output entity) : base (metadataService, entity)
+        internal MarketAssessment(IMetadataService metadataService, MarketDataEntity.Output entity)
         {
+            _entity = entity;
+            _metadataService = metadataService;
+            _identifier = new MarketDataIdentifier(entity.ProviderName, entity.MarketDataName);
+
             Assessments = new List<AssessmentElement>();
         }
+
+        /// <summary>
+        /// MarketData AssessmentElement
+        /// </summary>
+        public List<AssessmentElement> Assessments { get; internal set; }
 
         /// <summary>
         /// MarketData ClearData
@@ -78,13 +86,13 @@ namespace Artesian.SDK.Factory
             {
                 var period = ArtesianUtils.MapTimePeriod(_entity.OriginalGranularity);
                 if (!reportTime.IsStartOfInterval(period))
-                    throw new MarketAssessmentException("Trying to insert Report Time {0} with wrong format to Assessment {1}. Should be of period {2}", reportTime, Identifier, period);
+                    throw new MarketAssessmentException("Trying to insert Report Time {0} with wrong format to Assessment {1}. Should be of period {2}", reportTime, _identifier, period);
             }
             else
             {
                 var period = ArtesianUtils.MapDatePeriod(_entity.OriginalGranularity);
                 if (!reportTime.IsStartOfInterval(period))
-                    throw new MarketAssessmentException("Trying to insert Report Time {0} with wrong format to Assessment {1}. Should be of period {2}", reportTime, Identifier, period);
+                    throw new MarketAssessmentException("Trying to insert Report Time {0} with wrong format to Assessment {1}. Should be of period {2}", reportTime, _identifier, period);
             }
 
             //if (reportTime.Date >= product.ReferenceDate)
@@ -113,7 +121,7 @@ namespace Artesian.SDK.Factory
 
             if (Assessments.Any())
             {
-                var data = new UpsertCurveData(this.Identifier)
+                var data = new UpsertCurveData(_identifier)
                 {
                     Timezone = _entity.OriginalTimezone,
                     DownloadedAt = downloadedAt,

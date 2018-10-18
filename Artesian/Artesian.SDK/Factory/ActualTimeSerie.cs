@@ -16,22 +16,29 @@ namespace Artesian.SDK.Factory
     /// <summary>
     /// ActualTimeSerie entity
     /// </summary>
-    public class ActualTimeSerie : MarketData, ITimeserieWritable
+    internal sealed class ActualTimeSerie : ITimeserieWritable
     {
+        private IMetadataService _metadataService;
+        private MarketDataEntity.Output _entity = null;
+        private readonly MarketDataIdentifier _identifier = null;
         private Dictionary<LocalDateTime, double?> _values = new Dictionary<LocalDateTime, double?>();
+
+        /// <summary>
+        /// ActualTimeSerie Constructor
+        /// </summary>
+        internal ActualTimeSerie(IMetadataService metadataService, MarketDataEntity.Output entity)
+        {
+            _entity = entity;
+            _metadataService = metadataService;
+            _identifier = new MarketDataIdentifier(entity.ProviderName, entity.MarketDataName);
+
+            Values = new ReadOnlyDictionary<LocalDateTime, double?>(_values);
+        }
 
         /// <summary>
         /// ActualTimeSerie Curve Values
         /// </summary>
         public IReadOnlyDictionary<LocalDateTime, double?> Values { get; private set; }
-
-        /// <summary>
-        /// ActualTimeSerie Constructor
-        /// </summary>
-        public ActualTimeSerie(IMetadataService metadataService, MarketDataEntity.Output entity) : base(metadataService, entity)
-        {
-            Values = new ReadOnlyDictionary<LocalDateTime, double?>(_values);
-        }
 
         /// <summary>
         /// MarketData ClearData
@@ -88,13 +95,13 @@ namespace Artesian.SDK.Factory
             {
                 var period = ArtesianUtils.MapTimePeriod(_entity.OriginalGranularity);
                 if (!localTime.IsStartOfInterval(period))
-                    throw new ArtesianSdkClientException("Trying to insert Time {0} with wrong format to serie {1}. Should be of period {2}", localTime, Identifier, period);
+                    throw new ArtesianSdkClientException("Trying to insert Time {0} with wrong format to serie {1}. Should be of period {2}", localTime, _identifier, period);
             }
             else
             {
                 var period = ArtesianUtils.MapDatePeriod(_entity.OriginalGranularity);
                 if (!localTime.IsStartOfInterval(period))
-                    throw new ArtesianSdkClientException("Trying to insert Time {0} with wrong format to serie {1}. Should be of period {2}", localTime, Identifier, period);
+                    throw new ArtesianSdkClientException("Trying to insert Time {0} with wrong format to serie {1}. Should be of period {2}", localTime, _identifier, period);
             }
 
             _values.Add(localTime, value);
@@ -117,7 +124,7 @@ namespace Artesian.SDK.Factory
 
             if (_values.Any())
             {
-                var data = new UpsertCurveData(this.Identifier)
+                var data = new UpsertCurveData(_identifier)
                 {
                     Timezone = _entity.OriginalGranularity.IsTimeGranularity() ? "UTC" : _entity.OriginalTimezone,
                     DownloadedAt = downloadedAt,

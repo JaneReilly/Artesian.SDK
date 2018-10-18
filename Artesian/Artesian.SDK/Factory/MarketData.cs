@@ -16,10 +16,7 @@ namespace Artesian.SDK.Factory
     /// </summary>
     public class MarketData : IMarketData
     {
-        /// <summary>
-        /// MarketData metadata service
-        /// </summary>
-        protected IMetadataService _metadataService;
+        private IMetadataService _metadataService;
 
         /// <summary>
         /// MarketData Id
@@ -34,12 +31,9 @@ namespace Artesian.SDK.Factory
         /// <summary>
         /// MarketData Entity
         /// </summary>
-        public CustomMarketDataEntity Entity { get; protected set; }
+        public MarketDataEntityFactory Entity { get; protected set; }
 
-        /// <summary>
-        /// MarketData entity
-        /// </summary>
-        protected MarketDataEntity.Output _entity = null;
+        private MarketDataEntity.Output _entity = null;
 
         /// <summary>
         /// MarketData Constructor by Id
@@ -67,7 +61,7 @@ namespace Artesian.SDK.Factory
         private void _create(MarketDataEntity.Output entity)
         {
             Identifier = new MarketDataIdentifier(entity.ProviderName, entity.MarketDataName);
-            Entity = new CustomMarketDataEntity(entity);
+            Entity = new MarketDataEntityFactory(entity);
             _entity = entity;
         }
 
@@ -96,7 +90,7 @@ namespace Artesian.SDK.Factory
 
             _entity = await _metadataService.RegisterMarketDataAsync(metadata, ctk);
 
-            Entity = new CustomMarketDataEntity(_entity);
+            Entity = new MarketDataEntityFactory(_entity);
         }
 
         /// <summary>
@@ -113,7 +107,7 @@ namespace Artesian.SDK.Factory
 
             if (_entity != null)
             {
-                Entity = new CustomMarketDataEntity(_entity);
+                Entity = new MarketDataEntityFactory(_entity);
                 return true;
             }
                 
@@ -133,7 +127,7 @@ namespace Artesian.SDK.Factory
                 _entity = await _metadataService.ReadMarketDataRegistryAsync(this.Identifier, ctk);
 
             if (_entity != null)
-                Entity = new CustomMarketDataEntity(_entity);
+                Entity = new MarketDataEntityFactory(_entity);
         }
 
         /// <summary>
@@ -162,7 +156,7 @@ namespace Artesian.SDK.Factory
 
             _entity = await _metadataService.UpdateMarketDataAsync(marketDataEntityInput, ctk);
 
-            Entity = new CustomMarketDataEntity(_entity);
+            Entity = new MarketDataEntityFactory(_entity);
         }
 
         /// <summary>

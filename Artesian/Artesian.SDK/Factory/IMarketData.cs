@@ -3,6 +3,7 @@ using NodaTime;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -24,9 +25,19 @@ namespace Artesian.SDK.Factory
         /// </summary>
         MarketDataIdentifier Identifier { get; }
         /// <summary>
-        /// MarketData Entity
+        /// MarketData ReadOnly Entity
         /// </summary>
         ReadOnlyMarketDataEntity Entity { get; }
+        /// <summary>
+        /// MarketData Writable Entity
+        /// </summary>
+        WritableMarketDataEntity EntityWritable { get; }
+
+        /// <summary>
+        /// MarketData Entity Edit
+        /// </summary>
+        void EditEntity();
+
         /// <summary>
         /// MarketData Load Metadata
         /// </summary>
@@ -189,20 +200,17 @@ namespace Artesian.SDK.Factory
     public class ReadOnlyMarketDataEntity
     {
         private MarketDataEntity.Output _output;
-
-        /// <summary>
-        /// Read Only Class for MarketData Entity default constructor
-        /// </summary>
-        public ReadOnlyMarketDataEntity()
-        {
-        }
+        private Lazy<IReadOnlyDictionary<string, IReadOnlyList<string>>> _tags;
 
         /// <summary>
         /// Read Only Class for MarketData Entity constructor
         /// </summary>
-        public ReadOnlyMarketDataEntity(MarketDataEntity.Output output)
+        internal ReadOnlyMarketDataEntity(MarketDataEntity.Output output)
         {
             _output = output;
+            _tags = new Lazy<IReadOnlyDictionary<string, IReadOnlyList<string>>>(
+                () => new ReadOnlyDictionary<string, IReadOnlyList<string>>(_output.Tags.ToDictionary(pair => pair.Key, pair => pair.Value.AsReadOnly() as IReadOnlyList<string>))
+            );
         }
 
         /// <summary>
@@ -224,11 +232,11 @@ namespace Artesian.SDK.Factory
         /// <summary>
         /// The Original Granularity
         /// </summary>
-        public Granularity? OriginalGranularity => _output?.OriginalGranularity; //Nullable Added
+        public Granularity OriginalGranularity => _output.OriginalGranularity;
         /// <summary>
         /// The Type
         /// </summary>
-        public MarketDataType? Type => _output?.Type; //Nullable Added
+        public MarketDataType Type => _output.Type;
         /// <summary>
         /// The Original Timezone
         /// </summary>
@@ -236,7 +244,7 @@ namespace Artesian.SDK.Factory
         /// <summary>
         /// The Aggregation Rule
         /// </summary>
-        public AggregationRule? AggregationRule => _output?.AggregationRule; //Nullable Added
+        public AggregationRule AggregationRule => _output.AggregationRule;
         /// <summary>
         /// The TimeTransformID
         /// </summary>
@@ -248,7 +256,7 @@ namespace Artesian.SDK.Factory
         /// <summary>
         /// The custom Tags assigned to the data
         /// </summary>
-        public IReadOnlyDictionary<string, IReadOnlyList<string>> Tags => (IReadOnlyDictionary<string, IReadOnlyList<string>>)_output.Tags.ToDictionary(pair => pair.Key, pair => pair.Value.AsReadOnly());
+        public IReadOnlyDictionary<string, IReadOnlyList<string>> Tags => _tags.Value;
         /// <summary>
         /// The Authorization Path
         /// </summary>
@@ -279,4 +287,34 @@ namespace Artesian.SDK.Factory
         public Instant Created => _output.Created;
     }
 
+    /// <summary>
+    /// Writable Class for MarketData Entity
+    /// </summary>
+    public class WritableMarketDataEntity : MarketDataEntity.Output
+    {
+        /// <summary>
+        /// Writable Class for MarketData Entity constructor
+        /// </summary>
+        internal WritableMarketDataEntity(MarketDataEntity.Output ouput)
+        {
+            this.MarketDataId = ouput.MarketDataId;
+            this.ETag = ouput.ETag;
+            this.ProviderName = ouput.ProviderName;
+            this.MarketDataName = ouput.MarketDataName;
+            this.OriginalGranularity = ouput.OriginalGranularity;
+            this.Type = ouput.Type;
+            this.OriginalTimezone = ouput.OriginalTimezone;
+            this.AggregationRule = ouput.AggregationRule;
+            this.TransformID = ouput.TransformID;
+            this.ProviderDescription = ouput.ProviderDescription;
+            this.Tags = ouput.Tags;
+            this.Path = ouput.Path;
+            this.Transform = ouput.Transform;
+            this.LastUpdated = ouput.LastUpdated;
+            this.DataLastWritedAt = ouput.DataLastWritedAt;
+            this.DataRangeStart = ouput.DataRangeStart;
+            this.DataRangeEnd = ouput.DataRangeEnd;
+            this.Created = ouput.Created;
+        }
+    }
 }

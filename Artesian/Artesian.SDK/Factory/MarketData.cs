@@ -24,7 +24,7 @@ namespace Artesian.SDK.Factory
         /// <summary>
         /// MarketData Id
         /// </summary>
-        public int? MarketDataId { get { return Entity?.MarketDataId; } }
+        public int? MarketDataId { get { return _entity?.MarketDataId; } }
 
         /// <summary>
         /// MarketData Identifier
@@ -35,6 +35,11 @@ namespace Artesian.SDK.Factory
         /// MarketData Entity
         /// </summary>
         public ReadOnlyMarketDataEntity Entity { get; protected set; }
+
+        /// <summary>
+        /// MarketData entity writable
+        /// </summary>
+        public WritableMarketDataEntity EntityWritable { get; set; } = null;
 
         /// <summary>
         /// MarketData entity
@@ -69,6 +74,14 @@ namespace Artesian.SDK.Factory
             Identifier = new MarketDataIdentifier(entity.ProviderName, entity.MarketDataName);
             Entity = new ReadOnlyMarketDataEntity(entity);
             _entity = entity;
+        }
+
+        /// <summary>
+        /// Market Data Entity Edit
+        /// </summary>
+        public void EditEntity()
+        {
+            EntityWritable = new WritableMarketDataEntity(_entity);
         }
 
         /// <summary>
@@ -146,10 +159,12 @@ namespace Artesian.SDK.Factory
         public async Task Update(CancellationToken ctk = default)
         {
             if (_entity == null)
-                throw new ActualTimeSerieException("Actual Time Serie is not yet registered");
+                throw new ArtesianFactoryException("Market Data is not yet registered");
 
-            var metadata = _entity;
-            _entity = await _metadataService.UpdateMarketDataAsync(metadata, ctk);
+            if (EntityWritable == null)
+                throw new ArtesianFactoryException("Market Data Entity is not in edit mode!");
+
+            _entity = await _metadataService.UpdateMarketDataAsync(EntityWritable, ctk);
 
             Entity = new ReadOnlyMarketDataEntity(_entity);
         }

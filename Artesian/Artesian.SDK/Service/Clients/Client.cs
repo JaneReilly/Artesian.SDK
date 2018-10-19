@@ -123,7 +123,7 @@ namespace Artesian.SDK.Service
                     if (body != null)
                         content = new ObjectContent(typeof(TBody), body, _lz4msgPackFormatter);
                 
-                    using (var res = await req.SendAsync(method, content: content, cancellationToken: ctk))
+                    using (var res = await req.SendAsync(method, content: content, completionOption: HttpCompletionOption.ResponseContentRead, cancellationToken: ctk))
                     {
                         if (res.StatusCode == HttpStatusCode.NoContent || res.StatusCode == HttpStatusCode.NotFound)
                             return default;
@@ -131,8 +131,23 @@ namespace Artesian.SDK.Service
                         if (!res.IsSuccessStatusCode)
                         {
                             var responseText = await res.Content.ReadAsStringAsync();
+                            var exceptionMessage = $"Failed handling REST call to WebInterface {method} {Config.BaseAddress + _url + resource}. Returned status: {res.StatusCode}. Content: \n";
 
-                            throw new ArtesianSdkRemoteException("Failed handling REST call to WebInterface {0} {1}. Returned status: {2}. Content: \n{3}", method, Config.BaseAddress + _url + resource, res.StatusCode, responseText);
+                            if (res.StatusCode == HttpStatusCode.BadRequest)
+                            {
+                                var responseDeserialized = await res.Content.ReadAsAsync<object>(_formatters, ctk);
+                                responseText = _tryDecodeText(responseDeserialized);
+
+                                throw new ArtesianSdkValidationException(exceptionMessage + responseText);
+                            }
+
+                            if (res.StatusCode == HttpStatusCode.Conflict || res.StatusCode == HttpStatusCode.PreconditionFailed)
+                                throw new ArtesianSdkOptimisticConcurrencyException(exceptionMessage + responseText);
+
+                            if (res.StatusCode == HttpStatusCode.Forbidden)
+                                throw new ArtesianSdkForbiddenException(exceptionMessage + responseText);
+
+                            throw new ArtesianSdkRemoteException(exceptionMessage + responseText);
                         }
 
                         return await res.Content.ReadAsAsync<TResult>(_formatters, ctk);
@@ -151,6 +166,36 @@ namespace Artesian.SDK.Service
             {
                 throw new ArtesianSdkClientException($"Failed handling REST call to WebInterface: {method} " + Config.BaseAddress + _url + resource, e);
             }
+        }
+
+        private string _tryDecodeText(object responseDeserialized)
+        {
+            switch (responseDeserialized)
+            {
+                case Dictionary<object, object> dc:
+                    {
+                        if (dc.Count > 0)
+                        {
+                            if (dc.ContainsKey("ErrorMessage"))
+                            {
+                                return dc["ErrorMessage"].ToString();
+                            }
+                        }
+                        break;
+                    }
+                case String st:
+                    {
+                        return st;
+                    }
+                case Int32 i:
+                    {
+                        return i.ToString();
+                    }
+                default:
+                    return "Not parsed error message";
+            }
+
+            return null;
         }
 
         public async Task Exec(HttpMethod method, string resource, CancellationToken ctk = default)

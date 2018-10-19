@@ -142,9 +142,6 @@ namespace Artesian.SDK.Factory
             if (_entity == null)
                 throw new ArtesianFactoryException("Market Data is not yet registered");
 
-            //if (Entity == null)
-            //    throw new ArtesianFactoryException("Market Data Entity is not in edit mode!");
-
             var marketDataEntityInput = new MarketDataEntity.Input(_entity)
             {
                 Tags = Entity.Tags,

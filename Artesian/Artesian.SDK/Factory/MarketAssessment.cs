@@ -25,11 +25,12 @@ namespace Artesian.SDK.Factory
         /// <summary>
         /// MarketAssessment Constructor
         /// </summary>
-        internal MarketAssessment(IMetadataService metadataService, MarketDataEntity.Output entity)
+        internal MarketAssessment(MarketData marketData)
         {
-            _entity = entity;
-            _metadataService = metadataService;
-            _identifier = new MarketDataIdentifier(entity.ProviderName, entity.MarketDataName);
+            _entity = marketData._entity;
+            _metadataService = marketData._metadataService;
+
+            _identifier = new MarketDataIdentifier(_entity.ProviderName, _entity.MarketDataName);
 
             Assessments = new List<AssessmentElement>();
         }

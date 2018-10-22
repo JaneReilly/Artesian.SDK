@@ -16,7 +16,8 @@ namespace Artesian.SDK.Factory
     /// </summary>
     public class MarketData : IMarketData
     {
-        private IMetadataService _metadataService;
+        internal IMetadataService _metadataService;
+        internal MarketDataEntity.Output _entity = null;
 
         /// <summary>
         /// MarketData Id
@@ -32,8 +33,6 @@ namespace Artesian.SDK.Factory
         /// MarketData Entity
         /// </summary>
         public MarketDataEntityFactory Entity { get; protected set; }
-
-        private MarketDataEntity.Output _entity = null;
 
         /// <summary>
         /// MarketData Constructor by Id
@@ -171,7 +170,7 @@ namespace Artesian.SDK.Factory
             if (_entity.Type != MarketDataType.ActualTimeSerie)
                 throw new MarketAssessmentException("Entity is not Actual Time Serie");
 
-            var actual = new ActualTimeSerie(_metadataService, _entity);
+            var actual = new ActualTimeSerie(this);
             return actual;
         }
 
@@ -190,7 +189,7 @@ namespace Artesian.SDK.Factory
             if (_entity.Type != MarketDataType.VersionedTimeSerie)
                 throw new MarketAssessmentException("Entity is not Versioned Time Serie");
 
-            var versioned = new VersionedTimeSerie(_metadataService, _entity);
+            var versioned = new VersionedTimeSerie(this);
             versioned.SetSelectedVersion(version);
 
             return versioned;
@@ -211,7 +210,7 @@ namespace Artesian.SDK.Factory
             if(_entity.Type != MarketDataType.MarketAssessment)
                 throw new MarketAssessmentException("Entity is not Market Assessement");
 
-            var mas = new MarketAssessment(_metadataService, _entity);
+            var mas = new MarketAssessment(this);
             return mas;
         }
     }

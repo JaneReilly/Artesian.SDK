@@ -26,11 +26,12 @@ namespace Artesian.SDK.Factory
         /// <summary>
         /// VersionedTimeSerie Constructor
         /// </summary>
-        internal VersionedTimeSerie(IMetadataService metadataService, MarketDataEntity.Output entity)
+        internal VersionedTimeSerie(MarketData marketData)
         {
-            _entity = entity;
-            _metadataService = metadataService;
-            _identifier = new MarketDataIdentifier(entity.ProviderName, entity.MarketDataName);
+            _entity = marketData._entity;
+            _metadataService = marketData._metadataService;
+
+            _identifier = new MarketDataIdentifier(_entity.ProviderName, _entity.MarketDataName);
 
             Values = new ReadOnlyDictionary<LocalDateTime, double?>(_values);
         }

@@ -26,11 +26,12 @@ namespace Artesian.SDK.Factory
         /// <summary>
         /// ActualTimeSerie Constructor
         /// </summary>
-        internal ActualTimeSerie(IMetadataService metadataService, MarketDataEntity.Output entity)
+        internal ActualTimeSerie(MarketData marketData)
         {
-            _entity = entity;
-            _metadataService = metadataService;
-            _identifier = new MarketDataIdentifier(entity.ProviderName, entity.MarketDataName);
+            _entity = marketData._entity;
+            _metadataService = marketData._metadataService;
+
+            _identifier = new MarketDataIdentifier(_entity.ProviderName, _entity.MarketDataName);
 
             Values = new ReadOnlyDictionary<LocalDateTime, double?>(_values);
         }

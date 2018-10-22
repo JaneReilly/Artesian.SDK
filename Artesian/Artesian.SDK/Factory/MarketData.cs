@@ -32,36 +32,18 @@ namespace Artesian.SDK.Factory
         /// <summary>
         /// MarketData Entity
         /// </summary>
-        public MarketDataEntityFactory Entity { get; protected set; }
+        public MarketDataMetadata Entity { get; protected set; }
 
         /// <summary>
         /// MarketData Constructor by Id
         /// </summary>
-        public MarketData(IMetadataService metadataService, MarketDataIdentifier id)
+        internal MarketData(IMetadataService metadataService, MarketDataIdentifier id)
         {
             EnsureArg.IsNotNull(metadataService, nameof(metadataService));
 
             _metadataService = metadataService;
 
             Identifier = id;
-        }
-
-        /// <summary>
-        /// MarketData Constructor
-        /// </summary>
-        public MarketData(IMetadataService metadataService, MarketDataEntity.Output entity)
-        {
-            EnsureArg.IsNotNull(metadataService, nameof(metadataService));
-
-            _metadataService = metadataService;
-            _create(entity);
-        }
-
-        private void _create(MarketDataEntity.Output entity)
-        {
-            Identifier = new MarketDataIdentifier(entity.ProviderName, entity.MarketDataName);
-            Entity = new MarketDataEntityFactory(entity);
-            _entity = entity;
         }
 
         /// <summary>
@@ -89,7 +71,7 @@ namespace Artesian.SDK.Factory
 
             _entity = await _metadataService.RegisterMarketDataAsync(metadata, ctk);
 
-            Entity = new MarketDataEntityFactory(_entity);
+            Entity = new MarketDataMetadata(_entity);
         }
 
         /// <summary>
@@ -101,16 +83,17 @@ namespace Artesian.SDK.Factory
         /// <returns> true if  Marketdata si present, false if not found </returns>
         public async Task<bool> IsRegistered(CancellationToken ctk = default)
         {
-            if (_entity == null)
-                _entity = await _metadataService.ReadMarketDataRegistryAsync(this.Identifier, ctk);
-
-            if (_entity != null)
-            {
-                Entity = new MarketDataEntityFactory(_entity);
+            if (Entity != null)
                 return true;
+            else
+            {
+                await LoadMetadata(ctk);
+
+                if (Entity != null)
+                    return true;
+
+                return false;
             }
-                
-            return false;
         }
 
         /// <summary>
@@ -122,11 +105,10 @@ namespace Artesian.SDK.Factory
         /// <returns></returns>
         public async Task LoadMetadata(CancellationToken ctk = default)
         {
-            if (_entity == null)
-                _entity = await _metadataService.ReadMarketDataRegistryAsync(this.Identifier, ctk);
+            _entity = await _metadataService.ReadMarketDataRegistryAsync(this.Identifier, ctk);
 
             if (_entity != null)
-                Entity = new MarketDataEntityFactory(_entity);
+                Entity = new MarketDataMetadata(_entity);
         }
 
         /// <summary>
@@ -141,18 +123,11 @@ namespace Artesian.SDK.Factory
             if (_entity == null)
                 throw new ArtesianFactoryException("Market Data is not yet registered");
 
-            var marketDataEntityInput = new MarketDataEntity.Input(_entity)
-            {
-                Tags = Entity.Tags,
-                OriginalTimezone = Entity.OriginalTimezone,
-                AggregationRule = Entity.AggregationRule,
-                ProviderDescription = Entity.ProviderDescription,
-                Path = Entity.Path,
-            };
+            var marketDataEntityInput = new MarketDataEntity.Input(_entity);
 
             _entity = await _metadataService.UpdateMarketDataAsync(marketDataEntityInput, ctk);
 
-            Entity = new MarketDataEntityFactory(_entity);
+            Entity = new MarketDataMetadata(_entity);
         }
 
         /// <summary>

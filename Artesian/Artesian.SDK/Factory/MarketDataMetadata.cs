@@ -14,14 +14,14 @@ namespace Artesian.SDK.Factory
     /// <summary>
     /// Read Only Class for MarketData Entity
     /// </summary>
-    public class MarketDataEntityFactory
+    public class MarketDataMetadata
     {
         private MarketDataEntity.Output _output;
 
         /// <summary>
         /// Read Only Class for MarketData Entity constructor
         /// </summary>
-        internal MarketDataEntityFactory(MarketDataEntity.Output output)
+        internal MarketDataMetadata(MarketDataEntity.Output output)
         {
             _output = output;
         }
@@ -61,7 +61,7 @@ namespace Artesian.SDK.Factory
         /// <summary>
         /// The TimeTransformID
         /// </summary>
-        public int? TransformID => _output.TransformID;
+        private int? TransformID => _output.TransformID;
         /// <summary>
         /// The Provider description
         /// </summary>

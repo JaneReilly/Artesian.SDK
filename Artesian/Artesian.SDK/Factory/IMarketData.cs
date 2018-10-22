@@ -27,7 +27,7 @@ namespace Artesian.SDK.Factory
         /// <summary>
         /// MarketData ReadOnly Entity
         /// </summary>
-        MarketDataEntityFactory Entity { get; }
+        MarketDataMetadata Entity { get; }
 
         /// <summary>
         /// MarketData Load Metadata

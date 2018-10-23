@@ -1,4 +1,4 @@
-using Artesian.SDK.Service;
+using Artesian.SDK.Common;
 using MessagePack;
 using NodaTime;
 using System;

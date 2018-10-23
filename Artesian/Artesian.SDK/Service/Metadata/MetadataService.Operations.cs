@@ -15,7 +15,7 @@ namespace Artesian.SDK.Service
         /// A sequence of operation will be applied to the metadata identified by ids
         /// </summary>
         /// <param name="operations"></param>
-        /// <param name="ctk"></param>
+        /// <param name="ctk">CancellationToken</param>
         /// <returns>MarketData Entity Output</returns>
         public Task<List<MarketDataEntity.Output>> PerformOperationsAsync(Operations operations, CancellationToken ctk = default)
         {

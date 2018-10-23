@@ -80,7 +80,7 @@ namespace Artesian.SDK.Service
             return _client.Exec<PagedResult<AuthGroup>>(HttpMethod.Get, url);
         }
         /// <summary>
-        /// Get a list of Principals of hte selected user
+        /// Get a list of Principals of the selected user
         /// </summary>
         /// <param name="user">the user name</param>
         /// <param name="ctk">CancellationToken</param>

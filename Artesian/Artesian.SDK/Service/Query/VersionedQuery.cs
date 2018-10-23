@@ -266,7 +266,7 @@ namespace Artesian.SDK.Service
         /// <summary>
         /// Execute VersionedQuery
         /// </summary>
-        /// <param name="ctk"></param>
+        /// <param name="ctk">CancellationToken</param>
         /// <returns>Enumerable of TimeSerieRow Versioned</returns>
         public async Task<IEnumerable<TimeSerieRow.Versioned>> ExecuteAsync(CancellationToken ctk = default)
         {

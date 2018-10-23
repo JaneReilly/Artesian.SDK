@@ -1,6 +1,6 @@
-﻿// Copyright (c) ARK LTD. All rights reserved.
-// Licensed under the MIT License. See LICENSE in the project root for
-// license information. 
+﻿using System;
+using System.Collections.Generic;
+
 namespace Artesian.SDK.Dto
 {
     /// <summary>
@@ -12,6 +12,39 @@ namespace Artesian.SDK.Dto
         GASDAY66 = 1,
         THERMALYEAR = 2,
 #pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
+    }
 
+    /// <summary>
+    /// System TimeTransforms
+    /// </summary>
+    public static class SystemTimeTransforms
+    {
+        /// <summary>
+        /// System TimeTransform GASDAY66
+        /// </summary>
+        public static TimeTransformSimpleShift GASDAY66 = new TimeTransformSimpleShift()
+        {
+            ID = 1,
+            Name = SystemTimeTransform.GASDAY66.ToString(),
+            ETag = Guid.Empty,
+            DefinedBy = TransformDefinitionType.System,
+            Period = Granularity.Day,
+            PositiveShift = "PT6H",
+            NegativeShift = "",
+        };
+
+        /// <summary>
+        /// System TimeTransform THERMALYEAR
+        /// </summary>
+        public static TimeTransformSimpleShift THERMALYEAR = new TimeTransformSimpleShift()
+        {
+            ID = 2,
+            Name = SystemTimeTransform.THERMALYEAR.ToString(),
+            ETag = Guid.Empty,
+            DefinedBy = TransformDefinitionType.System,
+            Period = Granularity.Year,
+            PositiveShift = "",
+            NegativeShift = "P3M",
+        };
     }
 }

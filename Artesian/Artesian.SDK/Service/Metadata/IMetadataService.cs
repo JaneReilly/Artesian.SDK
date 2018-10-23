@@ -82,7 +82,7 @@ namespace Artesian.SDK.Service
         /// 
         /// </remarks>
         /// <param name="operations"></param>
-        /// <param name="ctk"></param>
+        /// <param name="ctk">CancellationToken</param>
         /// <returns>MarketData Entity Output</returns>
         Task<List<MarketDataEntity.Output>> PerformOperationsAsync(Operations operations, CancellationToken ctk = default);
         #endregion
@@ -172,7 +172,7 @@ namespace Artesian.SDK.Service
         /// Retrieve the ACL Path Roles by path
         /// </summary>
         /// <param name="path">The path (starting with "/" char. Ex. "/marketdata/system/" identifies folder "marketdata" with a subfolder "system", roles are assigned to "system" subfolder. Ex. "/marketdata/genoacurve" identifies folder "marketdata" with entity "genoacurve", roles are assigned to "genoacurve" entity.</param>
-        /// <param name="ctk"></param>
+        /// <param name="ctk">CancellationToken</param>
         /// <returns>Enumerable of AuthorizationPath Output entity</returns>
         Task<IEnumerable<AuthorizationPath.Output>> ReadRolesByPath(PathString path, CancellationToken ctk = default);
         /// <summary>
@@ -182,7 +182,7 @@ namespace Artesian.SDK.Service
         /// <param name="pageSize">the size of the page</param>
         /// <param name="principalIds">The principal ids I want to inspect, encoded.( ex. u:user@example.com for users and clients,g:1001 for groups)</param>
         /// <param name="asOf">LocalDateTime we want to inspect</param>
-        /// <param name="ctk"></param>
+        /// <param name="ctk">CancellationToken</param>
         /// <returns>AuthorizationPath Output entity</returns>
         Task<PagedResult<AuthorizationPath.Output>> GetRoles(int page, int pageSize, string[] principalIds, LocalDateTime? asOf = null, CancellationToken ctk = default);
         /// <summary>
@@ -192,21 +192,21 @@ namespace Artesian.SDK.Service
         /// 
         /// </remarks>
         /// <param name="upsert">the entity we want to upsert</param>
-        /// <param name="ctk"></param>
+        /// <param name="ctk">CancellationToken</param>
         /// <returns></returns>
         Task UpsertRoles(AuthorizationPath.Input upsert, CancellationToken ctk = default);
         /// <summary>
         /// Add a role to the ACL Path
         /// </summary>
         /// <param name="add">the entity we want to add. At the path add.Path we add the add.Roles</param>
-        /// <param name="ctk"></param>
+        /// <param name="ctk">CancellationToken</param>
         /// <returns></returns>
         Task AddRoles(AuthorizationPath.Input add, CancellationToken ctk = default);
         /// <summary>
         /// Remove a role from the ACL Path
         /// </summary>
         /// <param name="remove">the entity we want to remove. At the path remove.Path we remove the remove.Roles</param>
-        /// <param name="ctk"></param>
+        /// <param name="ctk">CancellationToken</param>
         /// <returns></returns>
         Task RemoveRoles(AuthorizationPath.Input remove, CancellationToken ctk = default);
         #endregion

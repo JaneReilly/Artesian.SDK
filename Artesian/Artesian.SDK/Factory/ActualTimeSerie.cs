@@ -1,0 +1,143 @@
+﻿using Artesian.SDK.Dto;
+using Artesian.SDK.Common;
+using Artesian.SDK.Service;
+using EnsureThat;
+using NodaTime;
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
+
+namespace Artesian.SDK.Factory
+{
+    /// <summary>
+    /// ActualTimeSerie entity
+    /// </summary>
+    internal sealed class ActualTimeSerie : ITimeserieWritable
+    {
+        private IMetadataService _metadataService;
+        private MarketDataEntity.Output _entity = null;
+        private readonly MarketDataIdentifier _identifier = null;
+        private Dictionary<LocalDateTime, double?> _values = new Dictionary<LocalDateTime, double?>();
+
+        /// <summary>
+        /// ActualTimeSerie Constructor
+        /// </summary>
+        internal ActualTimeSerie(MarketData marketData)
+        {
+            _entity = marketData._entity;
+            _metadataService = marketData._metadataService;
+
+            _identifier = new MarketDataIdentifier(_entity.ProviderName, _entity.MarketDataName);
+
+            Values = new ReadOnlyDictionary<LocalDateTime, double?>(_values);
+        }
+
+        /// <summary>
+        /// ActualTimeSerie Curve Values
+        /// </summary>
+        public IReadOnlyDictionary<LocalDateTime, double?> Values { get; private set; }
+
+        /// <summary>
+        /// MarketData ClearData
+        /// </summary>
+        public void ClearData()
+        {
+            _values = new Dictionary<LocalDateTime, double?>();
+            Values = new ReadOnlyDictionary<LocalDateTime, double?>(_values);
+        }
+
+        /// <summary>
+        /// ActualTimeSerie AddData
+        /// </summary>
+        /// <remarks>
+        /// Add Data on curve with localDate
+        /// </remarks>
+        /// <returns>AddTimeSerieOperationResult</returns>
+        public AddTimeSerieOperationResult AddData(LocalDate localDate, double? value)
+        {
+            Ensure.Any.IsNotNull(_entity);
+
+            if (_entity.OriginalGranularity.IsTimeGranularity())
+                throw new ActualTimeSerieException("This MarketData has Time granularity. Use AddData(Instant time, double? value)");
+
+            var localTime = localDate.AtMidnight();
+
+            return _add(localTime, value);
+        }
+        /// <summary>
+        /// ActualTimeSerie AddData
+        /// </summary>
+        /// <remarks>
+        /// Add Data on curve with Instant
+        /// </remarks>
+        /// <returns>AddTimeSerieOperationResult</returns>
+        public AddTimeSerieOperationResult AddData(Instant time, double? value)
+        {
+            Ensure.Any.IsNotNull(_entity);
+
+            if (!_entity.OriginalGranularity.IsTimeGranularity())
+                throw new ActualTimeSerieException("This MarketData has Date granularity. Use AddData(LocalDate date, double? value)");
+
+            var localTime = time.InUtc().LocalDateTime;
+
+            return _add(localTime, value);
+        }
+
+        private AddTimeSerieOperationResult _add(LocalDateTime localTime, double? value)
+        {
+            if (_values.ContainsKey(localTime))
+                return AddTimeSerieOperationResult.TimeAlreadyPresent;
+
+            if (_entity.OriginalGranularity.IsTimeGranularity())
+            {
+                var period = ArtesianUtils.MapTimePeriod(_entity.OriginalGranularity);
+                if (!localTime.IsStartOfInterval(period))
+                    throw new ArtesianSdkClientException("Trying to insert Time {0} with wrong format to serie {1}. Should be of period {2}", localTime, _identifier, period);
+            }
+            else
+            {
+                var period = ArtesianUtils.MapDatePeriod(_entity.OriginalGranularity);
+                if (!localTime.IsStartOfInterval(period))
+                    throw new ArtesianSdkClientException("Trying to insert Time {0} with wrong format to serie {1}. Should be of period {2}", localTime, _identifier, period);
+            }
+
+            _values.Add(localTime, value);
+            return AddTimeSerieOperationResult.ValueAdded;
+        }
+
+        /// <summary>
+        /// MarketData Save
+        /// </summary>
+        /// <remarks>
+        /// Save the Data of the current MarketData
+        /// </remarks>
+        /// <param name="downloadedAt">downloaded at</param>
+        /// <param name="deferCommandExecution">deferCommandExecution</param>
+        /// <param name="deferDataGeneration">deferDataGeneration</param>
+        /// <returns></returns>
+        public async Task Save(Instant downloadedAt, bool deferCommandExecution = false, bool deferDataGeneration = true)
+        {
+            Ensure.Any.IsNotNull(_entity);
+
+            if (_values.Any())
+            {
+                var data = new UpsertCurveData(_identifier)
+                {
+                    Timezone = _entity.OriginalGranularity.IsTimeGranularity() ? "UTC" : _entity.OriginalTimezone,
+                    DownloadedAt = downloadedAt,
+                    Rows = _values,
+                    DeferCommandExecution = deferCommandExecution,
+                    DeferDataGeneration = deferDataGeneration
+                };
+
+                await _metadataService.UpsertCurveDataAsync(data);
+            }
+            //else
+            //    _logger.Warn("No Data to be saved.");
+        }
+    }
+}

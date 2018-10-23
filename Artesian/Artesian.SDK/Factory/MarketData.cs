@@ -32,7 +32,7 @@ namespace Artesian.SDK.Factory
         /// <summary>
         /// MarketData Entity
         /// </summary>
-        public MarketDataMetadata Entity { get; protected set; }
+        public MarketDataMetadata Metadata { get; protected set; }
 
         /// <summary>
         /// MarketData Constructor by Id
@@ -71,7 +71,7 @@ namespace Artesian.SDK.Factory
 
             _entity = await _metadataService.RegisterMarketDataAsync(metadata, ctk);
 
-            Entity = new MarketDataMetadata(_entity);
+            Metadata = new MarketDataMetadata(_entity);
         }
 
         /// <summary>
@@ -83,13 +83,13 @@ namespace Artesian.SDK.Factory
         /// <returns> true if  Marketdata si present, false if not found </returns>
         public async Task<bool> IsRegistered(CancellationToken ctk = default)
         {
-            if (Entity != null)
+            if (Metadata != null)
                 return true;
             else
             {
-                await LoadMetadata(ctk);
+                await Load(ctk);
 
-                if (Entity != null)
+                if (Metadata != null)
                     return true;
 
                 return false;
@@ -103,12 +103,12 @@ namespace Artesian.SDK.Factory
         /// Loads MarketData Metadata
         /// </remarks>
         /// <returns></returns>
-        public async Task LoadMetadata(CancellationToken ctk = default)
+        public async Task Load(CancellationToken ctk = default)
         {
             _entity = await _metadataService.ReadMarketDataRegistryAsync(this.Identifier, ctk);
 
             if (_entity != null)
-                Entity = new MarketDataMetadata(_entity);
+                Metadata = new MarketDataMetadata(_entity);
         }
 
         /// <summary>
@@ -127,7 +127,7 @@ namespace Artesian.SDK.Factory
 
             _entity = await _metadataService.UpdateMarketDataAsync(marketDataEntityInput, ctk);
 
-            Entity = new MarketDataMetadata(_entity);
+            Metadata = new MarketDataMetadata(_entity);
         }
 
         /// <summary>

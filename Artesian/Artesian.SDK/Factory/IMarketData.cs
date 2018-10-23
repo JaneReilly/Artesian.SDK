@@ -27,7 +27,7 @@ namespace Artesian.SDK.Factory
         /// <summary>
         /// MarketData ReadOnly Entity
         /// </summary>
-        MarketDataMetadata Entity { get; }
+        MarketDataMetadata Metadata { get; }
 
         /// <summary>
         /// MarketData Load Metadata
@@ -36,7 +36,7 @@ namespace Artesian.SDK.Factory
         /// Update the MarketData 
         /// </remarks>
         /// <returns></returns>
-        Task LoadMetadata(CancellationToken ctk = default);
+        Task Load(CancellationToken ctk = default);
         /// <summary>
         /// MarketData Update
         /// </summary>

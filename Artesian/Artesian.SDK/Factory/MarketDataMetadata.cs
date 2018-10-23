@@ -59,10 +59,6 @@ namespace Artesian.SDK.Factory
         /// </summary>
         public AggregationRule AggregationRule { get => _output.AggregationRule; set => _output.AggregationRule = value; }
         /// <summary>
-        /// The TimeTransformID
-        /// </summary>
-        private int? TransformID => _output.TransformID;
-        /// <summary>
         /// The Provider description
         /// </summary>
         public string ProviderDescription { get => _output.ProviderDescription; set => _output.ProviderDescription = value; }

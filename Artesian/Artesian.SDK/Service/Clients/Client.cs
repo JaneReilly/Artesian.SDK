@@ -3,6 +3,7 @@
 // license information. 
 using Auth0.AuthenticationApi;
 using Auth0.AuthenticationApi.Models;
+using Flurl;
 using Flurl.Http;
 using JWT.Builder;
 using Newtonsoft.Json;
@@ -45,10 +46,9 @@ namespace Artesian.SDK.Service
            = new Polly.Caching.Memory.MemoryCacheProvider(new Microsoft.Extensions.Caching.Memory.MemoryCache(new Microsoft.Extensions.Caching.Memory.MemoryCacheOptions()));
 
         private readonly Policy<(string AccessToken, DateTimeOffset ExpiresOn)> _cachePolicy;
-        /// <summary>
-        /// IArtesianServiceConfig Config
-        /// </summary>
-        public IArtesianServiceConfig Config { get; private set; }
+
+        private readonly string _apiKey;
+
         /// <summary>
         /// Client constructor Auth credentials / ApiKey can be passed through config
         /// </summary>
@@ -56,8 +56,8 @@ namespace Artesian.SDK.Service
         /// <param name="Url">string</param>
         public Client(IArtesianServiceConfig config, string Url)
         {
-            this.Config = config;
-            this._url = Url;
+            _url = config.BaseAddress.ToString().AppendPathSegment(Url);
+            _apiKey = config.ApiKey;
 
             var cfg = new JsonSerializerSettings();
             cfg = cfg.ConfigureForNodaTime(DateTimeZoneProviders.Tzdb);
@@ -85,13 +85,14 @@ namespace Artesian.SDK.Service
             formatters.Add(_jsonFormatter);
             _formatters = formatters;
 
-            if (config.ApiKey==null) {
-                _auth0 = new AuthenticationApiClient($"{Config.Domain}");
+            if (config.ApiKey == null)
+            {
+                _auth0 = new AuthenticationApiClient($"{config.Domain}");
                 _credentials = new ClientCredentialsTokenRequest()
                 {
-                    Audience = Config.Audience,
-                    ClientId = Config.ClientId,
-                    ClientSecret = Config.ClientSecret,
+                    Audience = config.Audience,
+                    ClientId = config.ClientId,
+                    ClientSecret = config.ClientSecret,
                 };
 
                 _cachePolicy = Policy.CacheAsync(_memoryCacheProvider.AsyncFor<(string AccessToken, DateTimeOffset ExpiresOn)>(), new ResultTtl<(string AccessToken, DateTimeOffset ExpiresOn)>(r => new Ttl(r.ExpiresOn - DateTimeOffset.Now, false)));
@@ -108,8 +109,8 @@ namespace Artesian.SDK.Service
             {
                 var req = _client.Request(resource).WithAcceptHeader(_formatters).AllowAnyHttpStatus();
 
-                if (Config.ApiKey != null)
-                    req = req.WithHeader("X-Api-Key", Config.ApiKey);
+                if (_apiKey != null)
+                    req = req.WithHeader("X-Api-Key", _apiKey);
                 else
                 {
                     var (token, _) = await _getAccessToken();
@@ -131,7 +132,7 @@ namespace Artesian.SDK.Service
                         if (!res.IsSuccessStatusCode)
                         {
                             var responseText = await res.Content.ReadAsStringAsync();
-                            var exceptionMessage = $"Failed handling REST call to WebInterface {method} {Config.BaseAddress + _url + resource}. Returned status: {res.StatusCode}. Content: \n";
+                            var exceptionMessage = $"Failed handling REST call to WebInterface {method} {_url + resource}. Returned status: {res.StatusCode}. Content: \n";
 
                             if (res.StatusCode == HttpStatusCode.BadRequest)
                             {
@@ -164,7 +165,7 @@ namespace Artesian.SDK.Service
             }
             catch (Exception e)
             {
-                throw new ArtesianSdkClientException($"Failed handling REST call to WebInterface: {method} " + Config.BaseAddress + _url + resource, e);
+                throw new ArtesianSdkClientException($"Failed handling REST call to WebInterface: {method} " + _url + resource, e);
             }
         }
 

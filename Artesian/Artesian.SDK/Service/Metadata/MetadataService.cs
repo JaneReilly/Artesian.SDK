@@ -16,8 +16,7 @@ namespace Artesian.SDK.Service
         public MetadataService(IArtesianServiceConfig cfg)
         {
             _cfg = cfg;
-            _client = new Client(cfg, cfg.BaseAddress.ToString().AppendPathSegment(ArtesianConstants.MetadataVersion)
-            );
+            _client = new Client(cfg, ArtesianConstants.MetadataVersion);
         }
     }
 }

@@ -20,8 +20,7 @@ namespace Artesian.SDK.Service
         public QueryService(IArtesianServiceConfig cfg)
         {
             _cfg = cfg;
-            _client = new Client(cfg, cfg.BaseAddress.ToString().AppendPathSegment(ArtesianConstants.QueryRoute).AppendPathSegment(ArtesianConstants.QueryVersion)
-            );
+            _client = new Client(cfg, ArtesianConstants.QueryRoute.AppendPathSegment(ArtesianConstants.QueryVersion));
         }
         /// <summary>
         /// Create Actual Time Serie Query

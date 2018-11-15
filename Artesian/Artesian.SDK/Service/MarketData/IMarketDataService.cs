@@ -1,6 +1,7 @@
 ﻿// Copyright (c) ARK LTD. All rights reserved.
 // Licensed under the MIT License. See LICENSE in the project root for
 // license information. 
+
 using Artesian.SDK.Dto;
 using NodaTime;
 using System;
@@ -11,28 +12,27 @@ using System.Threading.Tasks;
 namespace Artesian.SDK.Service
 {
     /// <summary>
-    /// Metadata service interface
+    ///  MarketData service interface
     /// </summary>
-    [Obsolete("Use IMarketDataService", true)]
-    public interface IMetadataService
+    public interface IMarketDataService
     {
         #region MarketData
         /// <summary>
-        /// Get Metadata by provider and curve name with MarketDataIdentifier
+        /// Get MarketData by provider and curve name with MarketDataIdentifier
         /// </summary>
         /// <param name="id">MarketDataIdentifier</param>
         /// <param name="ctk">CancellationToken</param>
         /// <returns>MarketData Entity Output</returns>
         Task<MarketDataEntity.Output> ReadMarketDataRegistryAsync(MarketDataIdentifier id, CancellationToken ctk = default);
         /// <summary>
-        /// Read Metadata by curve id
+        /// Read MarketData by curve id
         /// </summary>
         /// <param name="id">An Int</param>
         /// <param name="ctk">CancellationToken</param>
         /// <returns>MarketData Entity Output</returns>
         Task<MarketDataEntity.Output> ReadMarketDataRegistryAsync(int id, CancellationToken ctk = default);
         /// <summary>
-        /// Get the metadata versions by id
+        /// Get the MarketData versions by id
         /// </summary>
         /// <param name="id">Int</param>
         /// <param name="page">Int</param>
@@ -78,7 +78,7 @@ namespace Artesian.SDK.Service
 
         #region Operations
         /// <summary>
-        /// A sequence of operation will be applied to the metadata identified by ids
+        /// A sequence of operation will be applied to the MarketData identified by ids
         /// </summary>
         /// <remarks>
         /// 

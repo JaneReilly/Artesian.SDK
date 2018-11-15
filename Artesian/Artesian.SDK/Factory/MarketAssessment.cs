@@ -18,7 +18,7 @@ namespace Artesian.SDK.Factory
     /// </summary>
     internal sealed class MarketAssessment : IMarketAssessmentWritable
     {
-        private IMetadataService _metadataService;
+        private IMarketDataService _marketDataService;
         private MarketDataEntity.Output _entity = null;
         private readonly MarketDataIdentifier _identifier = null;
 
@@ -28,7 +28,7 @@ namespace Artesian.SDK.Factory
         internal MarketAssessment(MarketData marketData)
         {
             _entity = marketData._entity;
-            _metadataService = marketData._metadataService;
+            _marketDataService = marketData._marketDataService;
 
             _identifier = new MarketDataIdentifier(_entity.ProviderName, _entity.MarketDataName);
 
@@ -136,7 +136,7 @@ namespace Artesian.SDK.Factory
                     data.MarketAssessment.Add(reportTime.Key, assessments);
                 }
 
-                await _metadataService.UpsertCurveDataAsync(data);
+                await _marketDataService.UpsertCurveDataAsync(data);
             }
             //else
             //    _logger.Warn("No Data to be saved.");

@@ -18,7 +18,7 @@ namespace Artesian.SDK.Factory
     /// </summary>
     internal sealed class VersionedTimeSerie : ITimeserieWritable
     {
-        private IMetadataService _metadataService;
+        private IMarketDataService _marketDataService;
         private MarketDataEntity.Output _entity = null;
         private readonly MarketDataIdentifier _identifier = null;
         private Dictionary<LocalDateTime, double?> _values = new Dictionary<LocalDateTime, double?>();
@@ -29,7 +29,7 @@ namespace Artesian.SDK.Factory
         internal VersionedTimeSerie(MarketData marketData)
         {
             _entity = marketData._entity;
-            _metadataService = marketData._metadataService;
+            _marketDataService = marketData._marketDataService;
 
             _identifier = new MarketDataIdentifier(_entity.ProviderName, _entity.MarketDataName);
 
@@ -156,7 +156,7 @@ namespace Artesian.SDK.Factory
                     DeferDataGeneration = deferDataGeneration
                 };
 
-                await _metadataService.UpsertCurveDataAsync(data);
+                await _marketDataService.UpsertCurveDataAsync(data);
             }
             //else
             //    _logger.Warn("No Data to be saved.");

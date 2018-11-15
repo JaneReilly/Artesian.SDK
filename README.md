@@ -127,6 +127,75 @@ The MetadataService service is used to access the Artesian api market data metad
  var metadataquery = await metadataservice.ReadMarketDataRegistryAsync(
 		new MarketDataIdentifier("TestProvider", "TestCurveName"));
 ```
+## MarketData Service
+
+The MarketData Service is used to retrieve and edit MarketData references.
+
+Retrieving Market Data by an Identifier or Id and verify if it is registerd
+```csharp
+ var md = mds.GetMarketDataReference(new MarketDataIdentifier(marketDataEntity.ProviderName, marketDataEntity.MarketDataName)); // Id or identifier
+
+    var isRegistered = await md.IsRegistered(); // if exists return true, otherwise false
+    
+    if (!isRegistered)
+        await md.Register(marketDataEntity);
+```
+
+Changing a value to verify an update
+```csharp
+    md.Metadata.AggregationRule = AggregationRule.Undefined;
+    md.Metadata.Transform = SystemTimeTransforms.GASDAY66;
+
+    await md.Update();
+
+    await md.Load();
+```
+
+Using Write mode for Actual
+```csharp
+    if (md.Metadata.Type == MarketDataType.ActualTimeSerie)
+    {
+        var wmd = md.EditActual();
+
+        wmd.AddData(new LocalDate(2018, 10, 03), 10);
+        wmd.AddData(new LocalDate(2018, 10, 04), 15);
+
+        await wmd.Save(Instant.FromDateTimeUtc(DateTime.Now.ToUniversalTime()));
+    }
+```
+
+ Versioned
+ ```csharp
+    else if (md.Metadata.Type == MarketDataType.VersionedTimeSerie)
+    {
+        var wmd = md.EditVersioned(new LocalDateTime(2018, 10, 18, 00, 00));
+
+        wmd.AddData(new LocalDate(2018, 10, 03), 10);
+        wmd.AddData(new LocalDate(2018, 10, 04), 15);
+
+        await wmd.Save(Instant.FromDateTimeUtc(DateTime.Now.ToUniversalTime()));
+    }
+```
+
+Market Assessment
+```csharp
+    else if (md.Metadata.Type == MarketDataType.MarketAssessment)
+    {
+        var wmd = md.EditMarketAssessment();
+
+        var mktAssValue = new MarketAssessmentValue()
+        {
+            High = 47,
+            Close = 20,
+            Low = 18,
+            Open = 33
+        };
+
+        wmd.AddData(new LocalDate(2018, 11, 28), "Dec-18", mktAssValue);
+
+        await wmd.Save(Instant.FromDateTimeUtc(DateTime.Now.ToUniversalTime()));
+    }
+```
 
 ## Links
 * [Nuget](https://www.nuget.org/packages/Artesian.SDK/)

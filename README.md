@@ -18,7 +18,7 @@ or download directly from NuGet.
 * [NuGet](https://www.nuget.org/packages/Artesian.SDK/)
 
 ## How to use
-The Artesian.SDK instance can be configured using either Client credentials or API-Key authentication 
+The Artesian.SDK instance can be configured using either Client credentials or API-Key authentication
 ```csharp
 //API-Key
  ArtesianServiceConfig _cfg = new ArtesianServiceConfig(
@@ -118,72 +118,80 @@ Period Range
  .InRelativePeriodRange(Period.FromWeeks(2), Period.FromDays(20))
 ```
 
-## MetadataService
-
-The MetadataService service is used to access the Artesian api market data metadata and related entitys.
-
-```csharp
- var metadataservice = new MetadataService(_cfg);
- var metadataquery = await metadataservice.ReadMarketDataRegistryAsync(
-		new MarketDataIdentifier("TestProvider", "TestCurveName"));
-```
 ## MarketData Service
 
-The MarketData Service is used to retrieve and edit MarketData references.
-
-Retrieving Market Data by an Identifier or Id and verify if it is registerd
+Using the ArtesianServiceConfig we create an instance of the MarketDataService which is used to retrieve and edit
+MarketData refrences.
 ```csharp
- var md = mds.GetMarketDataReference(new MarketDataIdentifier(marketDataEntity.ProviderName, marketDataEntity.MarketDataName)); // Id or identifier
+var marketDataEntity = new MarketDataEntity.Input(){
+    ProviderName = "TestProviderName",
+    MarketDataName = "TestMarketDataName",
+    OriginalGranularity = Granularity.Day,
+    OriginalTimezone = "CET",
+    AggregationRule = AggregationRule.Undefined,
+    Type = MarketDataType.VersionedTimeSerie,
+    MarketDataId = 1
+}
 
-    var isRegistered = await md.IsRegistered(); // if exists return true, otherwise false
-    
-    if (!isRegistered)
-        await md.Register(marketDataEntity);
+var marketDataService = new MarketDataService(_cfg);
+
+var marketData = await marketDataQueryService.GetMarketDataReference(new MarketDataIdentifier(
+        marketDataEntity.ProviderName,
+        marketDataEntity.MarketDataName)
+    );
 ```
 
-Changing a value to verify an update
+Check for MarketData Registration status. Returns true if Market Data exists. Otherwise Register.
 ```csharp
-    md.Metadata.AggregationRule = AggregationRule.Undefined;
-    md.Metadata.Transform = SystemTimeTransforms.GASDAY66;
-
-    await md.Update();
-
-    await md.Load();
+var isRegistered = await marketData.IsRegistered();
+if(!isRegistered)
+    await marketData.Register(marketDataEntity);
 ```
 
-Using Write mode for Actual
+Verifying Updates made to MarketData
 ```csharp
-    if (md.Metadata.Type == MarketDataType.ActualTimeSerie)
+marketData.Metadata.AggregationRule = AggregationRule.SumAndDivide;
+marketData.Metadata.Transform = SystemTimeTransforms.GASDAY66;
+
+await marketData.Update();
+
+await marketData.Load();
+```
+
+Using Write mode
+### Actual Time Series
+```csharp
+    if (marketData.Metadata.Type == MarketDataType.ActualTimeSerie)
     {
-        var wmd = md.EditActual();
+        var writeMarketData = marketdata.EditActual();
 
-        wmd.AddData(new LocalDate(2018, 10, 03), 10);
-        wmd.AddData(new LocalDate(2018, 10, 04), 15);
+        writeMarketData.AddData(new LocalDate(2018, 10, 03), 10);
+        writeMarketData.AddData(new LocalDate(2018, 10, 04), 15);
 
-        await wmd.Save(Instant.FromDateTimeUtc(DateTime.Now.ToUniversalTime()));
+        await writeMarketData.Save(Instant.FromDateTimeUtc(DateTime.Now.ToUniversalTime()));
     }
 ```
 
- Versioned
+### Versioned Time Series
  ```csharp
-    else if (md.Metadata.Type == MarketDataType.VersionedTimeSerie)
+    else if (marketData.Metadata.Type == MarketDataType.VersionedTimeSerie)
     {
-        var wmd = md.EditVersioned(new LocalDateTime(2018, 10, 18, 00, 00));
+        var writeMarketData = marketData.EditVersioned(new LocalDateTime(2018, 10, 18, 00, 00));
 
-        wmd.AddData(new LocalDate(2018, 10, 03), 10);
-        wmd.AddData(new LocalDate(2018, 10, 04), 15);
+        writeMarketData.AddData(new LocalDate(2018, 10, 03), 10);
+        writeMarketData.AddData(new LocalDate(2018, 10, 04), 15);
 
-        await wmd.Save(Instant.FromDateTimeUtc(DateTime.Now.ToUniversalTime()));
+        await writeMarketData.Save(Instant.FromDateTimeUtc(DateTime.Now.ToUniversalTime()));
     }
 ```
 
-Market Assessment
+### Market Assessment Time Series
 ```csharp
-    else if (md.Metadata.Type == MarketDataType.MarketAssessment)
+    else if (marketData.Metadata.Type == MarketDataType.MarketAssessment)
     {
-        var wmd = md.EditMarketAssessment();
+        var writeMarketData = marketData.EditMarketAssessment();
 
-        var mktAssValue = new MarketAssessmentValue()
+        var marketAssessmentValue = new MarketAssessmentValue()
         {
             High = 47,
             Close = 20,
@@ -191,9 +199,9 @@ Market Assessment
             Open = 33
         };
 
-        wmd.AddData(new LocalDate(2018, 11, 28), "Dec-18", mktAssValue);
+        writeMarketAssessment.AddData(new LocalDate(2018, 11, 28), "Dec-18", marketAssessmentValue);
 
-        await wmd.Save(Instant.FromDateTimeUtc(DateTime.Now.ToUniversalTime()));
+        await writeMarketAssessment.Save(Instant.FromDateTimeUtc(DateTime.Now.ToUniversalTime()));
     }
 ```
 

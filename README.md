@@ -120,9 +120,10 @@ Period Range
 
 ## MarketData Service
 
-Using the ArtesianServiceConfig we create an instance of the MarketDataService which is used to retrieve and edit
-MarketData refrences.
+Using the ArtesianServiceConfig `_cfg` we create an instance of the MarketDataService which is used to retrieve and edit
+MarketData refrences. `GetMarketReference` will read the marketdata entity by MarketDataIdentifier and returns an istance of IMarketData if it exists.
 ```csharp
+//reference market data entity
 var marketDataEntity = new MarketDataEntity.Input(){
     ProviderName = "TestProviderName",
     MarketDataName = "TestMarketDataName",
@@ -141,14 +142,17 @@ var marketData = await marketDataQueryService.GetMarketDataReference(new MarketD
     );
 ```
 
-Check for MarketData Registration status. Returns true if Market Data exists. Otherwise Register.
+To Check MarketData for `IsRegistered` status, returns true if present or false if not found.
 ```csharp
 var isRegistered = await marketData.IsRegistered();
-if(!isRegistered)
-    await marketData.Register(marketDataEntity);
 ```
 
-Verifying Updates made to MarketData
+To `Register` MarketData , it will first verify that it has not all ready been registered then proceed to register the given MarketData entity.
+```csharp
+await marketData.Register(marketDataEntity);
+```
+
+Calling `Update` will update the registered MarketData. Calling `Load`, loads the MarketData.
 ```csharp
 marketData.Metadata.AggregationRule = AggregationRule.SumAndDivide;
 marketData.Metadata.Transform = SystemTimeTransforms.GASDAY66;
@@ -158,51 +162,48 @@ await marketData.Update();
 await marketData.Load();
 ```
 
-Using Write mode
+Using `Write mode` to edit MarketData and `save` to save the data of the current MarketData providing an instant.
 ### Actual Time Series
+`EditActual` starts the write mode for an Actual Time serie. Checks are done to verify registration and MarketDataType to verify it is an Actual Time Serie.
+Using `AddData` to be written.
 ```csharp
-    if (marketData.Metadata.Type == MarketDataType.ActualTimeSerie)
-    {
-        var writeMarketData = marketdata.EditActual();
+var writeMarketData = marketdata.EditActual();
 
-        writeMarketData.AddData(new LocalDate(2018, 10, 03), 10);
-        writeMarketData.AddData(new LocalDate(2018, 10, 04), 15);
+writeMarketData.AddData(new LocalDate(2018, 10, 03), 10);
+writeMarketData.AddData(new LocalDate(2018, 10, 04), 15);
 
-        await writeMarketData.Save(Instant.FromDateTimeUtc(DateTime.Now.ToUniversalTime()));
-    }
+await writeMarketData.Save(Instant.FromDateTimeUtc(DateTime.Now.ToUniversalTime()));
 ```
 
 ### Versioned Time Series
+`EditVersioned` starts the write mode for a Versioned Time serie. Checks are done to verify registration and MarketDataType to verify it is a Versioned Time Serie.
+Using `AddData` to be written.
  ```csharp
-    else if (marketData.Metadata.Type == MarketDataType.VersionedTimeSerie)
-    {
-        var writeMarketData = marketData.EditVersioned(new LocalDateTime(2018, 10, 18, 00, 00));
+var writeMarketData = marketData.EditVersioned(new LocalDateTime(2018, 10, 18, 00, 00));
 
-        writeMarketData.AddData(new LocalDate(2018, 10, 03), 10);
-        writeMarketData.AddData(new LocalDate(2018, 10, 04), 15);
+writeMarketData.AddData(new LocalDate(2018, 10, 03), 10);
+writeMarketData.AddData(new LocalDate(2018, 10, 04), 15);
 
-        await writeMarketData.Save(Instant.FromDateTimeUtc(DateTime.Now.ToUniversalTime()));
-    }
+await writeMarketData.Save(Instant.FromDateTimeUtc(DateTime.Now.ToUniversalTime()));
 ```
 
 ### Market Assessment Time Series
+`EditMarketAssessment` starts the write mode for  a Market Assessment. Checks are done to verify registration and MarketDataType to verify it is a Market Assessment.
+Using `AddData` to provide a local date time and a MarketAssessmentValue to be written.
 ```csharp
-    else if (marketData.Metadata.Type == MarketDataType.MarketAssessment)
-    {
-        var writeMarketData = marketData.EditMarketAssessment();
+var writeMarketData = marketData.EditMarketAssessment();
 
-        var marketAssessmentValue = new MarketAssessmentValue()
-        {
-            High = 47,
-            Close = 20,
-            Low = 18,
-            Open = 33
-        };
+var marketAssessmentValue = new MarketAssessmentValue()
+{
+    High = 47,
+    Close = 20,
+    Low = 18,
+    Open = 33
+};
 
-        writeMarketAssessment.AddData(new LocalDate(2018, 11, 28), "Dec-18", marketAssessmentValue);
+writeMarketData.AddData(new LocalDate(2018, 11, 28), "Dec-18", marketAssessmentValue);
 
-        await writeMarketAssessment.Save(Instant.FromDateTimeUtc(DateTime.Now.ToUniversalTime()));
-    }
+await writeMarketData.Save(Instant.FromDateTimeUtc(DateTime.Now.ToUniversalTime()));
 ```
 
 ## Links

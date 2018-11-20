@@ -152,7 +152,7 @@ To `Register` MarketData , it will first verify that it has not all ready been r
 await marketData.Register(marketDataEntity);
 ```
 
-Calling `Update` will update the registered MarketData. Calling `Load`, loads the MarketData.
+Calling `Update` will update the current MarketData metadata with changed values. Calling `Load`, retrieves the current metadata of a MarketData.
 ```csharp
 marketData.Metadata.AggregationRule = AggregationRule.SumAndDivide;
 marketData.Metadata.Transform = SystemTimeTransforms.GASDAY66;

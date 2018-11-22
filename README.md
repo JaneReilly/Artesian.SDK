@@ -198,7 +198,8 @@ var marketAssessmentValue = new MarketAssessmentValue()
     High = 47,
     Close = 20,
     Low = 18,
-    Open = 33
+    Open = 33,
+    Settlement = 22
 };
 
 writeMarketData.AddData(new LocalDate(2018, 11, 28), "Dec-18", marketAssessmentValue);

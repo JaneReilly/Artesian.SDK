@@ -31,7 +31,7 @@ namespace Artesian.SDK.Dto
         public LocalDateTime? Version { get; set; }
 
         /// <summary>
-        /// Last Update for this curve 
+        /// Last Update for this curve
         /// </summary>
         [Key(3)]
         public Instant LastUpdated { get; set; }
@@ -43,13 +43,13 @@ namespace Artesian.SDK.Dto
         public Instant Created { get; set; }
 
         /// <summary>
-        /// Date start of range for this curve  
+        /// Start date of range for this curve  
         /// </summary>
         [Key(5)]
         public LocalDate RangeStart { get; set; }
 
         /// <summary>
-        /// Date end of range for this curve  
+        /// End date of range for this curve  
         /// </summary>
         [Key(6)]
         public LocalDate RangeEnd { get; set; }

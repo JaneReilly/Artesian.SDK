@@ -59,7 +59,7 @@ namespace Artesian.SDK.Dto
         [Key(4)]
         public double? Low { get; set; }
         /// <summary>
-        /// The Market Assessment Volum paid
+        /// The Market Assessment Volume paid
         /// </summary>
         [Key(5)]
         public double? VolumePaid { get; set; }

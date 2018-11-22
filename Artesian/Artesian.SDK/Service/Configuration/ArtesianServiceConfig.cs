@@ -39,7 +39,7 @@ namespace Artesian.SDK.Service
         /// Config for ApiKey service access
         /// </summary>
         /// <param name="baseAddress">Uri</param>
-        /// <param name="xApiKey">string</param>
+        /// <param name="xApiKey">String</param>
         public ArtesianServiceConfig(Uri baseAddress, string xApiKey)
         {
             BaseAddress = baseAddress;
@@ -49,10 +49,10 @@ namespace Artesian.SDK.Service
         /// Config for Bearer token service access
         /// </summary>
         /// <param name="baseAddress">Uri</param>
-        /// <param name="audience">string</param>
-        /// <param name="domain">string</param>
-        /// <param name="clientId">string</param>
-        /// <param name="clientSecret">string</param>
+        /// <param name="audience">String</param>
+        /// <param name="domain">String</param>
+        /// <param name="clientId">String</param>
+        /// <param name="clientSecret">String</param>
         public ArtesianServiceConfig(Uri baseAddress, string audience, string domain, string clientId, string clientSecret)
         {
             BaseAddress = baseAddress;

@@ -53,7 +53,7 @@ namespace Artesian.SDK.Service
         /// Client constructor Auth credentials / ApiKey can be passed through config
         /// </summary>
         /// <param name="config">Config</param>
-        /// <param name="Url">string</param>
+        /// <param name="Url">String</param>
         public Client(IArtesianServiceConfig config, string Url)
         {
             _url = config.BaseAddress.ToString().AppendPathSegment(Url);

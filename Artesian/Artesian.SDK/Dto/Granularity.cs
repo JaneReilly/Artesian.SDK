@@ -32,7 +32,7 @@ namespace Artesian.SDK.Dto
     {
 
         /// <summary>
-        /// Returns true if the given Granularity is  by time
+        /// Returns true if the given Granularity is by time
         /// </summary>
         /// <param name="granularity">Granularity</param>
         public static bool IsTimeGranularity(this Granularity granularity)
@@ -41,7 +41,7 @@ namespace Artesian.SDK.Dto
         }
 
         /// <summary>
-        /// Returns true if the smaller is part of the biggest granularity
+        /// Returns true if the smaller granularity is part of the biggest granularity
         /// </summary>
         /// <param name="smaller">Granularity</param>
         /// <param name="bigger">Granularity</param>
@@ -59,7 +59,7 @@ namespace Artesian.SDK.Dto
         }
 
         /// <summary>
-        /// Gives the number of minute based on Granularity
+        /// Gives the number of minutes based on Granularity
         /// </summary>
         /// <param name="granularity">Granularity</param>
         private static int _orderOf(this Granularity granularity)

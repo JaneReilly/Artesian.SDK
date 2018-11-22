@@ -62,30 +62,30 @@ namespace Artesian.SDK.Dto
         [Required]
         [MessagePack.Key(3)]
         public Instant DownloadedAt { get; set; }
-        
+
         /// <summary>
         /// The Market Data Identifier to upsert
-        /// - LocalDateTime key is The Report timestamp in the MarketData OriginalTimezone but UTC when Hourly.
+        /// - LocalDateTime key is The Report timestamp in the MarketData OriginalTimezone but when Hourly must be UTC.
         /// - IDictionary value is The Market Data Identifier to upsert
         /// </summary>
         [MessagePack.Key(4)]
         public IDictionary<LocalDateTime, IDictionary<string, MarketAssessmentValue>> MarketAssessment { get; set; }
 
         /// <summary>
-        /// The timeserie data in OriginalTimezone or, when Hourly, UTC.
+        /// The timeserie data in OriginalTimezone or, when Hourly, must be UTC.
         /// </summary>
         [MessagePack.Key(5)]
         public IDictionary<LocalDateTime, double?> Rows { get; set; }
 
 
         /// <summary>
-        /// Flag to choose between syncronoys and asyncronous command execution
+        /// Flag to choose between synchronous and asynchronous command execution
         /// </summary>
         [MessagePack.Key(6)]
         public bool DeferCommandExecution { get; set; } = true;
 
         /// <summary>
-        /// Flag to choose between syncronoys and asyncronous precomputed data generation
+        /// Flag to choose between synchronous and asynchronous precomputed data generation
         /// </summary>
         [MessagePack.Key(7)]
         public bool DeferDataGeneration { get; set; } = true;
@@ -108,20 +108,20 @@ namespace Artesian.SDK.Dto
                 throw new ArgumentException("UpsertCurveData Rows must be valorized if MarketAssessment is null");
 
             if (upsertCurveData.MarketAssessment != null && upsertCurveData.Rows != null)
-                throw new ArgumentException("UpsertCurveData MarketAssessment must be valorized if Rows is null");
+                throw new ArgumentException("UpsertCurveData MarketAssessment must be valorized if Rows are null");
 
             if (upsertCurveData.Rows == null)
             {
                 if (upsertCurveData.Version != null)
-                    throw new ArgumentException("UpsertCurveData Version must be NULL if Rows is NULL");
+                    throw new ArgumentException("UpsertCurveData Version must be NULL if Rows are NULL");
 
                 if (upsertCurveData.MarketAssessment == null || upsertCurveData.MarketAssessment.Count == 0)
-                    throw new ArgumentException("UpsertCurveData MarketAssessment must be valorized if Rows is NULL");
+                    throw new ArgumentException("UpsertCurveData MarketAssessment must be valorized if Rows are NULL");
             }
             else
             {
                 if (upsertCurveData.MarketAssessment != null)
-                    throw new ArgumentException("UpsertCurveData MarketAssessment must be NULL if Rows is Valorized");
+                    throw new ArgumentException("UpsertCurveData MarketAssessment must be NULL if Rows are Valorized");
 
                 foreach (var row in upsertCurveData.Rows)
                 {

@@ -57,7 +57,7 @@ namespace Artesian.SDK.Factory
         internal void SetSelectedVersion(LocalDateTime version)
         {
             if ((SelectedVersion.HasValue) && (Values.Count != 0))
-                throw new VersionedTimeSerieException("SelectedVersion can't be changed if curve contains values. Current Version is {0}", SelectedVersion.Value);
+                throw new VersionedTimeSerieException("SelectedVersion can't be changed if the curve contains values. Current Version is {0}", SelectedVersion.Value);
 
             SelectedVersion = version;
         }
@@ -74,8 +74,8 @@ namespace Artesian.SDK.Factory
         /// <summary>
         /// VersionedTimeSerie AddData
         /// </summary>
-        /// <remarks>
-        /// Add Data on curve with localDate
+        /// <remarks>Add Data on to the curve
+        /// Add Data on to the curve with localDate
         /// </remarks>
         /// <returns>AddTimeSerieOperationResult</returns>
         public AddTimeSerieOperationResult AddData(LocalDate localDate, double? value)
@@ -93,7 +93,7 @@ namespace Artesian.SDK.Factory
         /// VersionedTimeSerie AddData
         /// </summary>
         /// <remarks>
-        /// Add Data on curve with Instant
+        /// Add Data on to the curve with Instant
         /// </remarks>
         /// <returns>AddTimeSerieOperationResult</returns>
         public AddTimeSerieOperationResult AddData(Instant time, double? value)
@@ -117,13 +117,13 @@ namespace Artesian.SDK.Factory
             {
                 var period = ArtesianUtils.MapTimePeriod(_entity.OriginalGranularity);
                 if (!localTime.IsStartOfInterval(period))
-                    throw new ArtesianSdkClientException("Trying to insert Time {0} with wrong format to serie {1}. Should be of period {2}", localTime, _identifier, period);
+                    throw new ArtesianSdkClientException("Trying to insert Time {0} with the wrong format to serie {1}. Should be of period {2}", localTime, _identifier, period);
             }
             else
             {
                 var period = ArtesianUtils.MapDatePeriod(_entity.OriginalGranularity);
                 if (!localTime.IsStartOfInterval(period))
-                    throw new ArtesianSdkClientException("Trying to insert Time {0} with wrong format to serie {1}. Should be of period {2}", localTime, _identifier, period);
+                    throw new ArtesianSdkClientException("Trying to insert Time {0} with the wrong format to serie {1}. Should be of period {2}", localTime, _identifier, period);
             }
 
             _values.Add(localTime, value);
@@ -136,14 +136,14 @@ namespace Artesian.SDK.Factory
         /// <remarks>
         /// Save the Data of the current MarketData
         /// </remarks>
-        /// <param name="downloadedAt">downloaded at</param>
-        /// <param name="deferCommandExecution">deferCommandExecution</param>
-        /// <param name="deferDataGeneration">deferDataGeneration</param>
+        /// <param name="downloadedAt">Downloaded at</param>
+        /// <param name="deferCommandExecution">DeferCommandExecution</param>
+        /// <param name="deferDataGeneration">DeferDataGeneration</param>
         /// <returns></returns>
         public async Task Save(Instant downloadedAt, bool deferCommandExecution = false, bool deferDataGeneration = true)
         {          
             if (!SelectedVersion.HasValue)
-                throw new VersionedTimeSerieException("No Version Has been selected to save Data");
+                throw new VersionedTimeSerieException("No Version has been selected to save Data");
 
             if (Values.Any())
             {

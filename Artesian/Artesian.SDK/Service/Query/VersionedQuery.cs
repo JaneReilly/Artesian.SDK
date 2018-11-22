@@ -113,7 +113,7 @@ namespace Artesian.SDK.Service
             return this;
         }
         /// <summary>
-        /// Set the time transform to be applied to extraction
+        /// Set the time transform to be applied to the extraction
         /// </summary>
         /// <param name="tr">The Time Tramsform id to be applied to the extraction</param>
         /// <returns>VersionedQuery</returns>
@@ -123,7 +123,7 @@ namespace Artesian.SDK.Service
             return this;
         }
         /// <summary>
-        /// Set the time transform to be applied to extraction
+        /// Set the time transform to be applied to the extraction
         /// </summary>
         /// <param name="tr">The system defined time transform to be applied to the extraction</param>
         /// <returns>VersionedQuery</returns>

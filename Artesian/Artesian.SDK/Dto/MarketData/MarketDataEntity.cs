@@ -178,17 +178,17 @@ namespace Artesian.SDK.Dto
             [MessagePack.Key(12)]
             public Instant LastUpdated { get; set; }
             /// <summary>
-            /// The Last time the data has been writed
+            /// The Last time the data has been written at
             /// </summary>
             [MessagePack.Key(13)]
             public Instant? DataLastWritedAt { get; set; }
             /// <summary>
-            /// Date start of range for this curve  
+            /// Start date of range for this curve  
             /// </summary>
             [MessagePack.Key(14)]
             public LocalDate? DataRangeStart { get; set; }
             /// <summary>
-            /// Date end of range for this curve  
+            /// End date of range for this curve  
             /// </summary>
             [MessagePack.Key(15)]
             public LocalDate? DataRangeEnd { get; set; }

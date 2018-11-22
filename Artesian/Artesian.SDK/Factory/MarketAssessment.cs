@@ -52,7 +52,7 @@ namespace Artesian.SDK.Factory
         /// MarketAssessment AddData
         /// </summary>
         /// <remarks>
-        /// Add Data on curve with localDate
+        /// Add Data on to the curve with localDate
         /// </remarks>
         /// <returns>AddAssessmentOperationResult</returns>
         public AddAssessmentOperationResult AddData(LocalDate localDate, string product, MarketAssessmentValue value)
@@ -66,7 +66,7 @@ namespace Artesian.SDK.Factory
         /// MarketAssessment AddData
         /// </summary>
         /// <remarks>
-        /// Add Data on curve with Instant
+        /// Add Data on to the curve with Instant
         /// </remarks>
         /// <returns>AddAssessmentOperationResult</returns>
         public AddAssessmentOperationResult AddData(Instant time, string product, MarketAssessmentValue value)
@@ -87,13 +87,13 @@ namespace Artesian.SDK.Factory
             {
                 var period = ArtesianUtils.MapTimePeriod(_entity.OriginalGranularity);
                 if (!reportTime.IsStartOfInterval(period))
-                    throw new MarketAssessmentException("Trying to insert Report Time {0} with wrong format to Assessment {1}. Should be of period {2}", reportTime, _identifier, period);
+                    throw new MarketAssessmentException("Trying to insert Report Time {0} with the wrong format to Assessment {1}. Should be of period {2}", reportTime, _identifier, period);
             }
             else
             {
                 var period = ArtesianUtils.MapDatePeriod(_entity.OriginalGranularity);
                 if (!reportTime.IsStartOfInterval(period))
-                    throw new MarketAssessmentException("Trying to insert Report Time {0} with wrong format to Assessment {1}. Should be of period {2}", reportTime, _identifier, period);
+                    throw new MarketAssessmentException("Trying to insert Report Time {0} with wrong the format to Assessment {1}. Should be of period {2}", reportTime, _identifier, period);
             }
 
             //if (reportTime.Date >= product.ReferenceDate)
@@ -112,9 +112,9 @@ namespace Artesian.SDK.Factory
         /// <remarks>
         /// Save the Data of the current MarketData
         /// </remarks>
-        /// <param name="downloadedAt">downloaded at</param>
-        /// <param name="deferCommandExecution">deferCommandExecution</param>
-        /// <param name="deferDataGeneration">deferDataGeneration</param>
+        /// <param name="downloadedAt">Downloaded at</param>
+        /// <param name="deferCommandExecution">DeferCommandExecution</param>
+        /// <param name="deferDataGeneration">DeferDataGeneration</param>
         /// <returns></returns>
         public async Task Save(Instant downloadedAt, bool deferCommandExecution = false, bool deferDataGeneration = true)
         {

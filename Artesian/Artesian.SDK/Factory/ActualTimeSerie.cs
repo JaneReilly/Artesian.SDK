@@ -54,7 +54,7 @@ namespace Artesian.SDK.Factory
         /// ActualTimeSerie AddData
         /// </summary>
         /// <remarks>
-        /// Add Data on curve with localDate
+        /// Add Data on to the curve with localDate
         /// </remarks>
         /// <returns>AddTimeSerieOperationResult</returns>
         public AddTimeSerieOperationResult AddData(LocalDate localDate, double? value)
@@ -72,7 +72,7 @@ namespace Artesian.SDK.Factory
         /// ActualTimeSerie AddData
         /// </summary>
         /// <remarks>
-        /// Add Data on curve with Instant
+        /// Add Data on to the curve with Instant
         /// </remarks>
         /// <returns>AddTimeSerieOperationResult</returns>
         public AddTimeSerieOperationResult AddData(Instant time, double? value)
@@ -115,9 +115,9 @@ namespace Artesian.SDK.Factory
         /// <remarks>
         /// Save the Data of the current MarketData
         /// </remarks>
-        /// <param name="downloadedAt">downloaded at</param>
-        /// <param name="deferCommandExecution">deferCommandExecution</param>
-        /// <param name="deferDataGeneration">deferDataGeneration</param>
+        /// <param name="downloadedAt">Downloaded at</param>
+        /// <param name="deferCommandExecution">DeferCommandExecution</param>
+        /// <param name="deferDataGeneration">DeferDataGeneration</param>
         /// <returns></returns>
         public async Task Save(Instant downloadedAt, bool deferCommandExecution = false, bool deferDataGeneration = true)
         {

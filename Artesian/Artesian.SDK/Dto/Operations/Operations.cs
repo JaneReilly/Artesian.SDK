@@ -57,7 +57,7 @@ namespace Artesian.SDK.Dto
             foreach (var op in operations.OperationList)
             {
                 if (op == null)
-                    throw new ArgumentException("Operations any single operation must be valorized");
+                    throw new ArgumentException("Operations: any single operation must be valorized");
                 else
                 {
                     if (op.Params == null)

@@ -15,7 +15,7 @@ namespace Artesian.SDK.Factory
     public static class MarketDataServiceExtension
     {
         /// <summary>
-        /// Read marketdata entity by id and returns an istance of IMarketData if exists
+        /// Read marketdata entity by id and returns an istance of IMarketData if it exists
         /// </summary>
         /// <param name="marketDataService">MarketDataIdentifier of markedata to be retrieved</param>
         /// <param name="id">MarketDataIdentifier of markedata to be retrieved</param>

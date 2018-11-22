@@ -52,7 +52,7 @@ namespace Artesian.SDK.Factory
         /// <remarks>
         /// Register a MarketData
         /// </remarks>
-        /// <param name="metadata">the entity of metadata</param>
+        /// <param name="metadata">The entity of metadata</param>
         /// <param name="ctk">Cancellation token</param>
         /// <returns></returns>
         Task Register(MarketDataEntity.Input metadata, CancellationToken ctk = default);
@@ -102,8 +102,8 @@ namespace Artesian.SDK.Factory
         /// <remarks>
         /// MarketAssessment AddData
         /// </remarks>
-        /// <param name="localDate">the local date of the value</param>
-        /// <param name="product">the product</param>
+        /// <param name="localDate">The local date of the value</param>
+        /// <param name="product">The product</param>
         /// <param name="value">Market assessment Value</param>
         /// <returns></returns>
         AddAssessmentOperationResult AddData(LocalDate localDate, string product, MarketAssessmentValue value);
@@ -113,8 +113,8 @@ namespace Artesian.SDK.Factory
         /// <remarks>
         /// MarketAssessment AddData
         /// </remarks>
-        /// <param name="time">the istant of the value</param>
-        /// <param name="product">the product</param>
+        /// <param name="time">The istant of the value</param>
+        /// <param name="product">The product</param>
         /// <param name="value">Market assessment Value</param>
         /// <returns></returns>
         AddAssessmentOperationResult AddData(Instant time, string product, MarketAssessmentValue value);
@@ -128,9 +128,9 @@ namespace Artesian.SDK.Factory
         /// <remarks>
         /// MarketAssessment Save
         /// </remarks>
-        /// <param name="downloadedAt">the istant downloaded</param>
-        /// <param name="deferCommandExecution">defer Command Execution</param>
-        /// <param name="deferDataGeneration">defer Data Generation</param>
+        /// <param name="downloadedAt">The instant downloaded</param>
+        /// <param name="deferCommandExecution">Defer Command Execution</param>
+        /// <param name="deferDataGeneration">Defer Data Generation</param>
         /// <returns></returns>
         Task Save(Instant downloadedAt, bool deferCommandExecution = false, bool deferDataGeneration = true);
     }
@@ -148,27 +148,27 @@ namespace Artesian.SDK.Factory
         /// TimeSerie AddData
         /// </summary>
         /// <remarks>
-        /// Add Data on curve with localDate
+        /// Add Data on to the curve with localDate
         /// </remarks>
-        /// <param name="localDate">the local date of the value</param>
-        /// <param name="value">value</param>
+        /// <param name="localDate">The local date of the value</param>
+        /// <param name="value">Value</param>
         /// <returns>AddTimeSerieOperationResult</returns>
         AddTimeSerieOperationResult AddData(LocalDate localDate, double? value);
         /// <summary>
         /// TimeSerie AddData
         /// </summary>
         /// <remarks>
-        /// Add Data on curve with Instant
+        /// Add Data on to the curve with Instant
         /// </remarks>
-        /// <param name="time">the istant of the value</param>
-        /// <param name="value">value</param>
+        /// <param name="time">The instant of the value</param>
+        /// <param name="value">Value</param>
         /// <returns>AddTimeSerieOperationResult</returns>
         AddTimeSerieOperationResult AddData(Instant time, double? value);
         /// <summary>
         /// TimeSerie ClearData
         /// </summary>
         /// <remarks>
-        /// Clear all the data sey in the Values
+        /// Clear all the data set in the Values
         /// </remarks>
         /// <returns></returns>
         void ClearData();
@@ -178,9 +178,9 @@ namespace Artesian.SDK.Factory
         /// <remarks>
         /// TimeSerie Save
         /// </remarks>
-        /// <param name="downloadedAt">the istant downloaded</param>
-        /// <param name="deferCommandExecution">defer Command Execution</param>
-        /// <param name="deferDataGeneration">defer Data Generation</param>
+        /// <param name="downloadedAt">The instant downloaded</param>
+        /// <param name="deferCommandExecution">Defer Command Execution</param>
+        /// <param name="deferDataGeneration">Defer Data Generation</param>
         /// <returns></returns>
         Task Save(Instant downloadedAt, bool deferCommandExecution = false, bool deferDataGeneration = true);
     }

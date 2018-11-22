@@ -18,7 +18,7 @@ namespace Artesian.SDK.Service
         /// <summary>
         /// Create new ApiKey
         /// </summary>
-        /// <param name="apiKeyRecord">the entity we are going to insert</param>
+        /// <param name="apiKeyRecord">The entity we are going to insert</param>
         /// <param name="ctk">CancellationToken</param>
         /// <returns>ApiKey Output entity</returns>
         public Task<ApiKey.Output> CreateApiKeyAsync(ApiKey.Input apiKeyRecord, CancellationToken ctk = default)
@@ -58,9 +58,9 @@ namespace Artesian.SDK.Service
         /// <summary>
         /// Retrieve the apikeys paged
         /// </summary>
-        /// <param name="page">the requested page</param>
-        /// <param name="pageSize">the size of the page</param>
-        /// <param name="userId">the userid we want to filter for</param>
+        /// <param name="page">The requested page</param>
+        /// <param name="pageSize">The size of the page</param>
+        /// <param name="userId">The userid we want to filter for</param>
         /// <param name="ctk">CancellationToken</param>
         /// <returns>Paged result of ApiKey Output entity</returns>
         public Task<PagedResult<ApiKey.Output>> ReadApiKeysAsync(int page, int pageSize, string userId, CancellationToken ctk = default)
@@ -78,7 +78,7 @@ namespace Artesian.SDK.Service
         /// <summary>
         /// Delete the ApiKey
         /// </summary>
-        /// <param name="id"></param>
+        /// <param name="id">Int</param>
         /// <param name="ctk">CancellationToken</param>
         /// <returns></returns>
         public Task DeleteApiKeyAsync(int id, CancellationToken ctk = default)

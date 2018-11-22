@@ -52,7 +52,7 @@ namespace Artesian.SDK.Factory
         /// <remarks>
         /// Register a MarketData
         /// </remarks>
-        /// <param name="metadata">the entity of metadata</param>
+        /// <param name="metadata">The entity of metadata</param>
         /// <param name="ctk">CancellationToken</param>
         /// <returns></returns>
         public async Task Register(MarketDataEntity.Input metadata, CancellationToken ctk = default)
@@ -80,7 +80,7 @@ namespace Artesian.SDK.Factory
         /// <remarks>
         /// Register a MarketData
         /// </remarks>
-        /// <returns> true if  Marketdata is present, false if not found </returns>
+        /// <returns> True if  Marketdata is present, false if not found </returns>
         public async Task<bool> IsRegistered(CancellationToken ctk = default)
         {
             if (Metadata != null)
@@ -143,7 +143,7 @@ namespace Artesian.SDK.Factory
                 throw new ActualTimeSerieException("Actual Time Serie is not yet registered");
 
             if (_entity.Type != MarketDataType.ActualTimeSerie)
-                throw new MarketAssessmentException("Entity is not Actual Time Serie");
+                throw new MarketAssessmentException("Entity is not an Actual Time Serie");
 
             var actual = new ActualTimeSerie(this);
             return actual;
@@ -162,7 +162,7 @@ namespace Artesian.SDK.Factory
                 throw new VersionedTimeSerieException("Versioned Time Serie is not yet registered");
 
             if (_entity.Type != MarketDataType.VersionedTimeSerie)
-                throw new MarketAssessmentException("Entity is not Versioned Time Serie");
+                throw new MarketAssessmentException("Entity is not  a Versioned Time Serie");
 
             var versioned = new VersionedTimeSerie(this);
             versioned.SetSelectedVersion(version);
@@ -183,7 +183,7 @@ namespace Artesian.SDK.Factory
                 throw new MarketAssessmentException("Market Assessement is not yet registered");
 
             if(_entity.Type != MarketDataType.MarketAssessment)
-                throw new MarketAssessmentException("Entity is not Market Assessement");
+                throw new MarketAssessmentException("Entity is not a Market Assessement");
 
             var mas = new MarketAssessment(this);
             return mas;

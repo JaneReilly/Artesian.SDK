@@ -13,7 +13,6 @@ namespace Artesian.SDK.Service
     /// </summary>
     public abstract class Query
     {
-        // must comment and document all methods
         private ExtractionRangeSelectionConfig _extractionRangeCfg = new ExtractionRangeSelectionConfig();
         private ExtractionRangeType? _extractionRangeType = null;
         private static LocalDatePattern _localDatePattern = LocalDatePattern.Iso;
@@ -35,7 +34,7 @@ namespace Artesian.SDK.Service
         /// <summary>
         /// Set the marketData id to be queried
         /// </summary>
-        /// <param name="ids"></param>
+        /// <param name="ids">Int[]</param>
         /// <returns>Query</returns>
         protected Query _forMarketData(int[] ids)
         {
@@ -59,7 +58,7 @@ namespace Artesian.SDK.Service
         /// <summary>
         /// Set the timezone to be queried
         /// </summary>
-        /// <param name="tz"></param>
+        /// <param name="tz">String timezone</param>
         /// <returns>Query</returns>
         protected Query _inTimezone(string tz)
         {
@@ -159,10 +158,10 @@ namespace Artesian.SDK.Service
         protected virtual void _validateQuery()
         {
             if (_extractionRangeType == null)
-                throw new ApplicationException("Data extraction range must be provided. Provide a date range , period or period range or a interval eg .InAbsoluteDateRange()");
+                throw new ApplicationException("Data extraction range must be provided. Provide a date range , period or period range or an interval eg .InAbsoluteDateRange()");
 
             if (_ids == null && _filterId == null)
-                throw new ApplicationException("Marketadata ids OR filterId must be provided for extraction. Use .ForMarketData() OR .ForFilterId() and provide a integer or integer array as an argument");
+                throw new ApplicationException("Marketadata ids OR filterId must be provided for extraction. Use .ForMarketData() OR .ForFilterId() and provide an integer or integer array as an argument");
 
             if (_ids != null && _filterId != null)
                 throw new ApplicationException("Marketadata ids AND filterId cannot be valorized at same time, choose one");

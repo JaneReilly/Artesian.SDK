@@ -33,8 +33,8 @@ namespace Artesian.SDK.Service
         /// <summary>
         /// Retrieve the ACL Path Roles paged
         /// </summary>
-        /// <param name="page">the requested page</param>
-        /// <param name="pageSize">the size of the page</param>
+        /// <param name="page">The requested page</param>
+        /// <param name="pageSize">The size of the page</param>
         /// <param name="principalIds">The principal ids I want to inspect, encoded.( ex. u:user@example.com for users and clients,g:1001 for groups)</param>
         /// <param name="asOf">LocalDateTime we want to inspect</param>
         /// <param name="ctk">CancellationToken</param>
@@ -58,9 +58,8 @@ namespace Artesian.SDK.Service
         /// Upsert the ACL Path Roles
         /// </summary>
         /// <remarks>
-        /// 
         /// </remarks>
-        /// <param name="upsert">the entity we want to upsert</param>
+        /// <param name="upsert">The entity we want to upsert</param>
         /// <param name="ctk">CancellationToken</param>
         /// <returns></returns>
         public Task UpsertRoles(AuthorizationPath.Input upsert, CancellationToken ctk = default)
@@ -73,7 +72,7 @@ namespace Artesian.SDK.Service
         /// <summary>
         /// Add a role to the ACL Path
         /// </summary>
-        /// <param name="add">the entity we want to add. At the path add.Path we add the add.Roles</param>
+        /// <param name="add">The entity we want to add. At the path add.Path we add the add.Roles</param>
         /// <param name="ctk">CancellationToken</param>
         /// <returns></returns>
         public Task AddRoles(AuthorizationPath.Input add, CancellationToken ctk = default)
@@ -86,7 +85,7 @@ namespace Artesian.SDK.Service
         /// <summary>
         /// Remove a role from the ACL Path
         /// </summary>
-        /// <param name="remove">the entity we want to remove. At the path remove.Path we remove the remove.Roles</param>
+        /// <param name="remove">The entity we want to remove. At the path remove.Path we remove the remove.Roles</param>
         /// <param name="ctk">CancellationToken</param>
         /// <returns></returns>
         public Task RemoveRoles(AuthorizationPath.Input remove, CancellationToken ctk = default)

@@ -16,7 +16,7 @@ namespace Artesian.SDK.Factory
     /// </summary>
     public class MarketData : IMarketData
     {
-        internal IMetadataService _metadataService;
+        internal IMarketDataService _marketDataService;
         internal MarketDataEntity.Output _entity = null;
 
         /// <summary>
@@ -37,12 +37,12 @@ namespace Artesian.SDK.Factory
         /// <summary>
         /// MarketData Constructor by Id
         /// </summary>
-        internal MarketData(IMetadataService metadataService, MarketDataIdentifier id)
+        internal MarketData(IMarketDataService marketDataService, MarketDataIdentifier id)
         {
-            EnsureArg.IsNotNull(metadataService, nameof(metadataService));
+            EnsureArg.IsNotNull(marketDataService, nameof(marketDataService));
 
-            _metadataService = metadataService;
-
+            _marketDataService = marketDataService;
+          
             Identifier = id;
         }
 
@@ -52,7 +52,7 @@ namespace Artesian.SDK.Factory
         /// <remarks>
         /// Register a MarketData
         /// </remarks>
-        /// <param name="metadata">the entity of metadata</param>
+        /// <param name="metadata">The entity of metadata</param>
         /// <param name="ctk">CancellationToken</param>
         /// <returns></returns>
         public async Task Register(MarketDataEntity.Input metadata, CancellationToken ctk = default)
@@ -69,7 +69,7 @@ namespace Artesian.SDK.Factory
             if (_entity != null)
                 throw new ActualTimeSerieException("Actual Time Serie is already registered with ID {0}", _entity.MarketDataId);
 
-            _entity = await _metadataService.RegisterMarketDataAsync(metadata, ctk);
+            _entity = await _marketDataService.RegisterMarketDataAsync(metadata, ctk);
 
             Metadata = new MarketDataMetadata(_entity);
         }
@@ -80,7 +80,7 @@ namespace Artesian.SDK.Factory
         /// <remarks>
         /// Register a MarketData
         /// </remarks>
-        /// <returns> true if  Marketdata si present, false if not found </returns>
+        /// <returns> True if  Marketdata is present, false if not found </returns>
         public async Task<bool> IsRegistered(CancellationToken ctk = default)
         {
             if (Metadata != null)
@@ -105,7 +105,7 @@ namespace Artesian.SDK.Factory
         /// <returns></returns>
         public async Task Load(CancellationToken ctk = default)
         {
-            _entity = await _metadataService.ReadMarketDataRegistryAsync(this.Identifier, ctk);
+            _entity = await _marketDataService.ReadMarketDataRegistryAsync(this.Identifier, ctk);
 
             if (_entity != null)
                 Metadata = new MarketDataMetadata(_entity);
@@ -125,7 +125,7 @@ namespace Artesian.SDK.Factory
 
             var marketDataEntityInput = new MarketDataEntity.Input(_entity);
 
-            _entity = await _metadataService.UpdateMarketDataAsync(marketDataEntityInput, ctk);
+            _entity = await _marketDataService.UpdateMarketDataAsync(marketDataEntityInput, ctk);
 
             Metadata = new MarketDataMetadata(_entity);
         }
@@ -143,7 +143,7 @@ namespace Artesian.SDK.Factory
                 throw new ActualTimeSerieException("Actual Time Serie is not yet registered");
 
             if (_entity.Type != MarketDataType.ActualTimeSerie)
-                throw new MarketAssessmentException("Entity is not Actual Time Serie");
+                throw new MarketAssessmentException("Entity is not an Actual Time Serie");
 
             var actual = new ActualTimeSerie(this);
             return actual;
@@ -162,7 +162,7 @@ namespace Artesian.SDK.Factory
                 throw new VersionedTimeSerieException("Versioned Time Serie is not yet registered");
 
             if (_entity.Type != MarketDataType.VersionedTimeSerie)
-                throw new MarketAssessmentException("Entity is not Versioned Time Serie");
+                throw new MarketAssessmentException("Entity is not  a Versioned Time Serie");
 
             var versioned = new VersionedTimeSerie(this);
             versioned.SetSelectedVersion(version);
@@ -183,7 +183,7 @@ namespace Artesian.SDK.Factory
                 throw new MarketAssessmentException("Market Assessement is not yet registered");
 
             if(_entity.Type != MarketDataType.MarketAssessment)
-                throw new MarketAssessmentException("Entity is not Market Assessement");
+                throw new MarketAssessmentException("Entity is not a Market Assessement");
 
             var mas = new MarketAssessment(this);
             return mas;

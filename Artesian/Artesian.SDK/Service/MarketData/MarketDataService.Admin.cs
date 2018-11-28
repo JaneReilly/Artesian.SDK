@@ -13,12 +13,12 @@ using System.Collections.Generic;
 
 namespace Artesian.SDK.Service
 {
-    public partial class MetadataService : IMetadataService
+    public partial class MarketDataService : IMarketDataService
     {
         /// <summary>
         /// Create a new Authorization Group
         /// </summary>
-        /// <param name="group">the entity we are going to insert</param>
+        /// <param name="group">The entity we are going to insert</param>
         /// <param name="ctk">CancellationToken</param>
         /// <returns>Auth Group entity</returns>
         public Task<AuthGroup> CreateAuthGroup(AuthGroup group, CancellationToken ctk = default)
@@ -30,8 +30,8 @@ namespace Artesian.SDK.Service
         /// <summary>
         /// Update an Authorization Group
         /// </summary>
-        /// <param name="groupID">the entity Identifier</param>
-        /// <param name="group">the entity to update</param>
+        /// <param name="groupID">The entity Identifier</param>
+        /// <param name="group">The entity to update</param>
         /// <param name="ctk">CancellationToken</param>
         /// <returns>Auth Group entity</returns>
         public Task<AuthGroup> UpdateAuthGroup(int groupID, AuthGroup group, CancellationToken ctk = default)
@@ -43,7 +43,7 @@ namespace Artesian.SDK.Service
         /// <summary>
         /// Remove an Authorization Group
         /// </summary>
-        /// <param name="groupID">the entity Identifier</param>
+        /// <param name="groupID">The entity Identifier</param>
         /// <param name="ctk">CancellationToken</param>
         /// <returns></returns>
         public Task RemoveAuthGroup(int groupID, CancellationToken ctk = default)
@@ -55,7 +55,7 @@ namespace Artesian.SDK.Service
         /// <summary>
         /// Read Authorization Group
         /// </summary>
-        /// <param name="groupID">the entity Identifier</param>
+        /// <param name="groupID">The entity Identifier</param>
         /// <param name="ctk">CancellationToken</param>
         /// <returns>AuthGroup entity</returns>
         public Task<AuthGroup> ReadAuthGroup(int groupID, CancellationToken ctk = default)
@@ -67,8 +67,8 @@ namespace Artesian.SDK.Service
         /// <summary>
         /// Remove an Authorization Group
         /// </summary>
-        /// <param name="page">the requested page</param>
-        /// <param name="pageSize">the size of the page</param>
+        /// <param name="page">The requested page</param>
+        /// <param name="pageSize">The size of the page</param>
         /// <param name="ctk">CancellationToken</param>
         /// <returns>Paged result of Auth Group entity</returns>
         public Task<PagedResult<AuthGroup>> ReadAuthGroups(int page, int pageSize, CancellationToken ctk = default)
@@ -82,7 +82,7 @@ namespace Artesian.SDK.Service
         /// <summary>
         /// Get a list of Principals of the selected user
         /// </summary>
-        /// <param name="user">the user name</param>
+        /// <param name="user">The user name</param>
         /// <param name="ctk">CancellationToken</param>
         /// <returns>List of Principals entity</returns>
         public Task<List<Principals>> ReadUserPrincipals(string user, CancellationToken ctk = default)

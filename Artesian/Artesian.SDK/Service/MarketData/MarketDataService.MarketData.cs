@@ -11,7 +11,7 @@ using System;
 
 namespace Artesian.SDK.Service
 {
-    public partial class MetadataService : IMetadataService
+    public partial class MarketDataService : IMarketDataService
     {
         /// <summary>
         /// Read marketdata metadata by provider and curve name with MarketDataIdentifier
@@ -97,7 +97,7 @@ namespace Artesian.SDK.Service
         /// <summary>
         /// Delete the specific MarketData entity by id
         /// </summary>
-        /// <param name="id">int</param>
+        /// <param name="id">Int</param>
         /// <param name="ctk">CancellationToken</param>
         /// <returns></returns>
         public Task DeleteMarketDataAsync(int id, CancellationToken ctk = default)

@@ -13,20 +13,20 @@ using System.Collections.Generic;
 
 namespace Artesian.SDK.Service
 {
-    public partial class MetadataService : IMetadataService
+    public partial class MarketDataService : IMarketDataService
     {
         /// <summary>
         /// Upsert the curve data supplied in <paramref name="data"/>
         /// </summary>
         /// <remarks>
         /// Unified controller for saving curve data
-        /// ID, TimeZone and DownloadedAt fields should always be not null
+        /// ID, TimeZone and DownloadedAt fields should not be null
         /// - Market Data Assessment: MarketAssessment field should not be null, other fields should be null
         /// - Actual TimeSerie: Rows field should not be null, other fields should be null-
         /// - Versioned TimeSerie: Rows and Version fields should not be null, other fields should be null
         /// </remarks>
         /// <param name="data">
-        /// An object that rappresent MarketDataAssessment, ActualTimeSerie or VersionedTimeSerie
+        /// An object that represents MarketDataAssessment, ActualTimeSerie or VersionedTimeSerie
         /// </param>
         /// <param name="ctk">CancellationToken</param>
         /// <returns></returns>

@@ -106,7 +106,7 @@ namespace Artesian.SDK.Dto
         }
 
         /// <summary>
-        /// Dencode principal Enum
+        /// Decode principal Enum
         /// </summary>
         public static PrincipalType DecodePrincipalEnum(string encoded)
         {

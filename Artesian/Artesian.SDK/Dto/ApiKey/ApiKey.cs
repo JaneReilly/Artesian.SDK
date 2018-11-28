@@ -33,7 +33,7 @@ namespace Artesian.SDK.Dto
             [Key(2)]
             public int? UsagePerDay { get; set; }
             /// <summary>
-            /// The expire time of ApiKey
+            /// The expiration time of the ApiKey
             /// </summary>
             [Key(3)]
             public Instant? ExpiresAt { get; set; }

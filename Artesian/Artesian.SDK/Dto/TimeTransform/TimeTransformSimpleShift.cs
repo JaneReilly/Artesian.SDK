@@ -40,7 +40,7 @@ namespace Artesian.SDK.Dto
         public static void Validate(this TimeTransformSimpleShift timeTransform)
         {
             if (String.IsNullOrWhiteSpace(timeTransform.Name))
-                throw new ArgumentException("timeTransform Name must be valorized");
+                throw new ArgumentException("TimeTransform Name must be valorized");
 
             if (String.IsNullOrWhiteSpace(timeTransform.NegativeShift) && String.IsNullOrWhiteSpace(timeTransform.PositiveShift))
                 throw new ArgumentException("At least one between positive or negative shift must be valorized");

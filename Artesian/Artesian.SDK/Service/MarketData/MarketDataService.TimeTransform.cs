@@ -10,7 +10,7 @@ using System;
 
 namespace Artesian.SDK.Service
 {
-    public partial class MetadataService : IMetadataService
+    public partial class MarketDataService : IMarketDataService
     {
         /// <summary>
         /// Read a time transform entity from the service by ID
@@ -49,7 +49,7 @@ namespace Artesian.SDK.Service
         /// <summary>
         /// Register a new TimeTransform
         /// </summary>
-        /// <param name="timeTransform">the entity we are going to insert</param>
+        /// <param name="timeTransform">The entity we are going to insert</param>
         /// <param name="ctk">CancellationToken</param>
         /// <returns>Time Transform Entity</returns>
         public Task<TimeTransform> RegisterTimeTransformBaseAsync(TimeTransform timeTransform, CancellationToken ctk = default)
@@ -63,7 +63,7 @@ namespace Artesian.SDK.Service
         /// <summary>
         /// Update the TimeTransform
         /// </summary>
-        /// <param name="timeTransform">the entity we are going to update</param>
+        /// <param name="timeTransform">The entity we are going to update</param>
         /// <param name="ctk">CancellationToken</param>
         /// <returns>Time Transform Entity</returns>
         public Task<TimeTransform> UpdateTimeTransformBaseAsync(TimeTransform timeTransform, CancellationToken ctk = default)
@@ -77,7 +77,7 @@ namespace Artesian.SDK.Service
         /// <summary>
         /// Delete the TimeTransform
         /// </summary>
-        /// <param name="timeTransformId">the entity id we are going to delete</param>
+        /// <param name="timeTransformId">The entity id we are going to delete</param>
         /// <param name="ctk">CancellationToken</param>
         /// <returns></returns>
         public Task DeleteTimeTransformSimpleShiftAsync(int timeTransformId, CancellationToken ctk = default)

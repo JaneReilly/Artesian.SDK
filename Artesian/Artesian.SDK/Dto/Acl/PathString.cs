@@ -35,7 +35,7 @@ namespace Artesian.SDK.Dto
             for (int i = 0; i < tokens.Length; i++)
             {
                 if (tokens[i].Length > MaxTokenLen)
-                    throw new ArgumentException($@"Tokens have to be less than {MaxTokenLen} chars lenght");
+                    throw new ArgumentException($@"Tokens should be less than {MaxTokenLen} characters in length");
             }
 
             _tokens = tokens;
@@ -45,7 +45,7 @@ namespace Artesian.SDK.Dto
         public static PathString Parse(string path)
         {
             if (String.IsNullOrWhiteSpace(path))
-                throw new ArgumentException("path should not be null or whitespace");
+                throw new ArgumentException("path should not be null or a whitespace");
 
             if (!path.StartsWith(@"/"))
                 throw new ArgumentException(@"path should start with '/' character");
@@ -179,8 +179,8 @@ namespace Artesian.SDK.Dto
         const string DelimiterString = "/";
         const char DelimiterChar = '/';
 
-        // Use a single / as escape char, avoid \ as that would require
-        // all escape chars to be escaped in the source code...
+        // Use a single / as an escape character, avoid \ as that would require
+        // all escape characters to be escaped in the source code...
         const char EscapeChar = '\\';
         const string EscapeString = "\\";
 

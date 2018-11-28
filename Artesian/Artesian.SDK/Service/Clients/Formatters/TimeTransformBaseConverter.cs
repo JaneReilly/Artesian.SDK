@@ -28,10 +28,10 @@ namespace Artesian.SDK.Service
                     throw new NotImplementedException($@"Not yet impletemented transform {TransformType.Composition}");
                 }
 
-                throw new InvalidOperationException("Can't deserialize TimeTransformBase. TransformType field not valid.");
+                throw new InvalidOperationException("Can't deserialize TimeTransformBase. TransformType field is not valid.");
             }
 
-            throw new InvalidOperationException("Can't deserialize TimeTransformBase. TransformType field not found.");
+            throw new InvalidOperationException("Can't deserialize TimeTransformBase. TransformType field is not found.");
         }
     }
 
@@ -40,9 +40,9 @@ namespace Artesian.SDK.Service
         /// <summary>
         /// Create an instance of objectType, based properties in the JSON object
         /// </summary>
-        /// <param name="objectType">type of object expected</param>
+        /// <param name="objectType">Type of object expected</param>
         /// <param name="jObject">
-        /// contents of JSON object that will be deserialized
+        /// Contents of JSON object that will be deserialized
         /// </param>
         /// <returns></returns>
         protected abstract T Create(Type objectType, JObject jObject);

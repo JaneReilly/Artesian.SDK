@@ -18,7 +18,7 @@ namespace Artesian.SDK.Factory
     /// </summary>
     internal sealed class ActualTimeSerie : ITimeserieWritable
     {
-        private IMetadataService _metadataService;
+        private IMarketDataService _marketDataService;
         private MarketDataEntity.Output _entity = null;
         private readonly MarketDataIdentifier _identifier = null;
         private Dictionary<LocalDateTime, double?> _values = new Dictionary<LocalDateTime, double?>();
@@ -29,7 +29,7 @@ namespace Artesian.SDK.Factory
         internal ActualTimeSerie(MarketData marketData)
         {
             _entity = marketData._entity;
-            _metadataService = marketData._metadataService;
+            _marketDataService = marketData._marketDataService;
 
             _identifier = new MarketDataIdentifier(_entity.ProviderName, _entity.MarketDataName);
 
@@ -54,7 +54,7 @@ namespace Artesian.SDK.Factory
         /// ActualTimeSerie AddData
         /// </summary>
         /// <remarks>
-        /// Add Data on curve with localDate
+        /// Add Data on to the curve with localDate
         /// </remarks>
         /// <returns>AddTimeSerieOperationResult</returns>
         public AddTimeSerieOperationResult AddData(LocalDate localDate, double? value)
@@ -72,7 +72,7 @@ namespace Artesian.SDK.Factory
         /// ActualTimeSerie AddData
         /// </summary>
         /// <remarks>
-        /// Add Data on curve with Instant
+        /// Add Data on to the curve with Instant
         /// </remarks>
         /// <returns>AddTimeSerieOperationResult</returns>
         public AddTimeSerieOperationResult AddData(Instant time, double? value)
@@ -115,9 +115,9 @@ namespace Artesian.SDK.Factory
         /// <remarks>
         /// Save the Data of the current MarketData
         /// </remarks>
-        /// <param name="downloadedAt">downloaded at</param>
-        /// <param name="deferCommandExecution">deferCommandExecution</param>
-        /// <param name="deferDataGeneration">deferDataGeneration</param>
+        /// <param name="downloadedAt">Downloaded at</param>
+        /// <param name="deferCommandExecution">DeferCommandExecution</param>
+        /// <param name="deferDataGeneration">DeferDataGeneration</param>
         /// <returns></returns>
         public async Task Save(Instant downloadedAt, bool deferCommandExecution = false, bool deferDataGeneration = true)
         {
@@ -134,7 +134,7 @@ namespace Artesian.SDK.Factory
                     DeferDataGeneration = deferDataGeneration
                 };
 
-                await _metadataService.UpsertCurveDataAsync(data);
+                await _marketDataService.UpsertCurveDataAsync(data);
             }
             //else
             //    _logger.Warn("No Data to be saved.");

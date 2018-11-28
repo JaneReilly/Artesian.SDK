@@ -10,7 +10,7 @@ using Flurl;
 
 namespace Artesian.SDK.Service
 {
-    public partial class MetadataService : IMetadataService
+    public partial class MarketDataService : IMarketDataService
     {
         /// <summary>
         /// Search the marketdata metadata

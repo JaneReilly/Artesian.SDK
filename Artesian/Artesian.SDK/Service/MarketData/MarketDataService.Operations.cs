@@ -9,12 +9,12 @@ using System.Collections.Generic;
 
 namespace Artesian.SDK.Service
 {
-    public partial class MetadataService : IMetadataService
+    public partial class MarketDataService : IMarketDataService
     {
         /// <summary>
-        /// A sequence of operation will be applied to the metadata identified by ids
+        /// A sequence of operations will be applied to the metadata identified by ids
         /// </summary>
-        /// <param name="operations"></param>
+        /// <param name="operations">Operations</param>
         /// <param name="ctk">CancellationToken</param>
         /// <returns>MarketData Entity Output</returns>
         public Task<List<MarketDataEntity.Output>> PerformOperationsAsync(Operations operations, CancellationToken ctk = default)

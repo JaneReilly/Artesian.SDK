@@ -18,7 +18,7 @@ namespace Artesian.SDK.Dto
         [Key(0)]
         public int Page { get; set; }
         /// <summary>
-        /// Page size (number of elemnts by page)
+        /// Page size (number of elements by page)
         /// </summary>
         [Key(1)]
         public int PageSize { get; set; }

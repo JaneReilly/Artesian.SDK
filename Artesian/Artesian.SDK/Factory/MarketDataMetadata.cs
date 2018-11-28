@@ -79,15 +79,15 @@ namespace Artesian.SDK.Factory
         /// </summary>
         public Instant LastUpdated => _output.LastUpdated;
         /// <summary>
-        /// The Last time the data has been writed
+        /// The Last time the data has been written
         /// </summary>
         public Instant? DataLastWritedAt => _output.DataLastWritedAt;
         /// <summary>
-        /// Date start of range for this curve  
+        /// Start date of range for this curve  
         /// </summary>
         public LocalDate? DataRangeStart => _output.DataRangeStart;
         /// <summary>
-        /// Date end of range for this curve  
+        /// End date of range for this curve  
         /// </summary>
         public LocalDate? DataRangeEnd => _output.DataRangeEnd;
         /// <summary>

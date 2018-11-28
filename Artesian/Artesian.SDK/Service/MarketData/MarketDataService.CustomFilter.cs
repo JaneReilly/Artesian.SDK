@@ -13,12 +13,12 @@ using System.Collections.Generic;
 
 namespace Artesian.SDK.Service
 {
-    public partial class MetadataService : IMetadataService
+    public partial class MarketDataService : IMarketDataService
     {
         /// <summary>
         /// Create a new Filter
         /// </summary>
-        /// <param name="filter">the entity we are going to insert</param>
+        /// <param name="filter">The entity we are going to insert</param>
         /// <param name="ctk">CancellationToken</param>
         /// <returns>Custom Filter Entity</returns>
         public Task<CustomFilter> CreateFilter(CustomFilter filter, CancellationToken ctk = default)
@@ -31,8 +31,8 @@ namespace Artesian.SDK.Service
         /// <summary>
         /// Update specific Filter
         /// </summary>
-        /// <param name="filterId">the entity id</param>
-        /// <param name="filter">the entity we are going to update</param>
+        /// <param name="filterId">The entity id</param>
+        /// <param name="filter">The entity we are going to update</param>
         /// <param name="ctk">CancellationToken</param>
         /// <returns>Custom Filter Entity</returns>
         public Task<CustomFilter> UpdateFilter(int filterId, CustomFilter filter, CancellationToken ctk = default)
@@ -45,7 +45,7 @@ namespace Artesian.SDK.Service
         /// <summary>
         /// Read specific filter
         /// </summary>
-        /// <param name="filterId">the entity id to get</param>
+        /// <param name="filterId">The entity id to get</param>
         /// <param name="ctk">CancellationToken</param>
         /// <returns>Custom Filter Entity</returns>
         public Task<CustomFilter> ReadFilter(int filterId, CancellationToken ctk = default)
@@ -57,7 +57,7 @@ namespace Artesian.SDK.Service
         /// <summary>
         /// Remove specific Filter
         /// </summary>
-        /// <param name="filterId">the entity id to be removed</param>
+        /// <param name="filterId">The entity id to be removed</param>
         /// <param name="ctk">CancellationToken</param>
         /// <returns>Custom Filter Entity</returns>
         public Task<CustomFilter> RemoveFilter(int filterId, CancellationToken ctk = default)
@@ -69,8 +69,8 @@ namespace Artesian.SDK.Service
         /// <summary>
         /// Read all filters
         /// </summary>
-        /// <param name="page">int</param>
-        /// <param name="pageSize">int</param>
+        /// <param name="page">Int</param>
+        /// <param name="pageSize">Int</param>
         /// <param name="ctk">CancellationToken</param>
         /// <returns>Paged Result of Custom Filter Entity</returns>
         public Task<PagedResult<CustomFilter>> ReadFilters(int page, int pageSize, CancellationToken ctk = default)

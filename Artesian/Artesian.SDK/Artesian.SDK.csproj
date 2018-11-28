@@ -15,7 +15,7 @@
     <Description>Artesian SDK library</Description>
     <PackageTags>Ark;c#;Visual Studio;Framework;Arkive;Artesian;</PackageTags>
     <PackageLicenseUrl>https://github.com/ARKlab/Artesian.SDK/blob/master/LICENSE</PackageLicenseUrl>
-    <Version>1.2.2</Version>
+    <Version>1.3.0</Version>
     <VersionSuffix></VersionSuffix>
     <Version Condition=" '$(VersionSuffix)' != '' ">$(Version)-$(VersionSuffix)</Version>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>

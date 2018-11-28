@@ -164,7 +164,7 @@ await marketData.Load();
 
 Using `Write mode` to edit MarketData and `save` to save the data of the current MarketData providing an instant.
 ### Actual Time Series
-`EditActual` starts the write mode for an Actual Time serie. Checks are done to verify registration and MarketDataType to verify it is an Actual Time Serie.
+`EditActual` starts the write mode for an Actual Time series. Checks are done to verify registration and MarketDataType to verify it is an Actual Time Series.
 Using `AddData` to be written.
 ```csharp
 var writeMarketData = marketdata.EditActual();
@@ -176,7 +176,7 @@ await writeMarketData.Save(Instant.FromDateTimeUtc(DateTime.Now.ToUniversalTime(
 ```
 
 ### Versioned Time Series
-`EditVersioned` starts the write mode for a Versioned Time serie. Checks are done to verify registration and MarketDataType to verify it is a Versioned Time Serie.
+`EditVersioned` starts the write mode for a Versioned Time series. Checks are done to verify registration and MarketDataType to verify it is a Versioned Time Series.
 Using `AddData` to be written.
  ```csharp
 var writeMarketData = marketData.EditVersioned(new LocalDateTime(2018, 10, 18, 00, 00));

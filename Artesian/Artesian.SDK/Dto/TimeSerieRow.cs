@@ -33,7 +33,7 @@ namespace Artesian.SDK.Dto
             public virtual string CurveName { get; set; }
 
             /// <summary>
-            /// Time serie Identifier
+            /// Time series Identifier
             /// </summary>
             [JsonProperty(PropertyName = "ID")]
             [Key(2)]
@@ -54,7 +54,7 @@ namespace Artesian.SDK.Dto
             public virtual DateTimeOffset Time { get; set; }
 
             /// <summary>
-            /// Time serie Version
+            /// Time series Version
             /// </summary>
             [JsonProperty(PropertyName = "D")]
             [Key(5)]

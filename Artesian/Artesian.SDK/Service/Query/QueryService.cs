@@ -23,30 +23,30 @@ namespace Artesian.SDK.Service
             _client = new Client(cfg, ArtesianConstants.QueryRoute.AppendPathSegment(ArtesianConstants.QueryVersion));
         }
         /// <summary>
-        /// Create Actual Time Serie Query
+        /// Create Actual Time Series Query
         /// </summary>
         /// <returns>
-        /// Actual Time Serie <see cref="ActualQuery"/>
+        /// Actual Time Series <see cref="ActualQuery"/>
         /// </returns>
         public ActualQuery CreateActual()
         {
             return new ActualQuery(_client);
         }
         /// <summary>
-        /// Create Versioned Time Serie Query
+        /// Create Versioned Time Series Query
         /// </summary>
         /// <returns>
-        /// Versioned Time Serie <see cref="VersionedQuery"/>
+        /// Versioned Time Series <see cref="VersionedQuery"/>
         /// </returns>
         public VersionedQuery CreateVersioned()
         {
             return new VersionedQuery(_client);
         }
         /// <summary>
-        /// Create Market Assessment Time Serie Query
+        /// Create Market Assessment Time Series Query
         /// </summary>
         /// <returns>
-        /// Market Assessment Time Serie <see cref="MasQuery"/>
+        /// Market Assessment Time Series <see cref="MasQuery"/>
         /// </returns>
         public MasQuery CreateMarketAssessment()
         {

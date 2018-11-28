@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 namespace Artesian.SDK.Service
 {
     /// <summary>
-    /// Actual Time Serie Query Class
+    /// Actual Time Series Query Class
     /// </summary>
     public class ActualQuery : Query, IActualQuery<ActualQuery>
     {

@@ -5,6 +5,7 @@ using Artesian.SDK.Common;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System;
+using System.Text.RegularExpressions;
 
 namespace Artesian.SDK.Dto
 {
@@ -42,14 +43,14 @@ namespace Artesian.SDK.Dto
     {
         public static void Validate(this ArtesianSearchFilter artesianSearchFilter)
         {
-            var validSorts = @"^(MarketDataId|ProviderName|MarketDataName|OriginalGranularity|Type|OriginalTimezone|Created|LastUpdated)( (asc|desc))?$";
+            var validSorts = new Regex("^(MarketDataId|ProviderName|MarketDataName|OriginalGranularity|Type|OriginalTimezone|Created|LastUpdated)( (asc|desc))?$");
 
             if (artesianSearchFilter.Sorts != null)
             {
                 foreach (string element in artesianSearchFilter.Sorts)
                 {
-                    if (element.Equals(validSorts))
-                        throw new ArgumentException("Invalid search params");
+                    if (!validSorts.IsMatch(element))
+                        throw new ArgumentException($"Invalid search param {element}");
                 }
             }
 

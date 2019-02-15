@@ -156,7 +156,8 @@ namespace Artesian.SDK.Tests
                     Page = 1,
                     PageSize = 1,
                     SearchText = "testText",
-                    Filters = filterDict
+                    Filters = filterDict,
+                    Sorts = new List<string>() { "OriginalTimezone" }
                 };
                 var mdq = mds.SearchFacetAsync(filter).ConfigureAwait(true).GetAwaiter().GetResult();
 
@@ -165,6 +166,7 @@ namespace Artesian.SDK.Tests
                     .SetQueryParam("page", 1)
                     .SetQueryParam("searchText", "testText")
                     .SetQueryParam("filters", "TestKey%3ATestValue", true)
+                    .SetQueryParam("sorts", "OriginalTimezone", true)
                     )
                     .WithVerb(HttpMethod.Get)
                     .Times(1);

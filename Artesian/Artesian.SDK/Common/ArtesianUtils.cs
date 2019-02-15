@@ -4,6 +4,7 @@
 using Artesian.SDK.Service;
 using System;
 using Artesian.SDK.Dto;
+using System.Text.RegularExpressions;
 
 namespace Artesian.SDK.Common
 {
@@ -102,8 +103,8 @@ namespace Artesian.SDK.Common
                 throw new ArgumentException("Provider null or empty exception");
             if (validStringCheck.Length < minLenght || validStringCheck.Length > maxLenght)
                 throw new Exception("Provider must be between 1 and 50 characters.");
-            if (validStringCheck.Equals(ArtesianConstants.CharacterValidatorRegEx))
-                throw new Exception("Invalid string. Should not contain trailing or leading whitespaces or any of the following characters: ,:;'\"<space>");
+            if (!new Regex(ArtesianConstants.CharacterValidatorRegEx).Match(validStringCheck).Success)
+                throw new Exception($"Invalid string '{validStringCheck}'.Should not contain trailing or leading whitespaces or any of the following characters: ,:; '\"<space>");
         }
         /// <summary>
         /// Is valid provider
@@ -124,11 +125,11 @@ namespace Artesian.SDK.Common
         public static void IsValidMarketDataName(string name, int minLenght, int maxLenght)
         {
             if (String.IsNullOrEmpty(name))
-                throw new ArgumentException("Provider null or empty exception");
+                throw new ArgumentException("MarketData name must not be null or empty");
             if (name.Length < minLenght || name.Length > maxLenght)
-                throw new Exception("Provider must be between 1 and 250 characters.");
-            if (name.Equals(ArtesianConstants.CharacterValidatorRegEx))
-                throw new Exception("Invalid string. Should not contain trailing or leading whitespaces or any of the following characters: ,:;'\"<space>");
+                throw new Exception("MarketData name must be between 1 and 250 characters.");
+            if (!new Regex(ArtesianConstants.MarketDataNameValidatorRegEx).Match(name).Success)
+                throw new Exception($"Invalid string '{name}'. Should not contain trailing or leading whitespaces and no other whitespace than <space> in the middle.");
         }
     }
 }

@@ -45,7 +45,7 @@ namespace Artesian.SDK.Service
         private readonly Polly.Caching.Memory.MemoryCacheProvider _memoryCacheProvider
            = new Polly.Caching.Memory.MemoryCacheProvider(new Microsoft.Extensions.Caching.Memory.MemoryCache(new Microsoft.Extensions.Caching.Memory.MemoryCacheOptions()));
 
-        private readonly Policy<(string AccessToken, DateTimeOffset ExpiresOn)> _cachePolicy;
+        private readonly AsyncPolicy<(string AccessToken, DateTimeOffset ExpiresOn)> _cachePolicy;
 
         private readonly string _apiKey;
 

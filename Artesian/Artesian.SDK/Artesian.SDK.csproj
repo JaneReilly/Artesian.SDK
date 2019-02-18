@@ -23,14 +23,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Auth0.AuthenticationApi" Version="5.6.0" />
-    <PackageReference Include="Ensure.That" Version="8.0.0" />
-    <PackageReference Include="Flurl.Http" Version="2.3.2" />
-    <PackageReference Include="JWT" Version="4.0.0" />
-    <PackageReference Include="MessagePack.NodaTime" Version="1.0.0" />
-    <PackageReference Include="Microsoft.AspNet.WebApi.Client" Version="5.2.6" />
-    <PackageReference Include="NodaTime.Serialization.JsonNet" Version="2.0.0" />
-    <PackageReference Include="Polly.Caching.Memory" Version="2.0.0" />
+    <PackageReference Include="Ark.Tools.Auth0" Version="1.1.12" />
+    <PackageReference Include="Ark.Tools.Http" Version="1.1.12" />
     <PackageReference Include="System.ComponentModel.Annotations" Version="4.5.0" />
   </ItemGroup>
 

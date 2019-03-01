@@ -12,7 +12,12 @@ using Newtonsoft.Json.Serialization;
 using NodaTime;
 using NodaTime.Serialization.JsonNet;
 using Polly;
+using Polly.Bulkhead;
 using Polly.Caching;
+using Polly.CircuitBreaker;
+using Polly.Retry;
+using Polly.Timeout;
+using Polly.Wrap;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -41,6 +46,14 @@ namespace Artesian.SDK.Service
         private readonly object _gate = new { };
 
         private readonly string _url;
+
+        private readonly AsyncCircuitBreakerPolicy _circuitBreakerPolicy;
+
+        private readonly AsyncRetryPolicy _retryPolicy;
+
+        private readonly AsyncPolicyWrap _resilienceStrategy;
+
+        private readonly AsyncBulkheadPolicy _bulkheadPolicy;
 
         private readonly Polly.Caching.Memory.MemoryCacheProvider _memoryCacheProvider
            = new Polly.Caching.Memory.MemoryCacheProvider(new Microsoft.Extensions.Caching.Memory.MemoryCache(new Microsoft.Extensions.Caching.Memory.MemoryCacheOptions()));
@@ -85,6 +98,28 @@ namespace Artesian.SDK.Service
             formatters.Add(_jsonFormatter);
             _formatters = formatters;
 
+            //Wait and retry policy
+            _retryPolicy = Policy
+                .Handle<Exception>(e => !(e is BrokenCircuitException)) 
+                .WaitAndRetryAsync(3, retryAttempt =>
+                    TimeSpan.FromMilliseconds(Math.Pow(200,
+                    retryAttempt)
+                 ));
+
+            //Circuit break policy
+            _circuitBreakerPolicy = Policy
+                .Handle<Exception>()
+                .CircuitBreakerAsync(
+                    exceptionsAllowedBeforeBreaking:ArtesianConstants.MaxExceptions,
+                    durationOfBreak: TimeSpan.FromSeconds(3)
+                );
+
+            //Bulkhead policy
+            _bulkheadPolicy = Policy.BulkheadAsync(ArtesianConstants.MaxParallelism, ArtesianConstants.MaxQueuingActions);
+
+            //Policy wrap
+            _resilienceStrategy = Policy.WrapAsync(_retryPolicy, _circuitBreakerPolicy, _bulkheadPolicy);
+
             if (config.ApiKey == null)
             {
                 _auth0 = new AuthenticationApiClient($"{config.Domain}");
@@ -101,8 +136,10 @@ namespace Artesian.SDK.Service
             _client = new FlurlClient(_url);
             _client.WithTimeout(TimeSpan.FromMinutes(ArtesianConstants.ServiceRequestTimeOutMinutes));
 
+            
         }
 
+       
         public async Task<TResult> Exec<TResult, TBody>(HttpMethod method, string resource, TBody body = default, CancellationToken ctk = default)
         {
             try
@@ -123,8 +160,8 @@ namespace Artesian.SDK.Service
                 {
                     if (body != null)
                         content = new ObjectContent(typeof(TBody), body, _lz4msgPackFormatter);
-                
-                    using (var res = await req.SendAsync(method, content: content, completionOption: HttpCompletionOption.ResponseContentRead, cancellationToken: ctk))
+
+                    using (var res =  await _resilienceStrategy.ExecuteAsync ( () =>  req.SendAsync(method, content: content, completionOption: HttpCompletionOption.ResponseContentRead, cancellationToken: ctk)))
                     {
                         if (res.StatusCode == HttpStatusCode.NoContent || res.StatusCode == HttpStatusCode.NotFound)
                             return default;

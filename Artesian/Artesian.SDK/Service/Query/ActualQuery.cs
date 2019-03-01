@@ -6,6 +6,7 @@ using Flurl;
 using NodaTime;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
@@ -156,22 +157,43 @@ namespace Artesian.SDK.Service
         /// <returns>Enumerable of TimeSerieRow Actual</returns>
         public async Task<IEnumerable<TimeSerieRow.Actual>> ExecuteAsync(CancellationToken ctk = default)
         {
-            return await _client.Exec<IEnumerable<TimeSerieRow.Actual>>(HttpMethod.Get, _buildRequest(), ctk: ctk);
+            List<string> urls = _buildRequest();
+                var taskList = urls.Select(url=> _client.Exec<IEnumerable<TimeSerieRow.Actual>>(HttpMethod.Get, url, ctk: ctk));
+                await Task.WhenAll(taskList.ToArray());
+
+                var res =  taskList.SelectMany(t => t.GetAwaiter().GetResult());
+            return res;
+        }
+
+        public IEnumerable<IEnumerable<T>> Partition<T>(IEnumerable<T> parameters, int partitionSize)
+        {
+            int i = 0;
+            return parameters.GroupBy(x => (i++ / partitionSize)).ToList();
         }
 
         #region private
-        private string _buildRequest()
+        private List<string> _buildRequest()
         {
             _validateQuery();
 
             string url = null;
+            List<string> urlList = new List<string>();
+
 
             if (_ids != null)
             {
-                url = $"/{_routePrefix}/{_granularity}/{_buildExtractionRangeRoute()}"
-                        .SetQueryParam("id", _ids)
-                        .SetQueryParam("tz", _tz)
-                        .SetQueryParam("tr", _tr);
+                var ids = Partition(_ids, 25).ToList();
+
+                for(int i = 0; i< ids.Count(); i++)
+                {
+                    url = $"/{_routePrefix}/{_granularity}/{_buildExtractionRangeRoute()}"
+                            .SetQueryParam("id", ids[i])
+                            .SetQueryParam("tz", _tz)
+                            .SetQueryParam("tr", _tr);
+
+                    urlList.Add(url);
+                }
+
             }
             else
             {
@@ -179,9 +201,11 @@ namespace Artesian.SDK.Service
                         .SetQueryParam("filterId", _filterId)
                         .SetQueryParam("tz", _tz)
                         .SetQueryParam("tr", _tr);
+
+                urlList.Add(url);
             }
 
-            return url;
+            return urlList;
         }
 
         /// <summary>

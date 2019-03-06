@@ -3,7 +3,7 @@
 // license information. 
 namespace Artesian.SDK.Service
 {
-    interface IMasQuery<T>: IQuery<T>
+    interface IMasQuery<T>: IQuery<T>, IQueryPartition
     {
         T ForProducts(params string[] products);
     }

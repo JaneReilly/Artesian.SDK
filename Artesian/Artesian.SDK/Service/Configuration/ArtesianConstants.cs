@@ -17,8 +17,6 @@ namespace Artesian.SDK.Service
         internal const string MetadataVersion = "v2.1";
         internal const int ServiceRequestTimeOutMinutes = 10;
         internal const int MaxExceptions = 2;
-        internal const int MaxParallelism = 10;
-        internal const int MaxQueuingActions = 15;
 
     }
 }

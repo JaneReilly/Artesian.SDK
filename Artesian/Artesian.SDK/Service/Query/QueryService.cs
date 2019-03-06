@@ -17,10 +17,10 @@ namespace Artesian.SDK.Service
         /// Query service for building a query
         /// </summary>
         /// <param name="cfg">IArtesianServiceConfig</param>
-        public QueryService(IArtesianServiceConfig cfg)
+        public QueryService(IArtesianServiceConfig cfg, ArtesianPolicyConfig policy)
         {
             _cfg = cfg;
-            _client = new Client(cfg, ArtesianConstants.QueryRoute.AppendPathSegment(ArtesianConstants.QueryVersion));
+            _client = new Client(cfg, ArtesianConstants.QueryRoute.AppendPathSegment(ArtesianConstants.QueryVersion),policy);
         }
         /// <summary>
         /// Create Actual Time Serie Query

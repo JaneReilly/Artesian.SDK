@@ -1,11 +1,18 @@
-﻿using System;
+﻿// Copyright (c) ARK LTD. All rights reserved.
+// Licensed under the MIT License. See LICENSE in the project root for
+// license information. 
 using System.Collections.Generic;
-using System.Text;
 
 namespace Artesian.SDK.Service
 {
     public interface IQueryPartition
     {
-        IEnumerable<IEnumerable<T>> Partition<T>(IEnumerable<T> parameters, int batchSize);
+        /// <summary>
+        /// Partition queries by Market data Ids
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="ids"></param>
+        /// <returns></returns>
+        IEnumerable<IEnumerable<int>> Partition<T>(IEnumerable<int> ids);
     }
 }

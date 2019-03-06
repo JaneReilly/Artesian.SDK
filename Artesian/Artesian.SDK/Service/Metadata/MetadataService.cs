@@ -21,10 +21,10 @@ namespace Artesian.SDK.Service
         /// Metadata service
         /// </summary>
         /// <param name="cfg">IArtesianServiceConfig</param>
-        public MetadataService(IArtesianServiceConfig cfg)
+        public MetadataService(IArtesianServiceConfig cfg, ArtesianPolicyConfig policy)
         {
             _cfg = cfg;
-            _client = new Client(cfg, ArtesianConstants.MetadataVersion);
+            _client = new Client(cfg, ArtesianConstants.MetadataVersion, policy);
         }
 
         public Task<MarketDataEntity.Output> ReadMarketDataRegistryAsync(MarketDataIdentifier id, CancellationToken ctk = default)

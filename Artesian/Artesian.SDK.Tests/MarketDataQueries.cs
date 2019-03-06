@@ -14,6 +14,7 @@ namespace Artesian.SDK.Tests
     public class MarketDataQueries
     {
         private ArtesianServiceConfig _cfg = new ArtesianServiceConfig(new Uri(TestConstants.BaseAddress), TestConstants.APIKey);
+        private ArtesianPolicyConfig _policy = new ArtesianPolicyConfig();
 
         #region MarketData
         [Test]
@@ -21,7 +22,7 @@ namespace Artesian.SDK.Tests
         {
             using (var httpTest = new HttpTest())
             {
-                var mds = new MarketDataService(_cfg);
+                var mds = new MarketDataService(_cfg, _policy);
 
                 var mdq = mds.ReadMarketDataRegistryAsync(new MarketDataIdentifier("TestProvider", "TestCurveName")).ConfigureAwait(true).GetAwaiter().GetResult();
 
@@ -38,7 +39,7 @@ namespace Artesian.SDK.Tests
         {
             using (var httpTest = new HttpTest())
             {
-                var mds = new MarketDataService(_cfg);
+                var mds = new MarketDataService(_cfg, _policy);
 
                 var mdq = mds.ReadCurveRangeAsync(100000001, 1, 1, "M+1", new LocalDateTime(2018, 07, 19, 12, 0), new LocalDateTime(2017, 07, 19, 12, 0)).ConfigureAwait(true).GetAwaiter().GetResult();
 
@@ -58,7 +59,7 @@ namespace Artesian.SDK.Tests
         {
             using (var httpTest = new HttpTest())
             {
-                var mds = new MarketDataService(_cfg);
+                var mds = new MarketDataService(_cfg, _policy);
 
                 var mdq = mds.ReadMarketDataRegistryAsync(100000001).ConfigureAwait(true).GetAwaiter().GetResult();
 
@@ -73,7 +74,7 @@ namespace Artesian.SDK.Tests
         {
             using (var httpTest = new HttpTest())
             {
-                var mds = new MarketDataService(_cfg);
+                var mds = new MarketDataService(_cfg, _policy);
 
                 var marketDataEntity = new MarketDataEntity.Input()
                 {
@@ -100,7 +101,7 @@ namespace Artesian.SDK.Tests
         {
             using (var httpTest = new HttpTest())
             {
-                var mds = new MarketDataService(_cfg);
+                var mds = new MarketDataService(_cfg, _policy);
 
                 var marketDataEntity = new MarketDataEntity.Input()
                 {
@@ -128,7 +129,7 @@ namespace Artesian.SDK.Tests
         {
             using (var httpTest = new HttpTest())
             {
-                var mds = new MarketDataService(_cfg);
+                var mds = new MarketDataService(_cfg, _policy);
 
                 mds.DeleteMarketDataAsync(1).ConfigureAwait(true).GetAwaiter().GetResult();
 
@@ -150,7 +151,7 @@ namespace Artesian.SDK.Tests
                 {
                     {"TestKey",new string[]{"TestValue"} }
                 };
-                var mds = new MarketDataService(_cfg);
+                var mds = new MarketDataService(_cfg, _policy);
                 var filter = new ArtesianSearchFilter
                 {
                     Page = 1,
@@ -180,7 +181,7 @@ namespace Artesian.SDK.Tests
         {
             using (var httpTest = new HttpTest())
             {
-                var mds = new MarketDataService(_cfg);
+                var mds = new MarketDataService(_cfg, _policy);
 
                 var operations = new Operations()
                 {
@@ -211,7 +212,7 @@ namespace Artesian.SDK.Tests
         {
             using (var httpTest = new HttpTest())
             {
-                var mds = new MarketDataService(_cfg);
+                var mds = new MarketDataService(_cfg, _policy);
 
                 var operations = new Operations()
                 {
@@ -242,7 +243,7 @@ namespace Artesian.SDK.Tests
         {
             using (var httpTest = new HttpTest())
             {
-                var mds = new MarketDataService(_cfg);
+                var mds = new MarketDataService(_cfg, _policy);
 
                 var operations = new Operations()
                 {
@@ -272,7 +273,7 @@ namespace Artesian.SDK.Tests
         {
             using (var httpTest = new HttpTest())
             {
-                var mds = new MarketDataService(_cfg);
+                var mds = new MarketDataService(_cfg, _policy);
 
                 var operations = new Operations()
                 {
@@ -302,7 +303,7 @@ namespace Artesian.SDK.Tests
         {
             using (var httpTest = new HttpTest())
             {
-                var mds = new MarketDataService(_cfg);
+                var mds = new MarketDataService(_cfg, _policy);
 
                 var operations = new Operations()
                 {
@@ -332,7 +333,7 @@ namespace Artesian.SDK.Tests
         {
             using (var httpTest = new HttpTest())
             {
-                var mds = new MarketDataService(_cfg);
+                var mds = new MarketDataService(_cfg, _policy);
 
                 var operations = new Operations()
                 {
@@ -364,7 +365,7 @@ namespace Artesian.SDK.Tests
         {
             using (var httpTest = new HttpTest())
             {
-                var mds = new MarketDataService(_cfg);
+                var mds = new MarketDataService(_cfg, _policy);
 
                 var data = new UpsertCurveData()
                 {
@@ -392,7 +393,7 @@ namespace Artesian.SDK.Tests
         {
             using (var httpTest = new HttpTest())
             {
-                var mds = new MarketDataService(_cfg);
+                var mds = new MarketDataService(_cfg, _policy);
 
                 //Create Version
                 var data = new UpsertCurveData()
@@ -419,7 +420,7 @@ namespace Artesian.SDK.Tests
         {
             using (var httpTest = new HttpTest())
             {
-                var mds = new MarketDataService(_cfg);
+                var mds = new MarketDataService(_cfg, _policy);
 
                 var mdq = mds.ReadTimeTransformBaseAsync(1).ConfigureAwait(true).GetAwaiter().GetResult();
 
@@ -430,7 +431,7 @@ namespace Artesian.SDK.Tests
 
             using (var httpTest = new HttpTest())
             {
-                var mds = new MarketDataService(_cfg);
+                var mds = new MarketDataService(_cfg, _policy);
 
                 var mdq = mds.ReadTimeTransformBaseAsync(2).ConfigureAwait(true).GetAwaiter().GetResult();
 
@@ -445,7 +446,7 @@ namespace Artesian.SDK.Tests
         {
             using (var httpTest = new HttpTest())
             {
-                var mds = new MarketDataService(_cfg);
+                var mds = new MarketDataService(_cfg, _policy);
 
                 var mdq = mds.ReadTimeTransformsAsync(1, 1, true).ConfigureAwait(true).GetAwaiter().GetResult();
 
@@ -463,7 +464,7 @@ namespace Artesian.SDK.Tests
         {
             using (var httpTest = new HttpTest())
             {
-                var mds = new MarketDataService(_cfg);
+                var mds = new MarketDataService(_cfg, _policy);
 
                 var mdq = mds.ReadTimeTransformsAsync(1, 1, true).ConfigureAwait(true).GetAwaiter().GetResult();
 
@@ -482,7 +483,7 @@ namespace Artesian.SDK.Tests
         {
             using (var httpTest = new HttpTest())
             {
-                var mds = new MarketDataService(_cfg);
+                var mds = new MarketDataService(_cfg, _policy);
 
                 var timeTransformEntity = new TimeTransformSimpleShift()
                 {
@@ -510,7 +511,7 @@ namespace Artesian.SDK.Tests
         {
             using (var httpTest = new HttpTest())
             {
-                var mds = new MarketDataService(_cfg);
+                var mds = new MarketDataService(_cfg, _policy);
 
                 var timeTransformEntity = new TimeTransformSimpleShift()
                 {
@@ -538,7 +539,7 @@ namespace Artesian.SDK.Tests
         {
             using (var httpTest = new HttpTest())
             {
-                var mds = new MarketDataService(_cfg);
+                var mds = new MarketDataService(_cfg, _policy);
 
                 mds.DeleteTimeTransformSimpleShiftAsync(1).ConfigureAwait(true).GetAwaiter().GetResult();
 
@@ -556,7 +557,7 @@ namespace Artesian.SDK.Tests
         {
             using (var httpTest = new HttpTest())
             {
-                var mds = new MarketDataService(_cfg);
+                var mds = new MarketDataService(_cfg, _policy);
 
                 var filter = new CustomFilter()
                 {
@@ -580,7 +581,7 @@ namespace Artesian.SDK.Tests
         {
             using (var httpTest = new HttpTest())
             {
-                var mds = new MarketDataService(_cfg);
+                var mds = new MarketDataService(_cfg, _policy);
 
                 var filter = new CustomFilter()
                 {
@@ -604,7 +605,7 @@ namespace Artesian.SDK.Tests
         {
             using (var httpTest = new HttpTest())
             {
-                var mds = new MarketDataService(_cfg);
+                var mds = new MarketDataService(_cfg, _policy);
 
                 var filter = new CustomFilter();
 
@@ -622,7 +623,7 @@ namespace Artesian.SDK.Tests
         {
             using (var httpTest = new HttpTest())
             {
-                var mds = new MarketDataService(_cfg);
+                var mds = new MarketDataService(_cfg, _policy);
 
                 var filter = new CustomFilter();
 
@@ -640,7 +641,7 @@ namespace Artesian.SDK.Tests
         {
             using (var httpTest = new HttpTest())
             {
-                var mds = new MarketDataService(_cfg);
+                var mds = new MarketDataService(_cfg, _policy);
 
                 var filter = new CustomFilter();
 
@@ -662,7 +663,7 @@ namespace Artesian.SDK.Tests
         {
             using (var httpTest = new HttpTest())
             {
-                var mds = new MarketDataService(_cfg);
+                var mds = new MarketDataService(_cfg, _policy);
 
                 var path = new PathString(new[] { "Path1" });
 
@@ -680,7 +681,7 @@ namespace Artesian.SDK.Tests
         {
             using (var httpTest = new HttpTest())
             {
-                var mds = new MarketDataService(_cfg);
+                var mds = new MarketDataService(_cfg, _policy);
 
                 var mdq = mds.GetRoles(1, 1, new[] { "Principals" }).ConfigureAwait(true).GetAwaiter().GetResult();
 
@@ -700,7 +701,7 @@ namespace Artesian.SDK.Tests
         {
             using (var httpTest = new HttpTest())
             {
-                var mds = new MarketDataService(_cfg);
+                var mds = new MarketDataService(_cfg, _policy);
 
                 var auth = new AuthorizationPath.Input()
                 {
@@ -735,7 +736,7 @@ namespace Artesian.SDK.Tests
         {
             using (var httpTest = new HttpTest())
             {
-                var mds = new MarketDataService(_cfg);
+                var mds = new MarketDataService(_cfg, _policy);
 
                 var auth = new AuthorizationPath.Input()
                 {
@@ -770,7 +771,7 @@ namespace Artesian.SDK.Tests
         {
             using (var httpTest = new HttpTest())
             {
-                var mds = new MarketDataService(_cfg);
+                var mds = new MarketDataService(_cfg, _policy);
 
                 var auth = new AuthorizationPath.Input()
                 {
@@ -807,7 +808,7 @@ namespace Artesian.SDK.Tests
         {
             using (var httpTest = new HttpTest())
             {
-                var mds = new MarketDataService(_cfg);
+                var mds = new MarketDataService(_cfg, _policy);
 
                 var group = new AuthGroup()
                 {
@@ -830,7 +831,7 @@ namespace Artesian.SDK.Tests
         {
             using (var httpTest = new HttpTest())
             {
-                var mds = new MarketDataService(_cfg);
+                var mds = new MarketDataService(_cfg, _policy);
 
                 var group = new AuthGroup()
                 {
@@ -853,7 +854,7 @@ namespace Artesian.SDK.Tests
         {
             using (var httpTest = new HttpTest())
             {
-                var mds = new MarketDataService(_cfg);
+                var mds = new MarketDataService(_cfg, _policy);
 
                 mds.RemoveAuthGroup(1).ConfigureAwait(true).GetAwaiter().GetResult();
 
@@ -869,7 +870,7 @@ namespace Artesian.SDK.Tests
         {
             using (var httpTest = new HttpTest())
             {
-                var mds = new MarketDataService(_cfg);
+                var mds = new MarketDataService(_cfg, _policy);
 
                 mds.ReadAuthGroup(1).ConfigureAwait(true).GetAwaiter().GetResult();
 
@@ -885,7 +886,7 @@ namespace Artesian.SDK.Tests
         {
             using (var httpTest = new HttpTest())
             {
-                var mds = new MarketDataService(_cfg);
+                var mds = new MarketDataService(_cfg, _policy);
 
                 var mdq = mds.ReadAuthGroups(1, 1).ConfigureAwait(true).GetAwaiter().GetResult();
 
@@ -905,7 +906,7 @@ namespace Artesian.SDK.Tests
         {
             using (var httpTest = new HttpTest())
             {
-                var mds = new MarketDataService(_cfg);
+                var mds = new MarketDataService(_cfg, _policy);
 
                 var apiKey = new ApiKey.Input()
                 {
@@ -927,7 +928,7 @@ namespace Artesian.SDK.Tests
         {
             using (var httpTest = new HttpTest())
             {
-                var mds = new MarketDataService(_cfg);
+                var mds = new MarketDataService(_cfg, _policy);
 
                 var mdq = mds.ReadApiKeyByIdAsync(1).ConfigureAwait(true).GetAwaiter().GetResult();
 
@@ -943,7 +944,7 @@ namespace Artesian.SDK.Tests
         {
             using (var httpTest = new HttpTest())
             {
-                var mds = new MarketDataService(_cfg);
+                var mds = new MarketDataService(_cfg, _policy);
 
                 var mdq = mds.ReadApiKeyByKeyAsync("testKey").ConfigureAwait(true).GetAwaiter().GetResult();
 
@@ -960,7 +961,7 @@ namespace Artesian.SDK.Tests
         {
             using (var httpTest = new HttpTest())
             {
-                var mds = new MarketDataService(_cfg);
+                var mds = new MarketDataService(_cfg, _policy);
 
                 var mdq = mds.ReadApiKeysAsync(1, 1, "testName").ConfigureAwait(true).GetAwaiter().GetResult();
 
@@ -979,7 +980,7 @@ namespace Artesian.SDK.Tests
         {
             using (var httpTest = new HttpTest())
             {
-                var mds = new MarketDataService(_cfg);
+                var mds = new MarketDataService(_cfg, _policy);
 
                 mds.DeleteApiKeyAsync(1).ConfigureAwait(true).GetAwaiter().GetResult();
 

@@ -158,17 +158,22 @@ namespace Artesian.SDK.Service
         public async Task<IEnumerable<TimeSerieRow.Actual>> ExecuteAsync(CancellationToken ctk = default)
         {
             List<string> urls = _buildRequest();
-                var taskList = urls.Select(url=> _client.Exec<IEnumerable<TimeSerieRow.Actual>>(HttpMethod.Get, url, ctk: ctk));
-                await Task.WhenAll(taskList.ToArray());
 
-                var res =  taskList.SelectMany(t => t.GetAwaiter().GetResult());
+            var taskList = urls.Select(url=> _client.Exec<IEnumerable<TimeSerieRow.Actual>>(HttpMethod.Get, url, ctk: ctk));
+
+            await Task.WhenAll(taskList.ToArray());
+
+            var res =  taskList.SelectMany(t => t.GetAwaiter().GetResult());
+
             return res;
         }
 
-        public IEnumerable<IEnumerable<T>> Partition<T>(IEnumerable<T> parameters, int partitionSize)
+        public IEnumerable<IEnumerable<int>> Partition<T>(IEnumerable<int> ids)
         {
             int i = 0;
-            return parameters.GroupBy(x => (i++ / partitionSize)).ToList();
+            int partitionSize = 25;
+            
+            return ids.GroupBy(x => (i++ / partitionSize)).ToList();
         }
 
         #region private
@@ -182,7 +187,7 @@ namespace Artesian.SDK.Service
 
             if (_ids != null)
             {
-                var ids = Partition(_ids, 25).ToList();
+                var ids = Partition<int>(_ids).ToList();
 
                 for(int i = 0; i< ids.Count(); i++)
                 {

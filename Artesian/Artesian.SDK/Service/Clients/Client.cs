@@ -12,11 +12,7 @@ using Newtonsoft.Json.Serialization;
 using NodaTime;
 using NodaTime.Serialization.JsonNet;
 using Polly;
-using Polly.Bulkhead;
 using Polly.Caching;
-using Polly.CircuitBreaker;
-using Polly.Retry;
-using Polly.Timeout;
 using Polly.Wrap;
 using System;
 using System.Collections.Generic;
@@ -47,13 +43,7 @@ namespace Artesian.SDK.Service
 
         private readonly string _url;
 
-        private readonly AsyncCircuitBreakerPolicy _circuitBreakerPolicy;
-
-        private readonly AsyncRetryPolicy _retryPolicy;
-
         private readonly AsyncPolicyWrap _resilienceStrategy;
-
-        private readonly AsyncBulkheadPolicy _bulkheadPolicy;
 
         private readonly Polly.Caching.Memory.MemoryCacheProvider _memoryCacheProvider
            = new Polly.Caching.Memory.MemoryCacheProvider(new Microsoft.Extensions.Caching.Memory.MemoryCache(new Microsoft.Extensions.Caching.Memory.MemoryCacheOptions()));
@@ -67,7 +57,7 @@ namespace Artesian.SDK.Service
         /// </summary>
         /// <param name="config">Config</param>
         /// <param name="Url">String</param>
-        public Client(IArtesianServiceConfig config, string Url)
+        public Client(IArtesianServiceConfig config, string Url, ArtesianPolicyConfig policy)
         {
             _url = config.BaseAddress.ToString().AppendPathSegment(Url);
             _apiKey = config.ApiKey;
@@ -98,27 +88,8 @@ namespace Artesian.SDK.Service
             formatters.Add(_jsonFormatter);
             _formatters = formatters;
 
-            //Wait and retry policy
-            _retryPolicy = Policy
-                .Handle<Exception>(e => !(e is BrokenCircuitException)) 
-                .WaitAndRetryAsync(3, retryAttempt =>
-                    TimeSpan.FromMilliseconds(Math.Pow(200,
-                    retryAttempt)
-                 ));
+            _resilienceStrategy = policy.ResillianceStrategy();
 
-            //Circuit break policy
-            _circuitBreakerPolicy = Policy
-                .Handle<Exception>()
-                .CircuitBreakerAsync(
-                    exceptionsAllowedBeforeBreaking:ArtesianConstants.MaxExceptions,
-                    durationOfBreak: TimeSpan.FromSeconds(3)
-                );
-
-            //Bulkhead policy
-            _bulkheadPolicy = Policy.BulkheadAsync(ArtesianConstants.MaxParallelism, ArtesianConstants.MaxQueuingActions);
-
-            //Policy wrap
-            _resilienceStrategy = Policy.WrapAsync(_retryPolicy, _circuitBreakerPolicy, _bulkheadPolicy);
 
             if (config.ApiKey == null)
             {

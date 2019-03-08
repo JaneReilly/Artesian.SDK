@@ -18,7 +18,7 @@ namespace Artesian.SDK.Service
         RelativeInterval
     }
 
-    enum VersionSelectionType
+    public enum VersionSelectionType
     {
         LastN,
         MUV,

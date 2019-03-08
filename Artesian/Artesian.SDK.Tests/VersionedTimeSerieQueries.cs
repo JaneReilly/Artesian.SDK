@@ -24,7 +24,8 @@ namespace Artesian.SDK.Tests
         {
             using (var httpTest = new HttpTest())
             {
-                var qs = new QueryService(_cfg, _policy);
+
+                var qs = new QueryService(_cfg);
 
                 var ver = qs.CreateVersioned()
                         .ForMarketData(new int[] { 100000001 })
@@ -45,7 +46,7 @@ namespace Artesian.SDK.Tests
         {
             using (var httpTest = new HttpTest())
             {
-                var qs = new QueryService(_cfg, _policy);
+                var qs = new QueryService(_cfg);
 
                 var ver = qs.CreateVersioned()
                         .ForMarketData(new int[] { 100000001 })
@@ -66,7 +67,7 @@ namespace Artesian.SDK.Tests
         {
             using (var httpTest = new HttpTest())
             {
-                var qs = new QueryService(_cfg, _policy);
+                var qs = new QueryService(_cfg);
 
                 var ver = qs.CreateVersioned()
                         .ForMarketData(new int[] { 100000001 })
@@ -87,7 +88,7 @@ namespace Artesian.SDK.Tests
         {
             using (var httpTest = new HttpTest())
             {
-                var qs = new QueryService(_cfg, _policy);
+                var qs = new QueryService(_cfg);
 
                 var ver = qs.CreateVersioned()
                         .ForMarketData(new int[] { 100000001 })
@@ -108,7 +109,7 @@ namespace Artesian.SDK.Tests
         {
             using (var httpTest = new HttpTest())
             {
-                var qs = new QueryService(_cfg, _policy);
+                var qs = new QueryService(_cfg);
 
                 var ver = qs.CreateVersioned()
                         .ForMarketData(new int[] { 100000001 })
@@ -129,7 +130,7 @@ namespace Artesian.SDK.Tests
         {
             using (var httpTest = new HttpTest())
             {
-                var qs = new QueryService(_cfg, _policy);
+                var qs = new QueryService(_cfg);
 
                 var ver = qs.CreateVersioned()
                         .ForMarketData(new int[] { 100000001 })
@@ -150,7 +151,7 @@ namespace Artesian.SDK.Tests
         {
             using (var httpTest = new HttpTest())
             {
-                var qs = new QueryService(_cfg, _policy);
+                var qs = new QueryService(_cfg);
 
                 var ver = qs.CreateVersioned()
                         .ForMarketData(new int[] { 100000001 })
@@ -171,7 +172,7 @@ namespace Artesian.SDK.Tests
         {
             using (var httpTest = new HttpTest())
             {
-                var qs = new QueryService(_cfg, _policy);
+                var qs = new QueryService(_cfg);
 
                 var ver = qs.CreateVersioned()
                         .ForMarketData(new int[] { 100000001 })
@@ -192,7 +193,7 @@ namespace Artesian.SDK.Tests
         {
             using (var httpTest = new HttpTest())
             {
-                var qs = new QueryService(_cfg, _policy);
+                var qs = new QueryService(_cfg);
 
                 var ver = qs.CreateVersioned()
                         .ForMarketData(new int[] { 100000001 })
@@ -213,7 +214,7 @@ namespace Artesian.SDK.Tests
         {
             using (var httpTest = new HttpTest())
             {
-                var qs = new QueryService(_cfg, _policy);
+                var qs = new QueryService(_cfg);
 
                 var ver = qs.CreateVersioned()
                         .ForMarketData(new int[] { 100000001 })
@@ -234,7 +235,7 @@ namespace Artesian.SDK.Tests
         {
             using (var httpTest = new HttpTest())
             {
-                var qs = new QueryService(_cfg, _policy);
+                var qs = new QueryService(_cfg);
 
                 var ver = qs.CreateVersioned()
                         .ForMarketData(new int[] { 100000001 })
@@ -255,7 +256,7 @@ namespace Artesian.SDK.Tests
         {
             using (var httpTest = new HttpTest())
             {
-                var qs = new QueryService(_cfg, _policy);
+                var qs = new QueryService(_cfg);
 
                 var ver = qs.CreateVersioned()
                         .ForMarketData(new int[] { 100000001 })
@@ -276,7 +277,7 @@ namespace Artesian.SDK.Tests
         {
             using (var httpTest = new HttpTest())
             {
-                var qs = new QueryService(_cfg, _policy);
+                var qs = new QueryService(_cfg);
 
                 var ver = qs.CreateVersioned()
                         .ForMarketData(new int[] { 100000001 })
@@ -297,7 +298,7 @@ namespace Artesian.SDK.Tests
         {
             using (var httpTest = new HttpTest())
             {
-                var qs = new QueryService(_cfg, _policy);
+                var qs = new QueryService(_cfg);
 
                 var ver = qs.CreateVersioned()
                         .ForMarketData(new int[] { 100000001 })
@@ -318,7 +319,7 @@ namespace Artesian.SDK.Tests
         {
             using (var httpTest = new HttpTest())
             {
-                var qs = new QueryService(_cfg, _policy);
+                var qs = new QueryService(_cfg);
 
                 var ver = qs.CreateVersioned()
                         .ForMarketData(new int[] { 100000001 })
@@ -339,7 +340,7 @@ namespace Artesian.SDK.Tests
         {
             using (var httpTest = new HttpTest())
             {
-                var qs = new QueryService(_cfg, _policy);
+                var qs = new QueryService(_cfg);
 
                 var ver = qs.CreateVersioned()
                         .ForMarketData(new int[] { 100000001 })
@@ -360,7 +361,7 @@ namespace Artesian.SDK.Tests
         {
             using (var httpTest = new HttpTest())
             {
-                var qs = new QueryService(_cfg, _policy);
+                var qs = new QueryService(_cfg);
 
                 var ver = qs.CreateVersioned()
                         .ForMarketData(new int[] { 100000001 })
@@ -381,7 +382,7 @@ namespace Artesian.SDK.Tests
         {
             using (var httpTest = new HttpTest())
             {
-                var qs = new QueryService(_cfg, _policy);
+                var qs = new QueryService(_cfg);
 
                 var ver = qs.CreateVersioned()
                         .ForMarketData(new int[] { 100000001 })
@@ -402,7 +403,7 @@ namespace Artesian.SDK.Tests
         {
             using (var httpTest = new HttpTest())
             {
-                var qs = new QueryService(_cfg, _policy);
+                var qs = new QueryService(_cfg);
 
                 var ver = qs.CreateVersioned()
                         .ForMarketData(new int[] { 100000001 })
@@ -423,7 +424,7 @@ namespace Artesian.SDK.Tests
         {
             using (var httpTest = new HttpTest())
             {
-                var qs = new QueryService(_cfg, _policy);
+                var qs = new QueryService(_cfg);
 
                 var ver = qs.CreateVersioned()
                         .ForMarketData(new int[] { 100000001 })
@@ -444,7 +445,7 @@ namespace Artesian.SDK.Tests
         {
             using (var httpTest = new HttpTest())
             {
-                var qs = new QueryService(_cfg, _policy);
+                var qs = new QueryService(_cfg);
 
                 var ver = qs.CreateVersioned()
                         .ForMarketData(new int[] { 100000001 })
@@ -465,7 +466,7 @@ namespace Artesian.SDK.Tests
         {
             using (var httpTest = new HttpTest())
             {
-                var qs = new QueryService(_cfg, _policy);
+                var qs = new QueryService(_cfg);
 
                 var ver = qs.CreateVersioned()
                         .ForMarketData(new int[] { 100000001 })
@@ -486,7 +487,7 @@ namespace Artesian.SDK.Tests
         {
             using (var httpTest = new HttpTest())
             {
-                var qs = new QueryService(_cfg, _policy);
+                var qs = new QueryService(_cfg);
 
                 var ver = qs.CreateVersioned()
                         .ForMarketData(new int[] { 100000001 })
@@ -507,7 +508,7 @@ namespace Artesian.SDK.Tests
         {
             using (var httpTest = new HttpTest())
             {
-                var qs = new QueryService(_cfg, _policy);
+                var qs = new QueryService(_cfg);
 
                 var ver = qs.CreateVersioned()
                         .ForMarketData(new int[] { 100000001 })
@@ -528,7 +529,7 @@ namespace Artesian.SDK.Tests
         {
             using (var httpTest = new HttpTest())
             {
-                var qs = new QueryService(_cfg, _policy);
+                var qs = new QueryService(_cfg);
 
                 var ver = qs.CreateVersioned()
                         .ForMarketData(new int[] { 100000001 })
@@ -549,7 +550,7 @@ namespace Artesian.SDK.Tests
         {
             using (var httpTest = new HttpTest())
             {
-                var qs = new QueryService(_cfg, _policy);
+                var qs = new QueryService(_cfg);
 
                 var ver = qs.CreateVersioned()
                         .ForMarketData(new int[] { 100000001 })
@@ -570,7 +571,7 @@ namespace Artesian.SDK.Tests
         {
             using (var httpTest = new HttpTest())
             {
-                var qs = new QueryService(_cfg, _policy);
+                var qs = new QueryService(_cfg);
 
                 var ver = qs.CreateVersioned()
                         .ForMarketData(new int[] { 100000001 })
@@ -591,7 +592,7 @@ namespace Artesian.SDK.Tests
         {
             using (var httpTest = new HttpTest())
             {
-                var qs = new QueryService(_cfg, _policy);
+                var qs = new QueryService(_cfg);
 
                 var ver = qs.CreateVersioned()
                         .ForMarketData(new int[] { 100000001 })
@@ -612,7 +613,7 @@ namespace Artesian.SDK.Tests
         {
             using (var httpTest = new HttpTest())
             {
-                var qs = new QueryService(_cfg, _policy);
+                var qs = new QueryService(_cfg);
 
                 var ver = qs.CreateVersioned()
                         .ForMarketData(new int[] { 100000001 })
@@ -633,7 +634,7 @@ namespace Artesian.SDK.Tests
         {
             using (var httpTest = new HttpTest())
             {
-                var qs = new QueryService(_cfg, _policy);
+                var qs = new QueryService(_cfg);
 
                 var ver = qs.CreateVersioned()
                         .ForMarketData(new int[] { 100000001 })
@@ -654,7 +655,7 @@ namespace Artesian.SDK.Tests
         {
             using (var httpTest = new HttpTest())
             {
-                var qs = new QueryService(_cfg, _policy);
+                var qs = new QueryService(_cfg);
 
                 var ver = qs.CreateVersioned()
                         .ForMarketData(new int[] { 100000001 })
@@ -675,7 +676,7 @@ namespace Artesian.SDK.Tests
         {
             using (var httpTest = new HttpTest())
             {
-                var qs = new QueryService(_cfg, _policy);
+                var qs = new QueryService(_cfg);
 
                 var ver = qs.CreateVersioned()
                         .ForMarketData(new int[] { 100000001 })
@@ -696,7 +697,7 @@ namespace Artesian.SDK.Tests
         {
             using (var httpTest = new HttpTest())
             {
-                var qs = new QueryService(_cfg, _policy);
+                var qs = new QueryService(_cfg);
 
                 var ver = qs.CreateVersioned()
                         .ForMarketData(new int[] { 100000001 })
@@ -717,7 +718,7 @@ namespace Artesian.SDK.Tests
         {
             using (var httpTest = new HttpTest())
             {
-                var qs = new QueryService(_cfg, _policy);
+                var qs = new QueryService(_cfg);
 
                 var ver = qs.CreateVersioned()
                        .ForMarketData(new int[] { 100000001 })
@@ -738,7 +739,7 @@ namespace Artesian.SDK.Tests
         {
             using (var httpTest = new HttpTest())
             {
-                var qs = new QueryService(_cfg, _policy);
+                var qs = new QueryService(_cfg);
 
                 var ver = qs.CreateVersioned()
                        .ForMarketData(new int[] { 100000001 })
@@ -759,7 +760,7 @@ namespace Artesian.SDK.Tests
         {
             using (var httpTest = new HttpTest())
             {
-                var qs = new QueryService(_cfg, _policy);
+                var qs = new QueryService(_cfg);
 
                 var ver = qs.CreateVersioned()
                        .ForMarketData(new int[] { 100000001 })
@@ -780,7 +781,7 @@ namespace Artesian.SDK.Tests
         {
             using (var httpTest = new HttpTest())
             {
-                var qs = new QueryService(_cfg, _policy);
+                var qs = new QueryService(_cfg);
 
                 var ver = qs.CreateVersioned()
                        .ForMarketData(new int[] { 100000001 })
@@ -801,7 +802,7 @@ namespace Artesian.SDK.Tests
         {
             using (var httpTest = new HttpTest())
             {
-                var qs = new QueryService(_cfg, _policy);
+                var qs = new QueryService(_cfg);
 
                 var ver = qs.CreateVersioned()
                        .ForMarketData(new int[] { 100000001, 100000002, 100000003 })
@@ -822,7 +823,7 @@ namespace Artesian.SDK.Tests
         {
             using (var httpTest = new HttpTest())
             {
-                var qs = new QueryService(_cfg, _policy);
+                var qs = new QueryService(_cfg);
 
                 var ver = qs.CreateVersioned()
                        .ForMarketData(new int[] { 100000001, 100000002, 100000003 })
@@ -843,7 +844,7 @@ namespace Artesian.SDK.Tests
         {
             using (var httpTest = new HttpTest())
             {
-                var qs = new QueryService(_cfg, _policy);
+                var qs = new QueryService(_cfg);
 
                 var ver = qs.CreateVersioned()
                        .ForMarketData(new int[] { 100000001, 100000002, 100000003 })
@@ -864,7 +865,7 @@ namespace Artesian.SDK.Tests
         {
             using (var httpTest = new HttpTest())
             {
-                var qs = new QueryService(_cfg, _policy);
+                var qs = new QueryService(_cfg);
 
                 var ver = qs.CreateVersioned()
                        .ForMarketData(new int[] { 100000001, 100000002, 100000003 })
@@ -885,7 +886,7 @@ namespace Artesian.SDK.Tests
         {
             using (var httpTest = new HttpTest())
             {
-                var qs = new QueryService(_cfg, _policy);
+                var qs = new QueryService(_cfg);
 
                 var ver = qs.CreateVersioned()
                        .ForMarketData(new int[] { 100000001, 100000002, 100000003 })
@@ -906,7 +907,7 @@ namespace Artesian.SDK.Tests
         {
             using (var httpTest = new HttpTest())
             {
-                var qs = new QueryService(_cfg, _policy);
+                var qs = new QueryService(_cfg);
 
                 var ver = qs.CreateVersioned()
                        .ForMarketData(new int[] { 100000001 })
@@ -929,7 +930,7 @@ namespace Artesian.SDK.Tests
         {
             using (var httpTest = new HttpTest())
             {
-                var qs = new QueryService(_cfg, _policy);
+                var qs = new QueryService(_cfg);
 
                 var ver = qs.CreateVersioned()
                        .ForMarketData(new int[] { 100000001 })
@@ -952,7 +953,7 @@ namespace Artesian.SDK.Tests
         {
             using (var httpTest = new HttpTest())
             {
-                var qs = new QueryService(_cfg, _policy);
+                var qs = new QueryService(_cfg);
 
                 var ver = qs.CreateVersioned()
                        .ForMarketData(new int[] { 100000001 })
@@ -975,7 +976,7 @@ namespace Artesian.SDK.Tests
         {
             using (var httpTest = new HttpTest())
             {
-                var qs = new QueryService(_cfg, _policy);
+                var qs = new QueryService(_cfg);
 
                 var ver = qs.CreateVersioned()
                        .ForMarketData(new int[] { 100000001 })
@@ -998,7 +999,7 @@ namespace Artesian.SDK.Tests
         {
             using (var httpTest = new HttpTest())
             {
-                var qs = new QueryService(_cfg, _policy);
+                var qs = new QueryService(_cfg);
 
                 var ver = qs.CreateVersioned()
                        .ForMarketData(new int[] { 100000001 })
@@ -1021,7 +1022,7 @@ namespace Artesian.SDK.Tests
         {
             using (var httpTest = new HttpTest())
             {
-                var qs = new QueryService(_cfg, _policy);
+                var qs = new QueryService(_cfg);
 
                 var act = qs.CreateVersioned()
                        .ForMarketData(new int[] { 100000001 })
@@ -1044,7 +1045,7 @@ namespace Artesian.SDK.Tests
         {
             using (var httpTest = new HttpTest())
             {
-                var qs = new QueryService(_cfg, _policy);
+                var qs = new QueryService(_cfg);
 
                 var act = qs.CreateVersioned()
                        .ForMarketData(new int[] { 100000001 })
@@ -1067,7 +1068,7 @@ namespace Artesian.SDK.Tests
         {
             using (var httpTest = new HttpTest())
             {
-                var qs = new QueryService(_cfg, _policy);
+                var qs = new QueryService(_cfg);
 
                 var act = qs.CreateVersioned()
                        .ForMarketData(new int[] { 100000001 })
@@ -1090,7 +1091,7 @@ namespace Artesian.SDK.Tests
         {
             using (var httpTest = new HttpTest())
             {
-                var qs = new QueryService(_cfg, _policy);
+                var qs = new QueryService(_cfg);
 
                 var act = qs.CreateVersioned()
                        .ForMarketData(new int[] { 100000001 })
@@ -1113,7 +1114,7 @@ namespace Artesian.SDK.Tests
         {
             using (var httpTest = new HttpTest())
             {
-                var qs = new QueryService(_cfg, _policy);
+                var qs = new QueryService(_cfg);
 
                 var act = qs.CreateVersioned()
                        .ForMarketData(new int[] { 100000001 })
@@ -1136,7 +1137,7 @@ namespace Artesian.SDK.Tests
         {
             using (var httpTest = new HttpTest())
             {
-                var qs = new QueryService(_cfg, _policy);
+                var qs = new QueryService(_cfg);
 
                 var ver = qs.CreateVersioned()
                         .ForMarketData(new int[] { 100000001 })
@@ -1156,7 +1157,7 @@ namespace Artesian.SDK.Tests
 
             using (var httpTest = new HttpTest())
             {
-                var qs = new QueryService(_cfg, _policy);
+                var qs = new QueryService(_cfg);
 
                 var ver = qs.CreateVersioned()
                         .ForMarketData(new int[] { 100000001 })
@@ -1179,12 +1180,12 @@ namespace Artesian.SDK.Tests
             using (var httpTest = new HttpTest())
             {
 
-                var qs = new QueryService(_cfg, _policy);
+                var qs = new QueryService(_cfg);
 
                 var act = qs.CreateVersioned()
                     .ForMarketData(new int[] {
-                        100001250, 100001251, 100001252, 100001253 , 100001254,
-                        100001255 , 100001256, 100001257, 100001258, 100001259,
+                        100001250, 100001251, 100001252, 100001253, 100001254,
+                        100001255, 100001256, 100001257, 100001258, 100001259,
                         100001260, 100001261, 100001262, 100001263, 100001264,
                         100001265, 100001266, 100001267, 100001268, 100001269,
                         100001270, 100001271, 100001272, 100001273, 100001274,
@@ -1241,7 +1242,7 @@ namespace Artesian.SDK.Tests
         {
             using (var httpTest = new HttpTest())
             {
-                var qs = new QueryService(_cfg, _policy);
+                var qs = new QueryService(_cfg);
 
                 var ver = qs.CreateVersioned()
                         .ForFilterId(1)
@@ -1262,7 +1263,7 @@ namespace Artesian.SDK.Tests
         {
             using (var httpTest = new HttpTest())
             {
-                var qs = new QueryService(_cfg, _policy);
+                var qs = new QueryService(_cfg);
 
                 var ver = qs.CreateVersioned()
                         .ForFilterId(1)
@@ -1283,7 +1284,7 @@ namespace Artesian.SDK.Tests
         {
             using (var httpTest = new HttpTest())
             {
-                var qs = new QueryService(_cfg, _policy);
+                var qs = new QueryService(_cfg);
 
                 var ver = qs.CreateVersioned()
                         .ForFilterId(1)
@@ -1304,7 +1305,7 @@ namespace Artesian.SDK.Tests
         {
             using (var httpTest = new HttpTest())
             {
-                var qs = new QueryService(_cfg, _policy);
+                var qs = new QueryService(_cfg);
 
                 var ver = qs.CreateVersioned()
                         .ForFilterId(1)
@@ -1325,7 +1326,7 @@ namespace Artesian.SDK.Tests
         {
             using (var httpTest = new HttpTest())
             {
-                var qs = new QueryService(_cfg, _policy);
+                var qs = new QueryService(_cfg);
 
                 var ver = qs.CreateVersioned()
                         .ForFilterId(1)
@@ -1346,7 +1347,7 @@ namespace Artesian.SDK.Tests
         {
             using (var httpTest = new HttpTest())
             {
-                var qs = new QueryService(_cfg, _policy);
+                var qs = new QueryService(_cfg);
 
                 var ver = qs.CreateVersioned()
                         .ForFilterId(1)
@@ -1367,7 +1368,7 @@ namespace Artesian.SDK.Tests
         {
             using (var httpTest = new HttpTest())
             {
-                var qs = new QueryService(_cfg, _policy);
+                var qs = new QueryService(_cfg);
 
                 var ver = qs.CreateVersioned()
                         .ForFilterId(1)
@@ -1388,7 +1389,7 @@ namespace Artesian.SDK.Tests
         {
             using (var httpTest = new HttpTest())
             {
-                var qs = new QueryService(_cfg, _policy);
+                var qs = new QueryService(_cfg);
 
                 var ver = qs.CreateVersioned()
                         .ForFilterId(1)
@@ -1409,7 +1410,7 @@ namespace Artesian.SDK.Tests
         {
             using (var httpTest = new HttpTest())
             {
-                var qs = new QueryService(_cfg, _policy);
+                var qs = new QueryService(_cfg);
 
                 var ver = qs.CreateVersioned()
                         .ForFilterId(1)
@@ -1430,7 +1431,7 @@ namespace Artesian.SDK.Tests
         {
             using (var httpTest = new HttpTest())
             {
-                var qs = new QueryService(_cfg, _policy);
+                var qs = new QueryService(_cfg);
 
                 var ver = qs.CreateVersioned()
                         .ForFilterId(1)
@@ -1451,7 +1452,7 @@ namespace Artesian.SDK.Tests
         {
             using (var httpTest = new HttpTest())
             {
-                var qs = new QueryService(_cfg, _policy);
+                var qs = new QueryService(_cfg);
 
                 var ver = qs.CreateVersioned()
                         .ForFilterId(1)
@@ -1472,7 +1473,7 @@ namespace Artesian.SDK.Tests
         {
             using (var httpTest = new HttpTest())
             {
-                var qs = new QueryService(_cfg, _policy);
+                var qs = new QueryService(_cfg);
 
                 var ver = qs.CreateVersioned()
                         .ForFilterId(1)
@@ -1493,7 +1494,7 @@ namespace Artesian.SDK.Tests
         {
             using (var httpTest = new HttpTest())
             {
-                var qs = new QueryService(_cfg, _policy);
+                var qs = new QueryService(_cfg);
 
                 var ver = qs.CreateVersioned()
                         .ForFilterId(1)
@@ -1514,7 +1515,7 @@ namespace Artesian.SDK.Tests
         {
             using (var httpTest = new HttpTest())
             {
-                var qs = new QueryService(_cfg, _policy);
+                var qs = new QueryService(_cfg);
 
                 var ver = qs.CreateVersioned()
                         .ForFilterId(1)
@@ -1535,7 +1536,7 @@ namespace Artesian.SDK.Tests
         {
             using (var httpTest = new HttpTest())
             {
-                var qs = new QueryService(_cfg, _policy);
+                var qs = new QueryService(_cfg);
 
                 var ver = qs.CreateVersioned()
                         .ForFilterId(1)
@@ -1556,7 +1557,7 @@ namespace Artesian.SDK.Tests
         {
             using (var httpTest = new HttpTest())
             {
-                var qs = new QueryService(_cfg, _policy);
+                var qs = new QueryService(_cfg);
 
                 var ver = qs.CreateVersioned()
                         .ForFilterId(1)
@@ -1577,7 +1578,7 @@ namespace Artesian.SDK.Tests
         {
             using (var httpTest = new HttpTest())
             {
-                var qs = new QueryService(_cfg, _policy);
+                var qs = new QueryService(_cfg);
 
                 var ver = qs.CreateVersioned()
                         .ForFilterId(1)
@@ -1598,7 +1599,7 @@ namespace Artesian.SDK.Tests
         {
             using (var httpTest = new HttpTest())
             {
-                var qs = new QueryService(_cfg, _policy);
+                var qs = new QueryService(_cfg);
 
                 var ver = qs.CreateVersioned()
                         .ForFilterId(1)
@@ -1619,7 +1620,7 @@ namespace Artesian.SDK.Tests
         {
             using (var httpTest = new HttpTest())
             {
-                var qs = new QueryService(_cfg, _policy);
+                var qs = new QueryService(_cfg);
 
                 var ver = qs.CreateVersioned()
                         .ForFilterId(1)
@@ -1640,7 +1641,7 @@ namespace Artesian.SDK.Tests
         {
             using (var httpTest = new HttpTest())
             {
-                var qs = new QueryService(_cfg, _policy);
+                var qs = new QueryService(_cfg);
 
                 var ver = qs.CreateVersioned()
                         .ForFilterId(1)
@@ -1661,7 +1662,7 @@ namespace Artesian.SDK.Tests
         {
             using (var httpTest = new HttpTest())
             {
-                var qs = new QueryService(_cfg, _policy);
+                var qs = new QueryService(_cfg);
 
                 var ver = qs.CreateVersioned()
                         .ForFilterId(1)
@@ -1682,7 +1683,7 @@ namespace Artesian.SDK.Tests
         {
             using (var httpTest = new HttpTest())
             {
-                var qs = new QueryService(_cfg, _policy);
+                var qs = new QueryService(_cfg);
 
                 var ver = qs.CreateVersioned()
                         .ForFilterId(1)
@@ -1703,7 +1704,7 @@ namespace Artesian.SDK.Tests
         {
             using (var httpTest = new HttpTest())
             {
-                var qs = new QueryService(_cfg, _policy);
+                var qs = new QueryService(_cfg);
 
                 var ver = qs.CreateVersioned()
                         .ForFilterId(1)
@@ -1724,7 +1725,7 @@ namespace Artesian.SDK.Tests
         {
             using (var httpTest = new HttpTest())
             {
-                var qs = new QueryService(_cfg, _policy);
+                var qs = new QueryService(_cfg);
 
                 var ver = qs.CreateVersioned()
                         .ForFilterId(1)
@@ -1745,7 +1746,7 @@ namespace Artesian.SDK.Tests
         {
             using (var httpTest = new HttpTest())
             {
-                var qs = new QueryService(_cfg, _policy);
+                var qs = new QueryService(_cfg);
 
                 var ver = qs.CreateVersioned()
                         .ForFilterId(1)
@@ -1766,7 +1767,7 @@ namespace Artesian.SDK.Tests
         {
             using (var httpTest = new HttpTest())
             {
-                var qs = new QueryService(_cfg, _policy);
+                var qs = new QueryService(_cfg);
 
                 var ver = qs.CreateVersioned()
                         .ForFilterId(1)
@@ -1787,7 +1788,7 @@ namespace Artesian.SDK.Tests
         {
             using (var httpTest = new HttpTest())
             {
-                var qs = new QueryService(_cfg, _policy);
+                var qs = new QueryService(_cfg);
 
                 var ver = qs.CreateVersioned()
                         .ForFilterId(1)
@@ -1808,7 +1809,7 @@ namespace Artesian.SDK.Tests
         {
             using (var httpTest = new HttpTest())
             {
-                var qs = new QueryService(_cfg, _policy);
+                var qs = new QueryService(_cfg);
 
                 var ver = qs.CreateVersioned()
                         .ForFilterId(1)
@@ -1829,7 +1830,7 @@ namespace Artesian.SDK.Tests
         {
             using (var httpTest = new HttpTest())
             {
-                var qs = new QueryService(_cfg, _policy);
+                var qs = new QueryService(_cfg);
 
                 var ver = qs.CreateVersioned()
                         .ForFilterId(1)
@@ -1850,7 +1851,7 @@ namespace Artesian.SDK.Tests
         {
             using (var httpTest = new HttpTest())
             {
-                var qs = new QueryService(_cfg, _policy);
+                var qs = new QueryService(_cfg);
 
                 var ver = qs.CreateVersioned()
                         .ForFilterId(1)
@@ -1871,7 +1872,7 @@ namespace Artesian.SDK.Tests
         {
             using (var httpTest = new HttpTest())
             {
-                var qs = new QueryService(_cfg, _policy);
+                var qs = new QueryService(_cfg);
 
                 var ver = qs.CreateVersioned()
                         .ForFilterId(1)
@@ -1892,7 +1893,7 @@ namespace Artesian.SDK.Tests
         {
             using (var httpTest = new HttpTest())
             {
-                var qs = new QueryService(_cfg, _policy);
+                var qs = new QueryService(_cfg);
 
                 var ver = qs.CreateVersioned()
                         .ForFilterId(1)
@@ -1913,7 +1914,7 @@ namespace Artesian.SDK.Tests
         {
             using (var httpTest = new HttpTest())
             {
-                var qs = new QueryService(_cfg, _policy);
+                var qs = new QueryService(_cfg);
 
                 var ver = qs.CreateVersioned()
                         .ForFilterId(1)
@@ -1934,7 +1935,7 @@ namespace Artesian.SDK.Tests
         {
             using (var httpTest = new HttpTest())
             {
-                var qs = new QueryService(_cfg, _policy);
+                var qs = new QueryService(_cfg);
 
                 var ver = qs.CreateVersioned()
                        .ForFilterId(1)
@@ -1955,7 +1956,7 @@ namespace Artesian.SDK.Tests
         {
             using (var httpTest = new HttpTest())
             {
-                var qs = new QueryService(_cfg, _policy);
+                var qs = new QueryService(_cfg);
 
                 var ver = qs.CreateVersioned()
                        .ForFilterId(1)
@@ -1976,7 +1977,7 @@ namespace Artesian.SDK.Tests
         {
             using (var httpTest = new HttpTest())
             {
-                var qs = new QueryService(_cfg, _policy);
+                var qs = new QueryService(_cfg);
 
                 var ver = qs.CreateVersioned()
                        .ForFilterId(1)
@@ -1997,7 +1998,7 @@ namespace Artesian.SDK.Tests
         {
             using (var httpTest = new HttpTest())
             {
-                var qs = new QueryService(_cfg, _policy);
+                var qs = new QueryService(_cfg);
 
                 var ver = qs.CreateVersioned()
                        .ForFilterId(1)
@@ -2018,7 +2019,7 @@ namespace Artesian.SDK.Tests
         {
             using (var httpTest = new HttpTest())
             {
-                var qs = new QueryService(_cfg, _policy);
+                var qs = new QueryService(_cfg);
 
                 var ver = qs.CreateVersioned()
                        .ForFilterId(1)
@@ -2041,7 +2042,7 @@ namespace Artesian.SDK.Tests
         {
             using (var httpTest = new HttpTest())
             {
-                var qs = new QueryService(_cfg, _policy);
+                var qs = new QueryService(_cfg);
 
                 var ver = qs.CreateVersioned()
                        .ForFilterId(1)
@@ -2064,7 +2065,7 @@ namespace Artesian.SDK.Tests
         {
             using (var httpTest = new HttpTest())
             {
-                var qs = new QueryService(_cfg, _policy);
+                var qs = new QueryService(_cfg);
 
                 var ver = qs.CreateVersioned()
                        .ForFilterId(1)
@@ -2087,7 +2088,7 @@ namespace Artesian.SDK.Tests
         {
             using (var httpTest = new HttpTest())
             {
-                var qs = new QueryService(_cfg, _policy);
+                var qs = new QueryService(_cfg);
 
                 var ver = qs.CreateVersioned()
                        .ForFilterId(1)
@@ -2110,7 +2111,7 @@ namespace Artesian.SDK.Tests
         {
             using (var httpTest = new HttpTest())
             {
-                var qs = new QueryService(_cfg, _policy);
+                var qs = new QueryService(_cfg);
 
                 var ver = qs.CreateVersioned()
                        .ForFilterId(1)
@@ -2133,7 +2134,7 @@ namespace Artesian.SDK.Tests
         {
             using (var httpTest = new HttpTest())
             {
-                var qs = new QueryService(_cfg, _policy);
+                var qs = new QueryService(_cfg);
 
                 var act = qs.CreateVersioned()
                        .ForFilterId(1)
@@ -2156,7 +2157,7 @@ namespace Artesian.SDK.Tests
         {
             using (var httpTest = new HttpTest())
             {
-                var qs = new QueryService(_cfg, _policy);
+                var qs = new QueryService(_cfg);
 
                 var act = qs.CreateVersioned()
                        .ForFilterId(1)
@@ -2179,7 +2180,7 @@ namespace Artesian.SDK.Tests
         {
             using (var httpTest = new HttpTest())
             {
-                var qs = new QueryService(_cfg, _policy);
+                var qs = new QueryService(_cfg);
 
                 var act = qs.CreateVersioned()
                        .ForFilterId(1)
@@ -2202,7 +2203,7 @@ namespace Artesian.SDK.Tests
         {
             using (var httpTest = new HttpTest())
             {
-                var qs = new QueryService(_cfg, _policy);
+                var qs = new QueryService(_cfg);
 
                 var act = qs.CreateVersioned()
                        .ForFilterId(1)
@@ -2225,7 +2226,7 @@ namespace Artesian.SDK.Tests
         {
             using (var httpTest = new HttpTest())
             {
-                var qs = new QueryService(_cfg, _policy);
+                var qs = new QueryService(_cfg);
 
                 var act = qs.CreateVersioned()
                        .ForFilterId(1)
@@ -2248,7 +2249,7 @@ namespace Artesian.SDK.Tests
         {
             using (var httpTest = new HttpTest())
             {
-                var qs = new QueryService(_cfg, _policy);
+                var qs = new QueryService(_cfg);
 
                 var ver = qs.CreateVersioned()
                         .ForFilterId(1)
@@ -2268,7 +2269,7 @@ namespace Artesian.SDK.Tests
 
             using (var httpTest = new HttpTest())
             {
-                var qs = new QueryService(_cfg, _policy);
+                var qs = new QueryService(_cfg);
 
                 var ver = qs.CreateVersioned()
                         .ForFilterId(1)
@@ -2292,7 +2293,7 @@ namespace Artesian.SDK.Tests
         {
             using (var httpTest = new HttpTest())
             {
-                var qs = new QueryService(_cfg, _policy);
+                var qs = new QueryService(_cfg);
 
                 var partialQuery = qs.CreateVersioned()
                                     .ForMarketData(new int[] { 100000001 })
@@ -2323,7 +2324,7 @@ namespace Artesian.SDK.Tests
         {
             using (var httpTest = new HttpTest())
             {
-                var qs = new QueryService(_cfg, _policy);
+                var qs = new QueryService(_cfg);
 
                 var partialQuery = qs.CreateVersioned()
                                     .ForMarketData(new int[] { 100000001 })

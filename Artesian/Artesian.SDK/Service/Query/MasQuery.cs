@@ -141,14 +141,6 @@ namespace Artesian.SDK.Service
             return res;
         }
 
-        public IEnumerable<IEnumerable<int>> Partition<T>(IEnumerable<int> ids)
-        {
-            int i = 0;
-            int partitionSize = 25;
-
-            return ids.GroupBy(x => (i++ / partitionSize)).ToList();
-        }
-
         #region private
         private List<string> _buildRequest()
         {
@@ -157,14 +149,16 @@ namespace Artesian.SDK.Service
             string url = null;
             List<string> urlList = new List<string>();
 
+            var masParams = new MasQueryParamaters(_ids, _products);
+
             if (_ids != null)
             {
-                var ids = Partition<int>(_ids).ToList();
+                var partitionedList = masParams.Partition().ToList();
 
-                for (int i = 0; i < ids.Count(); i++)
+                for (int i = 0; i < partitionedList.Count(); i++)
                 {
                     url = $"/{_routePrefix}/{_buildExtractionRangeRoute()}"
-                        .SetQueryParam("id", ids[i])
+                        .SetQueryParam("id", partitionedList[i].ids)
                         .SetQueryParam("p", _products)
                         .SetQueryParam("tz", _tz);
 
@@ -193,7 +187,12 @@ namespace Artesian.SDK.Service
 
             if (_products == null)
                 throw new ApplicationException("Products must be provided for extraction. Use .ForProducts() argument takes a string or string array of products");
-        } 
+        }
+
+        public IEnumerable<MasQuery> Partition(MasQuery paramaters)
+        {
+            throw new NotImplementedException();
+        }
         #endregion
         #endregion
     }

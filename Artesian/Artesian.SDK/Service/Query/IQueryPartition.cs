@@ -5,14 +5,8 @@ using System.Collections.Generic;
 
 namespace Artesian.SDK.Service
 {
-    public interface IQueryPartition
+    public interface IQueryPartition<QueryParamaters> where QueryParamaters : IQueryPartition<QueryParamaters>
     {
-        /// <summary>
-        /// Partition queries by Market data Ids
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="ids"></param>
-        /// <returns></returns>
-        IEnumerable<IEnumerable<int>> Partition<T>(IEnumerable<int> ids);
+        IEnumerable<QueryParamaters> Partition();
     }
 }

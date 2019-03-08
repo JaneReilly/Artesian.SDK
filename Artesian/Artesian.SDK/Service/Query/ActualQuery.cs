@@ -168,14 +168,6 @@ namespace Artesian.SDK.Service
             return res;
         }
 
-        public IEnumerable<IEnumerable<int>> Partition<T>(IEnumerable<int> ids)
-        {
-            int i = 0;
-            int partitionSize = 25;
-            
-            return ids.GroupBy(x => (i++ / partitionSize)).ToList();
-        }
-
         #region private
         private List<string> _buildRequest()
         {
@@ -184,15 +176,16 @@ namespace Artesian.SDK.Service
             string url = null;
             List<string> urlList = new List<string>();
 
+            var actualParams = new ActualQueryParamaters(_ids, _granularity , _tr );
 
             if (_ids != null)
             {
-                var ids = Partition<int>(_ids).ToList();
+                var partitionedList =  actualParams.Partition().ToList();
 
-                for(int i = 0; i< ids.Count(); i++)
+                for(int i = 0; i< partitionedList.Count(); i++)
                 {
                     url = $"/{_routePrefix}/{_granularity}/{_buildExtractionRangeRoute()}"
-                            .SetQueryParam("id", ids[i])
+                            .SetQueryParam("id", partitionedList[i].ids)
                             .SetQueryParam("tz", _tz)
                             .SetQueryParam("tr", _tr);
 
@@ -222,7 +215,9 @@ namespace Artesian.SDK.Service
 
             if (_granularity == null)
                 throw new ApplicationException("Extraction granularity must be provided. Use .InGranularity() argument takes a granularity type");
-        } 
+        }
+
+      
         #endregion
         #endregion
     }

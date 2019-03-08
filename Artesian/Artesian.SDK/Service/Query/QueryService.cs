@@ -12,11 +12,23 @@ namespace Artesian.SDK.Service
     public class QueryService: IQueryService
     {
         private IArtesianServiceConfig _cfg;
+        private ArtesianPolicyConfig _policy;
         private Client _client;
         /// <summary>
         /// Query service for building a query
         /// </summary>
         /// <param name="cfg">IArtesianServiceConfig</param>
+        public QueryService(IArtesianServiceConfig cfg)
+        {
+            _cfg = cfg;
+            _policy = new ArtesianPolicyConfig();
+            _client = new Client(cfg, ArtesianConstants.QueryRoute.AppendPathSegment(ArtesianConstants.QueryVersion), _policy);
+        }
+        /// <summary>
+        /// Query service for building a query
+        /// </summary>
+        /// <param name="cfg">IArtesianServiceConfig</param>
+        /// <param name="policy">ArtesianPolicyConfig</param>
         public QueryService(IArtesianServiceConfig cfg, ArtesianPolicyConfig policy)
         {
             _cfg = cfg;

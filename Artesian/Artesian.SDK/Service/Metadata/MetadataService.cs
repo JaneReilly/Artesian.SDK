@@ -16,11 +16,23 @@ namespace Artesian.SDK.Service
     public partial class MetadataService : IMetadataService
     {
         private IArtesianServiceConfig _cfg;
+        private ArtesianPolicyConfig _policy;
         private static Client _client;
         /// <summary>
         /// Metadata service
         /// </summary>
         /// <param name="cfg">IArtesianServiceConfig</param>
+        public MetadataService(IArtesianServiceConfig cfg)
+        {
+            _cfg = cfg;
+            _policy = new ArtesianPolicyConfig();
+            _client = new Client(cfg, ArtesianConstants.MetadataVersion, _policy);
+        }
+        /// <summary>
+        /// Metadata service
+        /// </summary>
+        /// <param name="cfg">IArtesianServiceConfig</param>
+        /// <param name="policy">ArtesianPolicyConfig</param>
         public MetadataService(IArtesianServiceConfig cfg, ArtesianPolicyConfig policy)
         {
             _cfg = cfg;

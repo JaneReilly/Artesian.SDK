@@ -43,7 +43,7 @@ namespace Artesian.SDK.Service
 
         private readonly string _url;
 
-        private readonly AsyncPolicyWrap _resilienceStrategy;
+        private readonly AsyncPolicy _resilienceStrategy;
 
         private readonly Polly.Caching.Memory.MemoryCacheProvider _memoryCacheProvider
            = new Polly.Caching.Memory.MemoryCacheProvider(new Microsoft.Extensions.Caching.Memory.MemoryCache(new Microsoft.Extensions.Caching.Memory.MemoryCacheOptions()));
@@ -107,7 +107,6 @@ namespace Artesian.SDK.Service
             _client = new FlurlClient(_url);
             _client.WithTimeout(TimeSpan.FromMinutes(ArtesianConstants.ServiceRequestTimeOutMinutes));
 
-            
         }
 
        

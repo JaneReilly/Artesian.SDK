@@ -57,6 +57,7 @@ namespace Artesian.SDK.Service
         /// </summary>
         /// <param name="config">Config</param>
         /// <param name="Url">String</param>
+        /// /// <param name="policy">String</param>
         public Client(IArtesianServiceConfig config, string Url, ArtesianPolicyConfig policy)
         {
             _url = config.BaseAddress.ToString().AppendPathSegment(Url);

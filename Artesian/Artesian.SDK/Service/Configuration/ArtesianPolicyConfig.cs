@@ -1,15 +1,18 @@
-﻿using Polly;
+﻿// Copyright (c) ARK LTD. All rights reserved.
+// Licensed under the MIT License. See LICENSE in the project root for
+// license information. 
+using Polly;
 using Polly.Bulkhead;
 using Polly.CircuitBreaker;
 using Polly.Retry;
-using Polly.Wrap;
 using System;
-using System.Collections.Generic;
 using System.Net.Http;
-using System.Text;
 
 namespace Artesian.SDK.Service
 {
+    /// <summary>
+    /// Artesian Policy Config
+    /// </summary>
     public class ArtesianPolicyConfig
     {
         private  AsyncCircuitBreakerPolicy _circuitBreakerPolicy { get; set; }
@@ -24,7 +27,9 @@ namespace Artesian.SDK.Service
         private const int RetryWaitTime = 200;
         private const int RetryCount = 3;
         private const int DurationOfBreak = 3;
-
+        /// <summary>
+        /// Artesian Policy Config
+        /// </summary>
         public  ArtesianPolicyConfig()
         {
             RetryPolicyConfig().
@@ -32,7 +37,12 @@ namespace Artesian.SDK.Service
             BulkheadPolicyConfig().
             ResillianceStrategy();
         }
-
+        /// <summary>
+        /// Wait and Retry Policy Config
+        /// </summary>
+        /// <param name="retryCount"></param>
+        /// <param name="retryWaitTime"></param>
+        /// <returns></returns>
         public ArtesianPolicyConfig RetryPolicyConfig(int retryCount = RetryCount, int retryWaitTime = RetryWaitTime)
         {
             _retryPolicy = Policy
@@ -48,7 +58,12 @@ namespace Artesian.SDK.Service
 
             return this;
         }
-
+        /// <summary>
+        /// Circuit Breaker Policy
+        /// </summary>
+        /// <param name="maxExceptions"></param>
+        /// <param name="durationOfBreak"></param>
+        /// <returns></returns>
         public ArtesianPolicyConfig CircuitBreakerPolicyConfig(int maxExceptions = MaxExceptions, int durationOfBreak = DurationOfBreak)
         {
             _circuitBreakerPolicy = Policy
@@ -64,7 +79,12 @@ namespace Artesian.SDK.Service
 
             return this;
         }
-
+        /// <summary>
+        /// Bulkhead Policy Config
+        /// </summary>
+        /// <param name="maxParallelism"></param>
+        /// <param name="maxQueuingActions"></param>
+        /// <returns></returns>
         public ArtesianPolicyConfig BulkheadPolicyConfig(int maxParallelism = MaxParallelism, int maxQueuingActions = MaxQueuingActions)
         {
             _bulkheadPolicy = Policy
@@ -75,7 +95,10 @@ namespace Artesian.SDK.Service
 
             return this;
         }
-
+        /// <summary>
+        /// Policy Resiliance Strategy
+        /// </summary>
+        /// <returns></returns>
         public AsyncPolicy ResillianceStrategy()
         {
             return _circuitBreakerPolicy.WrapAsync(_retryPolicy.WrapAsync(_bulkheadPolicy));

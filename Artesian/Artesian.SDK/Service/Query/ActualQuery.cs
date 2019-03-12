@@ -23,15 +23,18 @@ namespace Artesian.SDK.Service
         /// </summary>
         protected Granularity? _granularity;
         private Client _client;
+        private IPartitionStrategy _partition;
+
         /// <summary>
         /// timerange
         /// </summary>
         protected int? _tr;
         private string _routePrefix = "ts";
 
-        internal ActualQuery(Client client)
+        internal ActualQuery(Client client, IPartitionStrategy partiton)
         {
             _client = client;
+            _partition = partiton;
         }
 
         #region facade methods
@@ -180,18 +183,13 @@ namespace Artesian.SDK.Service
 
             if (_ids != null)
             {
-                var partitionedList =  actualParams.Partition().ToList();
-
-                for(int i = 0; i< partitionedList.Count(); i++)
-                {
-                    url = $"/{_routePrefix}/{_granularity}/{_buildExtractionRangeRoute()}"
-                            .SetQueryParam("id", partitionedList[i].ids)
+                urlList = _partition.Partition(new List<ActualQueryParamaters>() { actualParams })
+                    .Select(qp => $"/{_routePrefix}/{_granularity}/{_buildExtractionRangeRoute()}"
+                            .SetQueryParam("id", qp.ids)
                             .SetQueryParam("tz", _tz)
-                            .SetQueryParam("tr", _tr);
-
-                    urlList.Add(url);
-                }
-
+                            .SetQueryParam("tr", qp.tr)
+                            .ToString())
+                    .ToList();
             }
             else
             {

@@ -42,7 +42,7 @@ namespace Artesian.SDK.Service
         /// </returns>
         public ActualQuery CreateActual()
         {
-            return new ActualQuery(_client);
+            return new ActualQuery(_client, new PartitionByIDsStrategy());
         }
         /// <summary>
         /// Create Versioned Time Serie Query
@@ -52,7 +52,7 @@ namespace Artesian.SDK.Service
         /// </returns>
         public VersionedQuery CreateVersioned()
         {
-            return new VersionedQuery(_client);
+            return new VersionedQuery(_client, new PartitionByIDsStrategy());
         }
         /// <summary>
         /// Create Market Assessment Time Serie Query
@@ -62,7 +62,7 @@ namespace Artesian.SDK.Service
         /// </returns>
         public MasQuery CreateMarketAssessment()
         {
-            return new MasQuery(_client);
+            return new MasQuery(_client, new PartitionByIDsStrategy());
         }
     }
 }

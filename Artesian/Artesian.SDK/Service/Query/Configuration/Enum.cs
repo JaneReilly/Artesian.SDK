@@ -17,9 +17,12 @@ namespace Artesian.SDK.Service
         PeriodRange,
         RelativeInterval
     }
-
+    /// <summary>
+    /// Version selection type
+    /// </summary>
     public enum VersionSelectionType
     {
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         LastN,
         MUV,
         LastOfDays,

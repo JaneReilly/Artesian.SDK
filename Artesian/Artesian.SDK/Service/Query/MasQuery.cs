@@ -21,10 +21,12 @@ namespace Artesian.SDK.Service
         private IEnumerable<string> _products;
         private string _routePrefix = "mas";
         private Client _client;
+        private IPartitionStrategy _partition;
 
-        internal MasQuery(Client client)
+        internal MasQuery(Client client, IPartitionStrategy partiton)
         {
             _client = client;
+            _partition = partiton;
         }
 
         #region facade methods
@@ -153,17 +155,15 @@ namespace Artesian.SDK.Service
 
             if (_ids != null)
             {
-                var partitionedList = masParams.Partition().ToList();
+             
 
-                for (int i = 0; i < partitionedList.Count(); i++)
-                {
-                    url = $"/{_routePrefix}/{_buildExtractionRangeRoute()}"
-                        .SetQueryParam("id", partitionedList[i].ids)
-                        .SetQueryParam("p", _products)
-                        .SetQueryParam("tz", _tz);
-
-                    urlList.Add(url);
-                }
+                urlList = _partition.Partition(new List<MasQueryParamaters>() { masParams })
+                    .Select(qp => $"/{_routePrefix}/{_buildExtractionRangeRoute()}"
+                            .SetQueryParam("id", qp.ids)
+                            .SetQueryParam("p", _products)
+                            .SetQueryParam("tz", _tz)
+                            .ToString())
+                    .ToList();
             }
             else
             {
@@ -177,7 +177,6 @@ namespace Artesian.SDK.Service
 
             return urlList;
         }
-
         /// <summary>
         /// Validate Query override
         /// </summary>
@@ -187,11 +186,6 @@ namespace Artesian.SDK.Service
 
             if (_products == null)
                 throw new ApplicationException("Products must be provided for extraction. Use .ForProducts() argument takes a string or string array of products");
-        }
-
-        public IEnumerable<MasQuery> Partition(MasQuery paramaters)
-        {
-            throw new NotImplementedException();
         }
         #endregion
         #endregion

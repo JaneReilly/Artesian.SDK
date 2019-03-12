@@ -22,12 +22,15 @@ namespace Artesian.SDK.Service
         private VersionSelectionType? _versionSelectionType = null;
         private Granularity? _granularity;
         private Client _client;
+        private IPartitionStrategy _partition;
+
         private int? _tr;
         private string _routePrefix = "vts";
 
-        internal VersionedQuery(Client client)
+        internal VersionedQuery(Client client, IPartitionStrategy partiton)
         {
             _client = client;
+            _partition = partiton;
         }
 
         #region facade methods
@@ -346,21 +349,20 @@ namespace Artesian.SDK.Service
             string url = null;
             List<string> urlList = new List<string>();
 
-            var versionedParams = new VersionedQueryParamaters(_ids, _versionSelectionCfg, _versionSelectionType, _granularity);
+            var versionedParams = new VersionedQueryParamaters(_ids, _versionSelectionCfg, _versionSelectionType, _granularity, _tr);
 
             if (_ids != null)
             {
-                var partitionedList = versionedParams.Partition().ToList();
+                
 
-                for (int i = 0; i < partitionedList.Count(); i++)
-                {
-                    url = $"/{_routePrefix}/{_buildVersionRoute()}/{_granularity}/{_buildExtractionRangeRoute()}"
-                            .SetQueryParam("id", partitionedList[i].ids)
+
+                urlList = _partition.Partition(new List<VersionedQueryParamaters>() { versionedParams })
+                    .Select(qp => $"/{_routePrefix}/{_buildVersionRoute()}/{_granularity}/{_buildExtractionRangeRoute()}"
+                            .SetQueryParam("id", qp.ids)
                             .SetQueryParam("tz", _tz)
-                            .SetQueryParam("tr", _tr);
-
-                    urlList.Add(url);
-                }
+                            .SetQueryParam("tr", qp.tr)
+                            .ToString())
+                    .ToList();
             }
             else
             {

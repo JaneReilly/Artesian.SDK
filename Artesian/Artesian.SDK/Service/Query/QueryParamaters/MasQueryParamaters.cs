@@ -1,20 +1,32 @@
-﻿using System;
+﻿// Copyright (c) ARK LTD. All rights reserved.
+// Licensed under the MIT License. See LICENSE in the project root for
+// license information. 
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace Artesian.SDK.Service
 {
-    public class MasQueryParamaters : QueryParamaters, IQueryPartition<MasQueryParamaters>
+    /// <summary>
+    /// Mas Query Paramaters DTO
+    /// </summary>
+    public class MasQueryParamaters : QueryParamaters
     {
-        protected IEnumerable<string> products;
-       
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
+        public IEnumerable<string> products;
+       /// <summary>
+       /// Mas Query Paramaters
+       /// </summary>
+       /// <param name="ids"></param>
+       /// <param name="products"></param>
         public MasQueryParamaters(IEnumerable<int> ids , IEnumerable<string> products)
         {
             this.ids = ids;
             this.products = products;
         }
-
+        /// <summary>
+        /// Partition Mas Query by ID's
+        /// </summary>
+        /// <returns>List of Mas Queries Partitioned by ID</returns>
         public IEnumerable<MasQueryParamaters> Partition()
         {
             int i = 0;

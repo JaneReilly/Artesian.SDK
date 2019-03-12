@@ -1,42 +1,37 @@
-﻿using Artesian.SDK.Dto;
-using System;
+﻿// Copyright (c) ARK LTD. All rights reserved.
+// Licensed under the MIT License. See LICENSE in the project root for
+// license information. 
+using Artesian.SDK.Dto;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace Artesian.SDK.Service
 {
-    public class VersionedQueryParamaters : QueryParamaters, IQueryPartition<VersionedQueryParamaters>
+    /// <summary>
+    /// Versioned Query Paramaters DTO
+    /// </summary>
+    public class VersionedQueryParamaters : QueryParamaters
     {
-        protected VersionSelectionConfig versionSelectionConfig;
-        protected VersionSelectionType? versionSelectionType;
-        protected Granularity? granularity;
-
-        public VersionedQueryParamaters(IEnumerable<int> ids, VersionSelectionConfig versionSelectionConfig, VersionSelectionType? versionSelectionType, Granularity? granularity)
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
+        public VersionSelectionConfig versionSelectionConfig;
+        public VersionSelectionType? versionSelectionType;
+        public Granularity? granularity;
+        public int? tr;
+        /// <summary>
+        /// Versioned Query Paramters
+        /// </summary>
+        /// <param name="ids"></param>
+        /// <param name="versionSelectionConfig"></param>
+        /// <param name="versionSelectionType"></param>
+        /// <param name="granularity"></param>
+        /// <param name="tr"></param>
+        public VersionedQueryParamaters(IEnumerable<int> ids, VersionSelectionConfig versionSelectionConfig, VersionSelectionType? versionSelectionType, Granularity? granularity, int? tr)
         {
             this.ids = ids;
             this.versionSelectionConfig = versionSelectionConfig;
             this.versionSelectionType = versionSelectionType;
             this.granularity = granularity;
+            this.tr = tr;
         }
-
-        public IEnumerable<VersionedQueryParamaters> Partition()
-        {
-            int i = 0;
-            int partitionSize = 25;
-
-            var idParams = ids.GroupBy(x => (i++ / partitionSize)).ToList();
-            var param = new VersionedQueryParamaters(null, null, null, null);
-            var actualQueryParams = new List<VersionedQueryParamaters>();
-
-            for (int x = 0; x < idParams.Count(); x++)
-            {
-                param = new VersionedQueryParamaters(idParams[x], versionSelectionConfig, versionSelectionType, granularity);
-                actualQueryParams.Add(param);
-            }
-
-            return actualQueryParams;
-        }
-    
     }
 }

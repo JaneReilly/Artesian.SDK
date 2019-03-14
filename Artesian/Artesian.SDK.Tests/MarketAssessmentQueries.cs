@@ -207,7 +207,7 @@ namespace Artesian.SDK.Tests
         }
 
         [Test]
-        public void Mas_WithMultiplePartitions()
+        public void Mas_Partitioned_By_ID()
         {
             using (var httpTest = new HttpTest())
             {

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Net.Http;
-using System.Text.RegularExpressions;
 using Artesian.SDK.Dto;
 using Artesian.SDK.Service;
 using Flurl;
@@ -17,6 +16,7 @@ namespace Artesian.SDK.Tests
         private ArtesianPolicyConfig _policy = new ArtesianPolicyConfig();
 
         #region MarketData ids
+        [Test]
         public void ActInRelativeIntervalExtractionWindow()
         {
             using (var httpTest = new HttpTest())
@@ -238,7 +238,7 @@ namespace Artesian.SDK.Tests
         }
 
         [Test]
-        public void Act_WithMultiplePartitions()
+        public void Act_Partitioned_By_ID()
         {
             using (var httpTest = new HttpTest())
             {

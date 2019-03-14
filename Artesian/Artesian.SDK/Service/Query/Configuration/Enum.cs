@@ -10,7 +10,7 @@ namespace Artesian.SDK.Service
         MAS
     }
 
-    enum ExtractionRangeType
+    public enum ExtractionRangeType
     {
         DateRange,
         Period,

@@ -42,6 +42,28 @@ namespace Artesian.SDK.Tests
         }
 
         [Test]
+        public void VerInPeriodRelativeIntervalLastOfMonths_Policy()
+        {
+            using (var httpTest = new HttpTest())
+            {
+
+                var qs = new QueryService(_cfg);
+
+                var ver = qs.CreateVersioned()
+                        .ForMarketData(new int[] { 100000001 })
+                        .InGranularity(Granularity.Day)
+                        .ForLastOfMonths(Period.FromMonths(-4))
+                        .InRelativeInterval(RelativeInterval.RollingMonth)
+                        .ExecuteAsync().Result;
+
+                httpTest.ShouldHaveCalled($"{_cfg.BaseAddress}query/v1.0/vts/LastOfMonths/P-4M/Day/RollingMonth"
+                   .SetQueryParam("id", 100000001))
+                   .WithVerb(HttpMethod.Get)
+                   .Times(1);
+            }
+        }
+
+        [Test]
         public void VerInPeriodAbsoluteDateRangeLastOfMonths()
         {
             using (var httpTest = new HttpTest())
@@ -1175,7 +1197,7 @@ namespace Artesian.SDK.Tests
         }
 
         [Test]
-        public void Ver_WithMultiplePartitions()
+        public void Ver_Partitioned_By_ID()
         {
             using (var httpTest = new HttpTest())
             {

@@ -36,7 +36,8 @@ namespace Artesian.SDK.Service
         public MetadataService(IArtesianServiceConfig cfg, ArtesianPolicyConfig policy)
         {
             _cfg = cfg;
-            _client = new Client(cfg, ArtesianConstants.MetadataVersion, policy);
+            _policy = policy;
+            _client = new Client(cfg, ArtesianConstants.MetadataVersion, _policy);
         }
 
         public Task<MarketDataEntity.Output> ReadMarketDataRegistryAsync(MarketDataIdentifier id, CancellationToken ctk = default)

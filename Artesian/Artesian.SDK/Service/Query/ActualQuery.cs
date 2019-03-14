@@ -179,15 +179,15 @@ namespace Artesian.SDK.Service
             string url = null;
             List<string> urlList = new List<string>();
 
-            var actualParams = new ActualQueryParamaters(_ids, _granularity , _tr );
+            var actualParams = new ActualQueryParamaters(_ids, _extractionRangeCfg, _extractionRangeType, _granularity , _tr );
 
             if (_ids != null)
             {
                 urlList = _partition.Partition(new List<ActualQueryParamaters>() { actualParams })
                     .Select(qp => $"/{_routePrefix}/{_granularity}/{_buildExtractionRangeRoute()}"
-                            .SetQueryParam("id", qp.ids)
+                            .SetQueryParam("id", qp.Ids)
                             .SetQueryParam("tz", _tz)
-                            .SetQueryParam("tr", qp.tr)
+                            .SetQueryParam("tr", qp.Tr)
                             .ToString())
                     .ToList();
             }

@@ -16,7 +16,6 @@ namespace Artesian.SDK.Service
         internal const string QueryRoute = "query";
         internal const string MetadataVersion = "v2.1";
         internal const int ServiceRequestTimeOutMinutes = 10;
-        internal const int MaxExceptions = 2;
 
     }
 }

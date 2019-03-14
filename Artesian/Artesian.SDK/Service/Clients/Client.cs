@@ -89,7 +89,7 @@ namespace Artesian.SDK.Service
             formatters.Add(_jsonFormatter);
             _formatters = formatters;
 
-            _resilienceStrategy = policy.ResillianceStrategy();
+            _resilienceStrategy = policy.GetResillianceStrategy();
 
 
             if (config.ApiKey == null)

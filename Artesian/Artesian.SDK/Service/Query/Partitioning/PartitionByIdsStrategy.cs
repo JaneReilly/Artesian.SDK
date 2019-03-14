@@ -10,7 +10,7 @@ namespace Artesian.SDK.Service
     /// </summary>
     public class PartitionByIDsStrategy : IPartitionStrategy
     {
-        const int PartitionSize = 25;
+        private const int PartitionSize = 25;
         /// <summary>
         /// Actual Partition
         /// </summary>
@@ -20,8 +20,8 @@ namespace Artesian.SDK.Service
         {
 
             return queries.SelectMany(query =>
-                        _partitionIds(query.ids)
-                        .Select(g => new ActualQueryParamaters(g, query.granularity, query.tr))
+                        _partitionIds(query.Ids)
+                        .Select(g => new ActualQueryParamaters(g, query.ExtractionRangeCfg, query.ExtractionRangeType, query.Granularity, query.Tr))
                     );
         }
         /// <summary>
@@ -33,8 +33,8 @@ namespace Artesian.SDK.Service
         {
 
             return queries.SelectMany(query =>
-                        _partitionIds(query.ids)
-                        .Select(g => new VersionedQueryParamaters(g, query.versionSelectionConfig, query.versionSelectionType, query.granularity, query.tr))
+                        _partitionIds(query.Ids)
+                        .Select(g => new VersionedQueryParamaters(g, query.ExtractionRangeCfg, query.ExtractionRangeType, query.VersionSelectionConfig, query.VersionSelectionType, query.Granularity, query.Tr))
                     );
         }
         /// <summary>
@@ -46,8 +46,8 @@ namespace Artesian.SDK.Service
         {
 
             return queries.SelectMany(query =>
-                        _partitionIds(query.ids)
-                        .Select(g => new MasQueryParamaters(g, query.products))
+                        _partitionIds(query.Ids)
+                        .Select(g => new MasQueryParamaters(g, query.ExtractionRangeCfg, query.ExtractionRangeType, query.Products))
                     );
         }
         private IEnumerable<IEnumerable<int>> _partitionIds(IEnumerable<int> ids)

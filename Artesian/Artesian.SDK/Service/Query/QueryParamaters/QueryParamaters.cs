@@ -11,12 +11,23 @@ namespace Artesian.SDK.Service
     /// </summary>
     public  abstract class QueryParamaters
     {
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
-        public IEnumerable<int> ids;
-        public ExtractionRangeSelectionConfig _extractionRangeCfg;
-        public ExtractionRangeType? _extractionRangeType;
-        public static LocalDatePattern _localDatePattern = LocalDatePattern.Iso;
-        public static LocalDateTimePattern _localDateTimePattern = LocalDateTimePattern.ExtendedIso;
+        /// <summary>
+        /// IDs
+        /// </summary>
+        public IEnumerable<int> Ids;
+        /// <summary>
+        /// Extraction range config
+        /// </summary>
+        public ExtractionRangeSelectionConfig ExtractionRangeCfg;
+        /// <summary>
+        /// Extraction range type
+        /// </summary>
+        public ExtractionRangeType? ExtractionRangeType;
+        /// <summary>
+        /// 
+        /// </summary>
+        private static LocalDatePattern LocalDatePattern = LocalDatePattern.Iso;
+        private static LocalDateTimePattern LocalDateTimePattern = LocalDateTimePattern.ExtendedIso;
 
     }
 }

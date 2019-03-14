@@ -278,11 +278,9 @@ namespace Artesian.SDK.Service
 
             var taskList = urls.Select(url => _client.Exec<IEnumerable<TimeSerieRow.Versioned>>(HttpMethod.Get, url, ctk: ctk));
 
-            await Task.WhenAll(taskList.ToArray());
+            var res = await Task.WhenAll(taskList);
 
-            var res = taskList.SelectMany(t => t.GetAwaiter().GetResult());
-
-            return res;
+            return res.SelectMany(t=>t);
         }
 
         #region private
@@ -349,18 +347,15 @@ namespace Artesian.SDK.Service
             string url = null;
             List<string> urlList = new List<string>();
 
-            var versionedParams = new VersionedQueryParamaters(_ids, _versionSelectionCfg, _versionSelectionType, _granularity, _tr);
+            var versionedParams = new VersionedQueryParamaters(_ids, _extractionRangeCfg, _extractionRangeType, _versionSelectionCfg, _versionSelectionType, _granularity, _tr);
 
             if (_ids != null)
             {
-                
-
-
                 urlList = _partition.Partition(new List<VersionedQueryParamaters>() { versionedParams })
                     .Select(qp => $"/{_routePrefix}/{_buildVersionRoute()}/{_granularity}/{_buildExtractionRangeRoute()}"
-                            .SetQueryParam("id", qp.ids)
+                            .SetQueryParam("id", qp.Ids)
                             .SetQueryParam("tz", _tz)
-                            .SetQueryParam("tr", qp.tr)
+                            .SetQueryParam("tr", qp.Tr)
                             .ToString())
                     .ToList();
             }

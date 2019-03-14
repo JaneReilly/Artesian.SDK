@@ -151,7 +151,7 @@ namespace Artesian.SDK.Service
             string url = null;
             List<string> urlList = new List<string>();
 
-            var masParams = new MasQueryParamaters(_ids, _products);
+            var masParams = new MasQueryParamaters(_ids, _extractionRangeCfg, _extractionRangeType, _products);
 
             if (_ids != null)
             {
@@ -159,7 +159,7 @@ namespace Artesian.SDK.Service
 
                 urlList = _partition.Partition(new List<MasQueryParamaters>() { masParams })
                     .Select(qp => $"/{_routePrefix}/{_buildExtractionRangeRoute()}"
-                            .SetQueryParam("id", qp.ids)
+                            .SetQueryParam("id", qp.Ids)
                             .SetQueryParam("p", _products)
                             .SetQueryParam("tz", _tz)
                             .ToString())

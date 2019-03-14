@@ -12,26 +12,41 @@ namespace Artesian.SDK.Service
     /// </summary>
     public class VersionedQueryParamaters : QueryParamaters
     {
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
-        public VersionSelectionConfig versionSelectionConfig;
-        public VersionSelectionType? versionSelectionType;
-        public Granularity? granularity;
-        public int? tr;
+        /// <summary>
+        /// Version selection config
+        /// </summary>
+        public VersionSelectionConfig VersionSelectionConfig;
+        /// <summary>
+        /// Version selection type
+        /// </summary>
+        public VersionSelectionType? VersionSelectionType;
+        /// <summary>
+        /// Granularity
+        /// </summary>
+        public Granularity? Granularity;
+        /// <summary>
+        /// Time range
+        /// </summary>
+        public int? Tr;
         /// <summary>
         /// Versioned Query Paramters
         /// </summary>
         /// <param name="ids"></param>
+        /// <param name="extractionRangeSelectionConfig"></param>
+        /// <param name="extractionRangeType"></param>
         /// <param name="versionSelectionConfig"></param>
         /// <param name="versionSelectionType"></param>
         /// <param name="granularity"></param>
         /// <param name="tr"></param>
-        public VersionedQueryParamaters(IEnumerable<int> ids, VersionSelectionConfig versionSelectionConfig, VersionSelectionType? versionSelectionType, Granularity? granularity, int? tr)
+        public VersionedQueryParamaters(IEnumerable<int> ids, ExtractionRangeSelectionConfig extractionRangeSelectionConfig, ExtractionRangeType? extractionRangeType, VersionSelectionConfig versionSelectionConfig, VersionSelectionType? versionSelectionType, Granularity? granularity, int? tr)
         {
-            this.ids = ids;
-            this.versionSelectionConfig = versionSelectionConfig;
-            this.versionSelectionType = versionSelectionType;
-            this.granularity = granularity;
-            this.tr = tr;
+            this.Ids = ids;
+            this.ExtractionRangeCfg = extractionRangeSelectionConfig;
+            this.ExtractionRangeType = extractionRangeType;
+            this.VersionSelectionConfig = versionSelectionConfig;
+            this.VersionSelectionType = versionSelectionType;
+            this.Granularity = granularity;
+            this.Tr = tr;
         }
     }
 }

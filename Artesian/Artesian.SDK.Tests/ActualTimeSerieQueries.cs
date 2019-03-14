@@ -13,7 +13,6 @@ namespace Artesian.SDK.Tests
     public class ActualTimeSerieQueries
     {
         private ArtesianServiceConfig _cfg = new ArtesianServiceConfig(new Uri(TestConstants.BaseAddress), TestConstants.APIKey);
-        private ArtesianPolicyConfig _policy = new ArtesianPolicyConfig();
 
         #region MarketData ids
         [Test]

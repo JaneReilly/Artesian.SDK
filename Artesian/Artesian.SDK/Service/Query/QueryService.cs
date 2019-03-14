@@ -14,6 +14,7 @@ namespace Artesian.SDK.Service
         private IArtesianServiceConfig _cfg;
         private ArtesianPolicyConfig _policy;
         private Client _client;
+        private IPartitionStrategy _partition;
         /// <summary>
         /// Query service for building a query
         /// </summary>
@@ -32,7 +33,8 @@ namespace Artesian.SDK.Service
         public QueryService(IArtesianServiceConfig cfg, ArtesianPolicyConfig policy)
         {
             _cfg = cfg;
-            _client = new Client(cfg, ArtesianConstants.QueryRoute.AppendPathSegment(ArtesianConstants.QueryVersion),policy);
+            _policy = policy;
+            _client = new Client(cfg, ArtesianConstants.QueryRoute.AppendPathSegment(ArtesianConstants.QueryVersion),_policy);
         }
         /// <summary>
         /// Create Actual Time Serie Query
@@ -42,7 +44,18 @@ namespace Artesian.SDK.Service
         /// </returns>
         public ActualQuery CreateActual()
         {
-            return new ActualQuery(_client, new PartitionByIDsStrategy());
+            _partition = new PartitionByIDsStrategy();
+            return new ActualQuery(_client, _partition);
+        }
+        /// <summary>
+        /// Create  Actual Time Serie Query
+        /// </summary>
+        /// <param name="partitionStrategy"></param>
+        /// <returns></returns>
+        public ActualQuery CreateActual(IPartitionStrategy partitionStrategy)
+        {
+            _partition = partitionStrategy;
+            return new ActualQuery(_client, _partition);
         }
         /// <summary>
         /// Create Versioned Time Serie Query
@@ -52,7 +65,18 @@ namespace Artesian.SDK.Service
         /// </returns>
         public VersionedQuery CreateVersioned()
         {
-            return new VersionedQuery(_client, new PartitionByIDsStrategy());
+            _partition = new PartitionByIDsStrategy();
+            return new VersionedQuery(_client, _partition);
+        }
+        /// <summary>
+        /// Create Versioned Time Serie Query
+        /// </summary>
+        /// <param name="partitionStrategy"></param>
+        /// <returns></returns>
+        public VersionedQuery CreateVersioned(IPartitionStrategy partitionStrategy)
+        {
+            _partition = partitionStrategy;
+            return new VersionedQuery(_client, _partition);
         }
         /// <summary>
         /// Create Market Assessment Time Serie Query
@@ -62,7 +86,18 @@ namespace Artesian.SDK.Service
         /// </returns>
         public MasQuery CreateMarketAssessment()
         {
-            return new MasQuery(_client, new PartitionByIDsStrategy());
+            _partition = new PartitionByIDsStrategy();
+            return new MasQuery(_client, _partition);
+        }
+        /// <summary>
+        /// Create Market Assessment Time Serie Query
+        /// </summary>
+        /// <param name="partitionStrategy"></param>
+        /// <returns></returns>
+        public MasQuery CreateMarketAssessment(IPartitionStrategy partitionStrategy)
+        {
+            _partition = partitionStrategy;
+            return new MasQuery(_client, _partition);
         }
     }
 }

@@ -35,7 +35,7 @@ namespace Artesian.SDK.Service
             RetryPolicyConfig().
             CircuitBreakerPolicyConfig().
             BulkheadPolicyConfig().
-            ResillianceStrategy();
+            GetResillianceStrategy();
         }
         /// <summary>
         /// Wait and Retry Policy Config
@@ -46,7 +46,7 @@ namespace Artesian.SDK.Service
         public ArtesianPolicyConfig RetryPolicyConfig(int retryCount = RetryCount, int retryWaitTime = RetryWaitTime)
         {
             _retryPolicy = Policy
-                .Handle<AggregateException>(x =>
+                .Handle<Exception>(x =>
                 {
                     var result = x.InnerException is HttpRequestException;
                     return result;
@@ -67,7 +67,7 @@ namespace Artesian.SDK.Service
         public ArtesianPolicyConfig CircuitBreakerPolicyConfig(int maxExceptions = MaxExceptions, int durationOfBreak = DurationOfBreak)
         {
             _circuitBreakerPolicy = Policy
-                .Handle<AggregateException>(x =>
+                .Handle<Exception>(x =>
                 {
                     var result = x.InnerException is HttpRequestException;
                     return result;
@@ -88,10 +88,7 @@ namespace Artesian.SDK.Service
         public ArtesianPolicyConfig BulkheadPolicyConfig(int maxParallelism = MaxParallelism, int maxQueuingActions = MaxQueuingActions)
         {
             _bulkheadPolicy = Policy
-                .BulkheadAsync(
-                maxParallelism, 
-                maxQueuingActions
-                );
+                .BulkheadAsync(maxParallelism, maxQueuingActions);
 
             return this;
         }
@@ -99,7 +96,7 @@ namespace Artesian.SDK.Service
         /// Policy Resiliance Strategy
         /// </summary>
         /// <returns></returns>
-        public AsyncPolicy ResillianceStrategy()
+        public AsyncPolicy GetResillianceStrategy()
         {
             return _circuitBreakerPolicy.WrapAsync(_retryPolicy.WrapAsync(_bulkheadPolicy));
         }

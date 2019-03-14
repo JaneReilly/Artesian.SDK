@@ -13,8 +13,14 @@ namespace Artesian.SDK.Service
     /// </summary>
     public abstract class Query
     {
-        private ExtractionRangeSelectionConfig _extractionRangeCfg = new ExtractionRangeSelectionConfig();
-        private ExtractionRangeType? _extractionRangeType = null;
+        /// <summary>
+        /// Extraction range config
+        /// </summary>
+        protected ExtractionRangeSelectionConfig _extractionRangeCfg = new ExtractionRangeSelectionConfig();
+        /// <summary>
+        /// Extraction range type
+        /// </summary>
+        protected ExtractionRangeType? _extractionRangeType = null;
         private static LocalDatePattern _localDatePattern = LocalDatePattern.Iso;
         private static LocalDateTimePattern _localDateTimePattern = LocalDateTimePattern.ExtendedIso;
 

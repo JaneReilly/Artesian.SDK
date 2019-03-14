@@ -9,9 +9,12 @@ namespace Artesian.SDK.Service
         Versioned,
         MAS
     }
-
+    /// <summary>
+    /// Extraction range type
+    /// </summary>
     public enum ExtractionRangeType
     {
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         DateRange,
         Period,
         PeriodRange,

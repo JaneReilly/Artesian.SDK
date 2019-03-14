@@ -11,20 +11,29 @@ namespace Artesian.SDK.Service
     /// </summary>
     public class ActualQueryParamaters : QueryParamaters
     {
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
-        public Granularity? granularity;
-        public int? tr;
+        /// <summary>
+        /// Granularity
+        /// </summary>
+        public Granularity? Granularity;
+        /// <summary>
+        /// Time range
+        /// </summary>
+        public int? Tr;
         /// <summary>
         /// Actual Query Paramaters
         /// </summary>
         /// <param name="ids"></param>
+        /// <param name="extractionRangeSelectionConfig"></param>
+        /// <param name="extractionRangeType"></param>
         /// <param name="granularity"></param>
         /// <param name="tr"></param>
-        public ActualQueryParamaters(IEnumerable<int> ids,  Granularity? granularity, int? tr)
+        public ActualQueryParamaters(IEnumerable<int> ids, ExtractionRangeSelectionConfig extractionRangeSelectionConfig, ExtractionRangeType? extractionRangeType,  Granularity? granularity, int? tr)
         {
-            this.ids = ids;
-            this.granularity = granularity;
-            this.tr = tr;
+            this.Ids = ids;
+            this.ExtractionRangeCfg = extractionRangeSelectionConfig;
+            this.ExtractionRangeType = extractionRangeType;
+            this.Granularity = granularity;
+            this.Tr = tr;
         }
      
     }

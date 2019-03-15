@@ -15,19 +15,19 @@ namespace Artesian.SDK.Service
         /// </summary>
         /// <param name="paramaters"></param>
         /// <returns></returns>
-        IEnumerable<ActualQueryParamaters> Partition(IEnumerable<ActualQueryParamaters> paramaters);
+        IEnumerable<ActualQueryParamaters> Partition(ActualQueryParamaters paramaters);
         /// <summary>
         /// Versioned Partition
         /// </summary>
         /// <param name="paramaters"></param>
         /// <returns></returns>
-        IEnumerable<VersionedQueryParamaters> Partition(IEnumerable<VersionedQueryParamaters> paramaters);
+        IEnumerable<VersionedQueryParamaters> Partition(VersionedQueryParamaters paramaters);
         /// <summary>
         /// Mas Partition
         /// </summary>
         /// <param name="paramaters"></param>
         /// <returns></returns>
-        IEnumerable<MasQueryParamaters> Partition(IEnumerable<MasQueryParamaters> paramaters);
+        IEnumerable<MasQueryParamaters> Partition(MasQueryParamaters paramaters);
 
     }
 }

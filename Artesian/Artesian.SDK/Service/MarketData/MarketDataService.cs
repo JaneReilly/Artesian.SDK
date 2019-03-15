@@ -20,11 +20,10 @@ namespace Artesian.SDK.Service
         /// </summary>
         /// <param name="cfg">IArtesianServiceConfig</param>
         public MarketDataService(IArtesianServiceConfig cfg)
+            : this(cfg, new ArtesianPolicyConfig())
         {
-            _cfg = cfg;
-            _policy = new ArtesianPolicyConfig();
-            _client = new Client(cfg, ArtesianConstants.MetadataVersion, _policy);
         }
+
         /// <summary>
         /// Metadata service
         /// </summary>

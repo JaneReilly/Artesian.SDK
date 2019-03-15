@@ -13,21 +13,13 @@ namespace Artesian.SDK.Service
     public class VersionedQueryParamaters : QueryParamaters
     {
         /// <summary>
-        /// Version selection config
+        /// 
         /// </summary>
-        public VersionSelectionConfig VersionSelectionConfig;
-        /// <summary>
-        /// Version selection type
-        /// </summary>
-        public VersionSelectionType? VersionSelectionType;
-        /// <summary>
-        /// Granularity
-        /// </summary>
-        public Granularity? Granularity;
-        /// <summary>
-        /// Time range
-        /// </summary>
-        public int? Tr;
+        public VersionedQueryParamaters()
+        {
+
+        }
+
         /// <summary>
         /// Versioned Query Paramters
         /// </summary>
@@ -37,16 +29,43 @@ namespace Artesian.SDK.Service
         /// <param name="versionSelectionConfig"></param>
         /// <param name="versionSelectionType"></param>
         /// <param name="granularity"></param>
-        /// <param name="tr"></param>
-        public VersionedQueryParamaters(IEnumerable<int> ids, ExtractionRangeSelectionConfig extractionRangeSelectionConfig, ExtractionRangeType? extractionRangeType, VersionSelectionConfig versionSelectionConfig, VersionSelectionType? versionSelectionType, Granularity? granularity, int? tr)
+        /// <param name="transformId"></param>
+        /// <param name="timezone"></param>
+        /// <param name="filterId"></param>
+        public VersionedQueryParamaters(
+            IEnumerable<int> ids, 
+            ExtractionRangeSelectionConfig extractionRangeSelectionConfig, 
+            ExtractionRangeType? extractionRangeType,
+            string timezone,
+            int? filterId,
+            Granularity? granularity,
+            int? transformId,
+            VersionSelectionConfig versionSelectionConfig,
+            VersionSelectionType? versionSelectionType
+            )
+            : base(ids, extractionRangeSelectionConfig, extractionRangeType, timezone, filterId)
         {
-            this.Ids = ids;
-            this.ExtractionRangeCfg = extractionRangeSelectionConfig;
-            this.ExtractionRangeType = extractionRangeType;
             this.VersionSelectionConfig = versionSelectionConfig;
             this.VersionSelectionType = versionSelectionType;
             this.Granularity = granularity;
-            this.Tr = tr;
+            this.TransformId = transformId;
         }
+
+        /// <summary>
+        /// Version selection config
+        /// </summary>
+        public VersionSelectionConfig VersionSelectionConfig { get; set; } = new VersionSelectionConfig();
+        /// <summary>
+        /// Version selection type
+        /// </summary>
+        public VersionSelectionType? VersionSelectionType { get; set; }
+        /// <summary>
+        /// Granularity
+        /// </summary>
+        public Granularity? Granularity { get; set; }
+        /// <summary>
+        /// Time range
+        /// </summary>
+        public int? TransformId { get; set; }
     }
 }

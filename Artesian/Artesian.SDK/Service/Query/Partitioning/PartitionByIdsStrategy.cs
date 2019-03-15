@@ -14,41 +14,61 @@ namespace Artesian.SDK.Service
         /// <summary>
         /// Actual Partition
         /// </summary>
-        /// <param name="queries"></param>
+        /// <param name="queryParamaters"></param>
         /// <returns></returns>
-        public IEnumerable<ActualQueryParamaters> Partition(IEnumerable<ActualQueryParamaters> queries)
+        public IEnumerable<ActualQueryParamaters> Partition(ActualQueryParamaters queryParamaters)
         {
+            if (queryParamaters.Ids == null) return new[] { queryParamaters };
 
-            return queries.SelectMany(query =>
-                        _partitionIds(query.Ids)
-                        .Select(g => new ActualQueryParamaters(g, query.ExtractionRangeCfg, query.ExtractionRangeType, query.Granularity, query.Tr))
-                    );
+            return _partitionIds(queryParamaters.Ids)
+                        .Select(g => new ActualQueryParamaters(g,
+                            queryParamaters.ExtractionRangeSelectionConfig,
+                            queryParamaters.ExtractionRangeType,
+                            queryParamaters.TimeZone,
+                            queryParamaters.FilterId,
+                            queryParamaters.Granularity,
+                            queryParamaters.TransformId
+                            ));
+                    
         }
         /// <summary>
         /// Versioned Partition
         /// </summary>
-        /// <param name="queries"></param>
+        /// <param name="queryParamaters"></param>
         /// <returns></returns>
-        public IEnumerable<VersionedQueryParamaters> Partition(IEnumerable<VersionedQueryParamaters> queries)
+        public IEnumerable<VersionedQueryParamaters> Partition(VersionedQueryParamaters queryParamaters)
         {
+            if (queryParamaters.Ids == null) return new[] { queryParamaters };
 
-            return queries.SelectMany(query =>
-                        _partitionIds(query.Ids)
-                        .Select(g => new VersionedQueryParamaters(g, query.ExtractionRangeCfg, query.ExtractionRangeType, query.VersionSelectionConfig, query.VersionSelectionType, query.Granularity, query.Tr))
-                    );
+            return _partitionIds(queryParamaters.Ids)
+                        .Select(g => new VersionedQueryParamaters(g, 
+                            queryParamaters.ExtractionRangeSelectionConfig, 
+                            queryParamaters.ExtractionRangeType,
+                            queryParamaters.TimeZone,
+                            queryParamaters.FilterId,
+                            queryParamaters.Granularity,
+                            queryParamaters.TransformId,
+                            queryParamaters.VersionSelectionConfig,
+                            queryParamaters.VersionSelectionType
+                            ));
         }
         /// <summary>
         /// Mas Partition
         /// </summary>
-        /// <param name="queries"></param>
+        /// <param name="queryParamaters"></param>
         /// <returns></returns>
-        public IEnumerable<MasQueryParamaters> Partition(IEnumerable<MasQueryParamaters> queries)
+        public IEnumerable<MasQueryParamaters> Partition(MasQueryParamaters queryParamaters)
         {
+            if (queryParamaters.Ids == null) return new[] { queryParamaters };
 
-            return queries.SelectMany(query =>
-                        _partitionIds(query.Ids)
-                        .Select(g => new MasQueryParamaters(g, query.ExtractionRangeCfg, query.ExtractionRangeType, query.Products))
-                    );
+            return _partitionIds(queryParamaters.Ids)
+                        .Select(g => new MasQueryParamaters(g, 
+                            queryParamaters.ExtractionRangeSelectionConfig,
+                            queryParamaters.ExtractionRangeType,
+                            queryParamaters.TimeZone,
+                            queryParamaters.FilterId,
+                            queryParamaters.Products))
+                    ;
         }
         private IEnumerable<IEnumerable<int>> _partitionIds(IEnumerable<int> ids)
         {

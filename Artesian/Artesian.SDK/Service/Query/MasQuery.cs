@@ -16,9 +16,8 @@ namespace Artesian.SDK.Service
     /// <summary>
     /// Market Assessment Query Class
     /// </summary>
-    public class MasQuery : Query, IMasQuery<MasQuery>
-    {
-        private IEnumerable<string> _products;
+    public class MasQuery : Query<MasQueryParamaters>, IMasQuery<MasQuery>
+    {        
         private string _routePrefix = "mas";
         private Client _client;
         private IPartitionStrategy _partition;
@@ -122,7 +121,7 @@ namespace Artesian.SDK.Service
         /// <returns></returns>
         public MasQuery ForProducts(params string[] products)
         {
-            _products = products;
+            _queryParamaters.Products = products;
             return this;
         }
         /// <summary>
@@ -148,32 +147,15 @@ namespace Artesian.SDK.Service
         {
             _validateQuery();
 
-            string url = null;
-            List<string> urlList = new List<string>();
 
-            var masParams = new MasQueryParamaters(_ids, _extractionRangeCfg, _extractionRangeType, _products);
-
-            if (_ids != null)
-            {
-             
-
-                urlList = _partition.Partition(new List<MasQueryParamaters>() { masParams })
-                    .Select(qp => $"/{_routePrefix}/{_buildExtractionRangeRoute()}"
-                            .SetQueryParam("id", qp.Ids)
-                            .SetQueryParam("p", _products)
-                            .SetQueryParam("tz", _tz)
-                            .ToString())
-                    .ToList();
-            }
-            else
-            {
-                url = $"/{_routePrefix}/{_buildExtractionRangeRoute()}"
-                    .SetQueryParam("filterId", _filterId)
-                    .SetQueryParam("p", _products)
-                    .SetQueryParam("tz", _tz);
-
-                urlList.Add(url);
-            }
+            var urlList = _partition.Partition(_queryParamaters)
+                .Select(qp => $"/{_routePrefix}/{_buildExtractionRangeRoute(qp)}"
+                        .SetQueryParam("id", qp.Ids)
+                        .SetQueryParam("filterId", qp.FilterId)
+                        .SetQueryParam("p", qp.Products)
+                        .SetQueryParam("tz", qp.TimeZone)
+                        .ToString())
+                .ToList();
 
             return urlList;
         }
@@ -184,7 +166,7 @@ namespace Artesian.SDK.Service
         {
             base._validateQuery();
 
-            if (_products == null)
+            if (_queryParamaters.Products == null)
                 throw new ApplicationException("Products must be provided for extraction. Use .ForProducts() argument takes a string or string array of products");
         }
         #endregion

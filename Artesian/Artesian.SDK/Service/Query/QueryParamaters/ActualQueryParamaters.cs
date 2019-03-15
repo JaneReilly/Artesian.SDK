@@ -12,13 +12,13 @@ namespace Artesian.SDK.Service
     public class ActualQueryParamaters : QueryParamaters
     {
         /// <summary>
-        /// Granularity
+        /// 
         /// </summary>
-        public Granularity? Granularity;
-        /// <summary>
-        /// Time range
-        /// </summary>
-        public int? Tr;
+        public ActualQueryParamaters()
+        {
+
+        }
+
         /// <summary>
         /// Actual Query Paramaters
         /// </summary>
@@ -26,15 +26,31 @@ namespace Artesian.SDK.Service
         /// <param name="extractionRangeSelectionConfig"></param>
         /// <param name="extractionRangeType"></param>
         /// <param name="granularity"></param>
-        /// <param name="tr"></param>
-        public ActualQueryParamaters(IEnumerable<int> ids, ExtractionRangeSelectionConfig extractionRangeSelectionConfig, ExtractionRangeType? extractionRangeType,  Granularity? granularity, int? tr)
-        {
-            this.Ids = ids;
-            this.ExtractionRangeCfg = extractionRangeSelectionConfig;
-            this.ExtractionRangeType = extractionRangeType;
+        /// <param name="transformId"></param>
+        /// <param name="timezone"></param>
+        /// <param name="filterId"></param>
+        public ActualQueryParamaters(
+            IEnumerable<int> ids, 
+            ExtractionRangeSelectionConfig extractionRangeSelectionConfig, 
+            ExtractionRangeType? extractionRangeType,
+            string timezone,
+            int? filterId,
+            Granularity? granularity, 
+            int? transformId
+            )
+            : base(ids,extractionRangeSelectionConfig, extractionRangeType, timezone, filterId)
+        {           
             this.Granularity = granularity;
-            this.Tr = tr;
+            this.TransformId = transformId;
         }
-     
+
+        /// <summary>
+        /// Granularity
+        /// </summary>
+        public Granularity? Granularity { get; set; }
+        /// <summary>
+        /// Time range
+        /// </summary>
+        public int? TransformId { get; set; }
     }
 }

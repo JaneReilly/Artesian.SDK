@@ -16,19 +16,11 @@ namespace Artesian.SDK.Service
     /// <summary>
     /// Actual Time Serie Query Class
     /// </summary>
-    public class ActualQuery : Query, IActualQuery<ActualQuery>
+    public class ActualQuery : Query<ActualQueryParamaters>, IActualQuery<ActualQuery>
     {
-        /// <summary>
-        /// Granularity
-        /// </summary>
-        protected Granularity? _granularity;
         private Client _client;
         private IPartitionStrategy _partition;
 
-        /// <summary>
-        /// timerange
-        /// </summary>
-        protected int? _tr;
         private string _routePrefix = "ts";
 
         internal ActualQuery(Client client, IPartitionStrategy partiton)
@@ -127,7 +119,7 @@ namespace Artesian.SDK.Service
         /// <returns>ActualQuery</returns>
         public ActualQuery WithTimeTransform(int tr)
         {
-            _tr = tr;
+            _queryParamaters.TransformId = tr;
             return this;
         }
         /// <summary>
@@ -137,7 +129,7 @@ namespace Artesian.SDK.Service
         /// <returns>ActualQuery</returns>
         public ActualQuery WithTimeTransform(SystemTimeTransform tr)
         {
-            _tr = (int)tr;
+            _queryParamaters.TransformId = (int)tr;
             return this;
         }
         #endregion
@@ -150,7 +142,7 @@ namespace Artesian.SDK.Service
         /// <returns>ActualQuery</returns>
         public ActualQuery InGranularity(Granularity granularity)
         {
-            _granularity = granularity;
+            _queryParamaters.Granularity = granularity;
             return this;
         }
         /// <summary>
@@ -176,30 +168,14 @@ namespace Artesian.SDK.Service
         {
             _validateQuery();
 
-            string url = null;
-            List<string> urlList = new List<string>();
-
-            var actualParams = new ActualQueryParamaters(_ids, _extractionRangeCfg, _extractionRangeType, _granularity , _tr );
-
-            if (_ids != null)
-            {
-                urlList = _partition.Partition(new List<ActualQueryParamaters>() { actualParams })
-                    .Select(qp => $"/{_routePrefix}/{_granularity}/{_buildExtractionRangeRoute()}"
-                            .SetQueryParam("id", qp.Ids)
-                            .SetQueryParam("tz", _tz)
-                            .SetQueryParam("tr", qp.Tr)
-                            .ToString())
-                    .ToList();
-            }
-            else
-            {
-                url = $"/{_routePrefix}/{_granularity}/{_buildExtractionRangeRoute()}"
-                        .SetQueryParam("filterId", _filterId)
-                        .SetQueryParam("tz", _tz)
-                        .SetQueryParam("tr", _tr);
-
-                urlList.Add(url);
-            }
+            var urlList = _partition.Partition(_queryParamaters)
+                .Select(qp => $"/{_routePrefix}/{qp.Granularity}/{_buildExtractionRangeRoute(qp)}"
+                        .SetQueryParam("id", qp.Ids)
+                        .SetQueryParam("filterId", qp.FilterId)
+                        .SetQueryParam("tz", qp.TimeZone)
+                        .SetQueryParam("tr", qp.TransformId)
+                        .ToString())
+                .ToList();
 
             return urlList;
         }
@@ -211,7 +187,7 @@ namespace Artesian.SDK.Service
         {
             base._validateQuery();
 
-            if (_granularity == null)
+            if (_queryParamaters.Granularity == null)
                 throw new ApplicationException("Extraction granularity must be provided. Use .InGranularity() argument takes a granularity type");
         }
 

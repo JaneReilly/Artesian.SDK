@@ -14,7 +14,7 @@ namespace Artesian.SDK.Service
         private IArtesianServiceConfig _cfg;
         private ArtesianPolicyConfig _policy;
         private Client _client;
-        private IPartitionStrategy _partitionStrategy = new PartitionByIDsStrategy();
+        private readonly IPartitionStrategy _partitionStrategy = new PartitionByIDsStrategy();
 
         /// <summary>
         /// Query service for building a query

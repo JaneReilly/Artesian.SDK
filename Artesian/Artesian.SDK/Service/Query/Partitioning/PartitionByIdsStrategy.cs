@@ -6,16 +6,16 @@ using System.Linq;
 namespace Artesian.SDK.Service
 {
     /// <summary>
-    /// Partition by ID's Strategy
+    /// Strategy to partition Query Paramaters by MarketData ID
     /// </summary>
     public class PartitionByIDsStrategy : IPartitionStrategy
     {
         private const int PartitionSize = 25;
         /// <summary>
-        /// Actual Partition
+        /// Partition strategy for Actual Time Serie Query
         /// </summary>
-        /// <param name="queryParamaters"></param>
-        /// <returns></returns>
+        /// <param name="queryParamaters">The list of Actual Time Serie Query paramaters to be partitioned</param>
+        /// <returns>The input list of Actual Time Serie Query paramaters partitioned by MarketData ID</returns>
         public IEnumerable<ActualQueryParamaters> Partition(IEnumerable<ActualQueryParamaters> queryParamaters)
         {
             
@@ -34,10 +34,10 @@ namespace Artesian.SDK.Service
                     
         }
         /// <summary>
-        /// Versioned Partition
+        /// Partition strategy for Versioned Time Serie Query
         /// </summary>
-        /// <param name="queryParamaters"></param>
-        /// <returns></returns>
+        /// <param name="queryParamaters">The list of Versioned Time Serie Query paramaters to be partitioned</param>
+        /// <returns>The input list of Versioned Time Serie Query paramaters partitioned by MarketData ID</returns>
         public IEnumerable<VersionedQueryParamaters> Partition(IEnumerable<VersionedQueryParamaters> queryParamaters)
         {
             if (queryParamaters.Any(g => g.Ids == null)) return queryParamaters;
@@ -56,10 +56,10 @@ namespace Artesian.SDK.Service
                                 )));
         }
         /// <summary>
-        /// Mas Partition
+        /// Partition strategy for Market Assessment Query
         /// </summary>
-        /// <param name="queryParamaters"></param>
-        /// <returns></returns>
+        /// <param name="queryParamaters">The list of Market Assessment Query paramaters to be partitioned</param>
+        /// <returns>The input list of Market Assessment Query paramaters partitioned by MarketData ID</returns>
         public IEnumerable<MasQueryParamaters> Partition(IEnumerable<MasQueryParamaters> queryParamaters)
         {
             if (queryParamaters.Any(g => g.Ids == null)) return queryParamaters;

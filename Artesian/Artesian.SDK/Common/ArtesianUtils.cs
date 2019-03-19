@@ -5,6 +5,7 @@ using Artesian.SDK.Service;
 using System;
 using Artesian.SDK.Dto;
 using System.Text.RegularExpressions;
+using System.IO;
 
 namespace Artesian.SDK.Common
 {
@@ -102,9 +103,9 @@ namespace Artesian.SDK.Common
             if (String.IsNullOrEmpty(validStringCheck))
                 throw new ArgumentException("Provider null or empty exception");
             if (validStringCheck.Length < minLenght || validStringCheck.Length > maxLenght)
-                throw new Exception("Provider must be between 1 and 50 characters.");
+                throw new ArgumentException("Provider must be between 1 and 50 characters.");
             if (!new Regex(ArtesianConstants.CharacterValidatorRegEx).Match(validStringCheck).Success)
-                throw new Exception($"Invalid string '{validStringCheck}'.Should not contain trailing or leading whitespaces or any of the following characters: ,:; '\"<space>");
+                throw new ArgumentException($"Invalid string '{validStringCheck}'.Should not contain trailing or leading whitespaces or any of the following characters: ,:; '\"<space>");
         }
         /// <summary>
         /// Is valid provider
@@ -127,9 +128,9 @@ namespace Artesian.SDK.Common
             if (String.IsNullOrEmpty(name))
                 throw new ArgumentException("MarketData name must not be null or empty");
             if (name.Length < minLenght || name.Length > maxLenght)
-                throw new Exception("MarketData name must be between 1 and 250 characters.");
+                throw new ArgumentException("MarketData name must be between 1 and 250 characters.");
             if (!new Regex(ArtesianConstants.MarketDataNameValidatorRegEx).Match(name).Success)
-                throw new Exception($"Invalid string '{name}'. Should not contain trailing or leading whitespaces and no other whitespace than <space> in the middle.");
+                throw new ArgumentException($"Invalid string '{name}'. Should not contain trailing or leading whitespaces and no other whitespace than <space> in the middle.");
         }
     }
 }

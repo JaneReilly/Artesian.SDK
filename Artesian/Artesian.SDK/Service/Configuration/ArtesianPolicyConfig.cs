@@ -39,9 +39,10 @@ namespace Artesian.SDK.Service
         }
         /// <summary>
         /// Wait and Retry Policy Config
+        /// Exponential Backoff strategy
         /// </summary>
-        /// <param name="retryCount"></param>
-        /// <param name="retryWaitTime"></param>
+        /// <param name="retryCount">Exponential backoff count</param>
+        /// <param name="retryWaitTime">Wait time for exponential backoff in milliseconds</param>
         /// <returns></returns>
         public ArtesianPolicyConfig RetryPolicyConfig(int retryCount = RetryCount, int retryWaitTime = RetryWaitTime)
         {
@@ -61,8 +62,8 @@ namespace Artesian.SDK.Service
         /// <summary>
         /// Circuit Breaker Policy
         /// </summary>
-        /// <param name="maxExceptions"></param>
-        /// <param name="durationOfBreak"></param>
+        /// <param name="maxExceptions">Max exceptions allowed</param>
+        /// <param name="durationOfBreak">Duration of break in seconds</param>
         /// <returns></returns>
         public ArtesianPolicyConfig CircuitBreakerPolicyConfig(int maxExceptions = MaxExceptions, int durationOfBreak = DurationOfBreak)
         {
@@ -82,8 +83,8 @@ namespace Artesian.SDK.Service
         /// <summary>
         /// Bulkhead Policy Config
         /// </summary>
-        /// <param name="maxParallelism"></param>
-        /// <param name="maxQueuingActions"></param>
+        /// <param name="maxParallelism">Maximum parallelization of executions through the bulkhead</param>
+        /// <param name="maxQueuingActions">Maximum number of actions that may be queuing (waiting to acquire an execution slot) at any time</param>
         /// <returns></returns>
         public ArtesianPolicyConfig BulkheadPolicyConfig(int maxParallelism = MaxParallelism, int maxQueuingActions = MaxQueuingActions)
         {

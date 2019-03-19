@@ -3,7 +3,6 @@
 // license information. 
 using Artesian.SDK.Dto;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Artesian.SDK.Service
 {

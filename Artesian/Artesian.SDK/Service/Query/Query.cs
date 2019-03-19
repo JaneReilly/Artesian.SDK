@@ -4,7 +4,6 @@
 using NodaTime;
 using NodaTime.Text;
 using System;
-using System.Collections.Generic;
 
 namespace Artesian.SDK.Service
 {

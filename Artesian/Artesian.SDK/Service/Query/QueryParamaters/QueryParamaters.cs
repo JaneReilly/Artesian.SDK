@@ -1,7 +1,6 @@
 ﻿// Copyright (c) ARK LTD. All rights reserved.
 // Licensed under the MIT License. See LICENSE in the project root for
 // license information. 
-using NodaTime.Text;
 using System.Collections.Generic;
 
 namespace Artesian.SDK.Service
@@ -24,6 +23,8 @@ namespace Artesian.SDK.Service
         /// <param name="ids"></param>
         /// <param name="extractionRangeSelectionConfig"></param>
         /// <param name="extractionRangeType"></param>
+        /// <param name="timezone"></param>
+        /// <param name="filterId"></param>
         public QueryParamaters(
             IEnumerable<int> ids, 
             ExtractionRangeSelectionConfig 

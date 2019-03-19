@@ -2,9 +2,6 @@
 // Licensed under the MIT License. See LICENSE in the project root for
 // license information. 
 
-using Flurl;
-using System;
-
 namespace Artesian.SDK.Service
 {
     /// <summary>

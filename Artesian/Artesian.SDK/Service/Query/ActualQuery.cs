@@ -168,7 +168,7 @@ namespace Artesian.SDK.Service
         {
             _validateQuery();
 
-            var urlList = _partition.Partition(_queryParamaters)
+            var urlList = _partition.Partition(new List<ActualQueryParamaters> { _queryParamaters })
                 .Select(qp => $"/{_routePrefix}/{qp.Granularity}/{_buildExtractionRangeRoute(qp)}"
                         .SetQueryParam("id", qp.Ids)
                         .SetQueryParam("filterId", qp.FilterId)

@@ -313,7 +313,7 @@ namespace Artesian.SDK.Service
                     subPath = $"Version/{_toUrlParam(queryParamaters.VersionSelectionConfig.Version)}";
                     break;
                 default:
-                    throw new Exception("Unsupported version type");
+                    throw new NotSupportedException("Unsupported version type");
             }
 
             return subPath;
@@ -339,7 +339,7 @@ namespace Artesian.SDK.Service
         {
             _validateQuery();
 
-            var urlList = _partition.Partition(_queryParamaters)
+            var urlList = _partition.Partition(new List<VersionedQueryParamaters> { _queryParamaters })
                     .Select(qp => $"/{_routePrefix}/{_buildVersionRoute(qp)}/{qp.Granularity}/{_buildExtractionRangeRoute(qp)}"
                             .SetQueryParam("id", qp.Ids)
                             .SetQueryParam("filterId", qp.FilterId)

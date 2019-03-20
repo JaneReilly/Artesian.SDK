@@ -8,7 +8,7 @@ namespace Artesian.SDK.Service
     /// <summary>
     /// Strategy to partition Query Paramaters by MarketData ID
     /// </summary>
-    public class PartitionByIDsStrategy : IPartitionStrategy
+    public class PartitionByIDStrategy : IPartitionStrategy
     {
         private const int _partitionSize = 25;
 

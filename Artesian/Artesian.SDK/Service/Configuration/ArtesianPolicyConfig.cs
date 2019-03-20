@@ -21,12 +21,15 @@ namespace Artesian.SDK.Service
 
         private AsyncBulkheadPolicy _bulkheadPolicy { get; set; }
 
-        private const int MaxParallelismDefault = 10;
-        private const int MaxQueuingActionsDefault = 15;
-        private const int MaxExceptionsDefault = 2;
-        private const int RetryWaitTimeDefault = 200;
-        private const int RetryCountDefault = 3;
-        private const int DurationOfBreakDefault = 3;
+        #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
+        public const int MaxParallelismDefault = 10;
+        public const int MaxQueuingActionsDefault = 15;
+        public const int MaxExceptionsDefault = 2;
+        public const int RetryWaitTimeDefault = 200;
+        public const int RetryCountDefault = 3;
+        public const int DurationOfBreakDefault = 3;
+
+
         /// <summary>
         /// Artesian Policy Config
         /// </summary>

@@ -15,22 +15,22 @@ namespace Artesian.SDK.Service
     /// </summary>
     public class ArtesianPolicyConfig
     {
-        private  AsyncCircuitBreakerPolicy _circuitBreakerPolicy { get; set; }
+        private AsyncCircuitBreakerPolicy _circuitBreakerPolicy { get; set; }
 
-        private  AsyncRetryPolicy _retryPolicy { get; set; }
+        private AsyncRetryPolicy _retryPolicy { get; set; }
 
-        private  AsyncBulkheadPolicy _bulkheadPolicy { get; set; }
+        private AsyncBulkheadPolicy _bulkheadPolicy { get; set; }
 
-        private const int _maxParallelism = 10;
-        private const int _maxQueuingActions = 15;
-        private const int _maxExceptions = 2;
-        private const int _retryWaitTime = 200;
-        private const int _retryCount = 3;
-        private const int _durationOfBreak = 3;
+        private const int MaxParallelism = 10;
+        private const int MaxQueuingActions = 15;
+        private const int MaxExceptions = 2;
+        private const int RetryWaitTime = 200;
+        private const int RetryCount = 3;
+        private const int DurationOfBreak = 3;
         /// <summary>
         /// Artesian Policy Config
         /// </summary>
-        public  ArtesianPolicyConfig()
+        public ArtesianPolicyConfig()
         {
             RetryPolicyConfig().
             CircuitBreakerPolicyConfig().
@@ -44,7 +44,7 @@ namespace Artesian.SDK.Service
         /// <param name="retryCount">Exponential backoff count</param>
         /// <param name="retryWaitTime">Wait time for exponential backoff in milliseconds</param>
         /// <returns></returns>
-        public ArtesianPolicyConfig RetryPolicyConfig(int retryCount = _retryCount, int retryWaitTime = _retryWaitTime)
+        public ArtesianPolicyConfig RetryPolicyConfig(int retryCount = RetryCount, int retryWaitTime = RetryWaitTime)
         {
             _retryPolicy = Policy
                 .Handle<Exception>(x =>
@@ -65,7 +65,7 @@ namespace Artesian.SDK.Service
         /// <param name="maxExceptions">Max exceptions allowed</param>
         /// <param name="durationOfBreak">Duration of break in seconds</param>
         /// <returns></returns>
-        public ArtesianPolicyConfig CircuitBreakerPolicyConfig(int maxExceptions = _maxExceptions, int durationOfBreak = _durationOfBreak)
+        public ArtesianPolicyConfig CircuitBreakerPolicyConfig(int maxExceptions = MaxExceptions, int durationOfBreak = DurationOfBreak)
         {
             _circuitBreakerPolicy = Policy
                 .Handle<Exception>(x =>
@@ -86,7 +86,7 @@ namespace Artesian.SDK.Service
         /// <param name="maxParallelism">Maximum parallelization of executions through the bulkhead</param>
         /// <param name="maxQueuingActions">Maximum number of actions that may be queuing (waiting to acquire an execution slot) at any time</param>
         /// <returns></returns>
-        public ArtesianPolicyConfig BulkheadPolicyConfig(int maxParallelism = _maxParallelism, int maxQueuingActions = _maxQueuingActions)
+        public ArtesianPolicyConfig BulkheadPolicyConfig(int maxParallelism = MaxParallelism, int maxQueuingActions = MaxQueuingActions)
         {
             _bulkheadPolicy = Policy
                 .BulkheadAsync(maxParallelism, maxQueuingActions);

@@ -176,13 +176,13 @@ namespace Artesian.SDK.Dto
     /// </summary>
     public static class DelimitedString
     {
-        const string DelimiterString = "/";
-        const char DelimiterChar = '/';
+        private const string _delimiterString = "/";
+        private const char _delimiterChar = '/';
 
         // Use a single / as an escape character, avoid \ as that would require
         // all escape characters to be escaped in the source code...
-        const char EscapeChar = '\\';
-        const string EscapeString = "\\";
+        private const char _escapeChar = '\\';
+        private const string _escapeString = "\\";
 
         /// <summary>
         /// Join strings with a delimiter and escape any occurence of the
@@ -193,11 +193,11 @@ namespace Artesian.SDK.Dto
         public static string Join(params string[] strings)
         {
             return string.Join(
-              DelimiterString,
+              _delimiterString,
               strings.Select(
                 s => s
-                .Replace(EscapeString, EscapeString + EscapeString)
-                .Replace(DelimiterString, EscapeString + DelimiterString)));
+                .Replace(_escapeString, _escapeString + _escapeString)
+                .Replace(_delimiterString, _escapeString + _delimiterString)));
         }
 
         /// <summary>
@@ -217,13 +217,13 @@ namespace Artesian.SDK.Dto
             for (int i = 0; i < source.Length; i++)
             {
                 bool readEscapeChar = false;
-                if (source[i] == EscapeChar)
+                if (source[i] == _escapeChar)
                 {
                     readEscapeChar = true;
                     i++;
                 }
 
-                if (!readEscapeChar && source[i] == DelimiterChar)
+                if (!readEscapeChar && source[i] == _delimiterChar)
                 {
                     result.Add(UnEscapeString(
                       source.Substring(segmentStart, i - segmentStart)));
@@ -241,8 +241,8 @@ namespace Artesian.SDK.Dto
 
         static string UnEscapeString(string src)
         {
-            return src.Replace(EscapeString + DelimiterString, DelimiterString)
-              .Replace(EscapeString + EscapeString, EscapeString);
+            return src.Replace(_escapeString + _delimiterString, _delimiterString)
+              .Replace(_escapeString + _escapeString, _escapeString);
         }
     }
 }

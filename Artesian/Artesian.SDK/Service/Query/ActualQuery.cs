@@ -6,6 +6,7 @@ using Flurl;
 using NodaTime;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
@@ -15,22 +16,17 @@ namespace Artesian.SDK.Service
     /// <summary>
     /// Actual Time Serie Query Class
     /// </summary>
-    public class ActualQuery : Query, IActualQuery<ActualQuery>
+    public class ActualQuery : Query<ActualQueryParamaters>, IActualQuery<ActualQuery>
     {
-        /// <summary>
-        /// Granularity
-        /// </summary>
-        protected Granularity? _granularity;
         private Client _client;
-        /// <summary>
-        /// timerange
-        /// </summary>
-        protected int? _tr;
+        private IPartitionStrategy _partition;
+
         private string _routePrefix = "ts";
 
-        internal ActualQuery(Client client)
+        internal ActualQuery(Client client, IPartitionStrategy partiton)
         {
             _client = client;
+            _partition = partiton;
         }
 
         #region facade methods
@@ -123,7 +119,7 @@ namespace Artesian.SDK.Service
         /// <returns>ActualQuery</returns>
         public ActualQuery WithTimeTransform(int tr)
         {
-            _tr = tr;
+            _queryParamaters.TransformId = tr;
             return this;
         }
         /// <summary>
@@ -133,7 +129,7 @@ namespace Artesian.SDK.Service
         /// <returns>ActualQuery</returns>
         public ActualQuery WithTimeTransform(SystemTimeTransform tr)
         {
-            _tr = (int)tr;
+            _queryParamaters.TransformId = (int)tr;
             return this;
         }
         #endregion
@@ -146,7 +142,7 @@ namespace Artesian.SDK.Service
         /// <returns>ActualQuery</returns>
         public ActualQuery InGranularity(Granularity granularity)
         {
-            _granularity = granularity;
+            _queryParamaters.Granularity = granularity;
             return this;
         }
         /// <summary>
@@ -156,32 +152,32 @@ namespace Artesian.SDK.Service
         /// <returns>Enumerable of TimeSerieRow Actual</returns>
         public async Task<IEnumerable<TimeSerieRow.Actual>> ExecuteAsync(CancellationToken ctk = default)
         {
-            return await _client.Exec<IEnumerable<TimeSerieRow.Actual>>(HttpMethod.Get, _buildRequest(), ctk: ctk);
+            List<string> urls = _buildRequest();
+
+            var taskList = urls.Select(url=> _client.Exec<IEnumerable<TimeSerieRow.Actual>>(HttpMethod.Get, url, ctk: ctk));
+
+            await Task.WhenAll(taskList.ToArray());
+
+            var res =  taskList.SelectMany(t => t.GetAwaiter().GetResult());
+
+            return res;
         }
 
         #region private
-        private string _buildRequest()
+        private List<string> _buildRequest()
         {
             _validateQuery();
 
-            string url = null;
+            var urlList = _partition.Partition(new List<ActualQueryParamaters> { _queryParamaters })
+                .Select(qp => $"/{_routePrefix}/{qp.Granularity}/{_buildExtractionRangeRoute(qp)}"
+                        .SetQueryParam("id", qp.Ids)
+                        .SetQueryParam("filterId", qp.FilterId)
+                        .SetQueryParam("tz", qp.TimeZone)
+                        .SetQueryParam("tr", qp.TransformId)
+                        .ToString())
+                .ToList();
 
-            if (_ids != null)
-            {
-                url = $"/{_routePrefix}/{_granularity}/{_buildExtractionRangeRoute()}"
-                        .SetQueryParam("id", _ids)
-                        .SetQueryParam("tz", _tz)
-                        .SetQueryParam("tr", _tr);
-            }
-            else
-            {
-                url = $"/{_routePrefix}/{_granularity}/{_buildExtractionRangeRoute()}"
-                        .SetQueryParam("filterId", _filterId)
-                        .SetQueryParam("tz", _tz)
-                        .SetQueryParam("tr", _tr);
-            }
-
-            return url;
+            return urlList;
         }
 
         /// <summary>
@@ -191,9 +187,11 @@ namespace Artesian.SDK.Service
         {
             base._validateQuery();
 
-            if (_granularity == null)
+            if (_queryParamaters.Granularity == null)
                 throw new ApplicationException("Extraction granularity must be provided. Use .InGranularity() argument takes a granularity type");
-        } 
+        }
+
+      
         #endregion
         #endregion
     }

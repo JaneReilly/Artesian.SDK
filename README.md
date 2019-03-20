@@ -37,8 +37,43 @@ The Artesian.SDK instance can be configured using either Client credentials or A
 ```
 
 ## QueryService
-
 Using the ArtesianServiceConfig we create an instance of the QueryService which is used to create Actual, Versioned and Market Assessment time series queries
+
+### Policy configuration
+Optionally a custom policy can be introduced to configure policy constraints within the QueryService otherwise default policy
+is implemented
+```csharp
+ArtesianPolicyConfig _policy = new ArtesianPolicyConfig();
+	_policy
+	    .RetryPolicyConfig(retryCount: 3, retryWaitTime: 200)
+	    .CircuitBreakerPolicyConfig(maxExceptions: 2, durationOfBreak: 3)
+	    .BulkheadPolicyConfig(maxParallelism: 10, maxQueuingActions: 15);
+
+var qs = new QueryService(_cfg,_policy);
+```
+
+<table>
+  <tr><th>Policies</th><th>Description</th></tr>
+  <tr><td>Wait & Retry Policy</td><td>Retry, waiting a specified duration between each retry</td></tr>
+  <tr><td>Circuit Breaker Policy</td><td>The CircuitBreakerPolicy instance maintains internal state across calls to track failures</td></tr>
+  <tr><td>Bulkhead Policy</td><td>The bulkhead isolation policy assigns operations to constrained resource pools, such that one faulting channel of actions cannot swamp all resource</td></tr>
+</table>
+
+### Partition Strategy
+Requests are partitioned by an IPartitionStrategy, optionally an IPartitionStrategy can be passed to use a certain partition  
+strategy. A partition strategy by ID is implemented by default 
+```csharp
+PartitionByIDStrategy idStrategy = new PartitionByIDStrategy();
+var act = qs.CreateActual(idStrategy)
+       .ForMarketData(new int[] { 100000001 })
+       .InGranularity(Granularity.Day)
+       .InRelativeInterval(RelativeInterval.RollingMonth)
+       .ExecuteAsync().Result;
+```
+<table>
+  <tr><th>Partition Strategies</th><th>Description</th></tr>
+  <tr><td>Partition by ID</td><td>Requests are partitioned into groups of ID's by a defined partition size </td></tr>
+</table>
 
 ### Actual Time Series
 ```csharp

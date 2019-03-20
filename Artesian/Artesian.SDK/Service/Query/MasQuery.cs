@@ -6,6 +6,7 @@ using Flurl;
 using NodaTime;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
@@ -15,15 +16,16 @@ namespace Artesian.SDK.Service
     /// <summary>
     /// Market Assessment Query Class
     /// </summary>
-    public class MasQuery : Query, IMasQuery<MasQuery>
-    {
-        private IEnumerable<string> _products;
+    public class MasQuery : Query<MasQueryParamaters>, IMasQuery<MasQuery>
+    {        
         private string _routePrefix = "mas";
         private Client _client;
+        private IPartitionStrategy _partition;
 
-        internal MasQuery(Client client)
+        internal MasQuery(Client client, IPartitionStrategy partiton)
         {
             _client = client;
+            _partition = partiton;
         }
 
         #region facade methods
@@ -119,7 +121,7 @@ namespace Artesian.SDK.Service
         /// <returns></returns>
         public MasQuery ForProducts(params string[] products)
         {
-            _products = products;
+            _queryParamaters.Products = products;
             return this;
         }
         /// <summary>
@@ -129,34 +131,34 @@ namespace Artesian.SDK.Service
         /// <returns>Enumerable of AssessmentRow</returns>
         public async Task<IEnumerable<AssessmentRow>> ExecuteAsync(CancellationToken ctk = default)
         {
-            return await _client.Exec<IEnumerable<AssessmentRow>>(HttpMethod.Get, _buildRequest(), ctk: ctk);
+            List<string> urls = _buildRequest();
+
+            var taskList = urls.Select(url => _client.Exec<IEnumerable<AssessmentRow>>(HttpMethod.Get, url, ctk: ctk));
+
+            await Task.WhenAll(taskList.ToArray());
+
+            var res = taskList.SelectMany(t => t.GetAwaiter().GetResult());
+
+            return res;
         }
 
         #region private
-        private string _buildRequest()
+        private List<string> _buildRequest()
         {
             _validateQuery();
 
-            string url = null;
 
-            if (_ids != null)
-            {
-                url = $"/{_routePrefix}/{_buildExtractionRangeRoute()}"
-                    .SetQueryParam("id", _ids)
-                    .SetQueryParam("p", _products)
-                    .SetQueryParam("tz", _tz);
-            }
-            else
-            {
-                url = $"/{_routePrefix}/{_buildExtractionRangeRoute()}"
-                    .SetQueryParam("filterId", _filterId)
-                    .SetQueryParam("p", _products)
-                    .SetQueryParam("tz", _tz);
-            }
+            var urlList = _partition.Partition(new List<MasQueryParamaters> { _queryParamaters })
+                .Select(qp => $"/{_routePrefix}/{_buildExtractionRangeRoute(qp)}"
+                        .SetQueryParam("id", qp.Ids)
+                        .SetQueryParam("filterId", qp.FilterId)
+                        .SetQueryParam("p", qp.Products)
+                        .SetQueryParam("tz", qp.TimeZone)
+                        .ToString())
+                .ToList();
 
-            return url;
+            return urlList;
         }
-
         /// <summary>
         /// Validate Query override
         /// </summary>
@@ -164,9 +166,9 @@ namespace Artesian.SDK.Service
         {
             base._validateQuery();
 
-            if (_products == null)
+            if (_queryParamaters.Products == null)
                 throw new ApplicationException("Products must be provided for extraction. Use .ForProducts() argument takes a string or string array of products");
-        } 
+        }
         #endregion
         #endregion
     }

@@ -23,6 +23,29 @@ namespace Artesian.SDK.Tests
         {
             using (var httpTest = new HttpTest())
             {
+
+                var qs = new QueryService(_cfg);
+
+                var ver = qs.CreateVersioned()
+                        .ForMarketData(new int[] { 100000001 })
+                        .InGranularity(Granularity.Day)
+                        .ForLastOfMonths(Period.FromMonths(-4))
+                        .InRelativeInterval(RelativeInterval.RollingMonth)
+                        .ExecuteAsync().Result;
+
+                httpTest.ShouldHaveCalled($"{_cfg.BaseAddress}query/v1.0/vts/LastOfMonths/P-4M/Day/RollingMonth"
+                   .SetQueryParam("id", 100000001))
+                   .WithVerb(HttpMethod.Get)
+                   .Times(1);
+            }
+        }
+
+        [Test]
+        public void VerInPeriodRelativeIntervalLastOfMonths_Policy()
+        {
+            using (var httpTest = new HttpTest())
+            {
+
                 var qs = new QueryService(_cfg);
 
                 var ver = qs.CreateVersioned()
@@ -1169,6 +1192,67 @@ namespace Artesian.SDK.Tests
                    .WithVerb(HttpMethod.Get)
                    //.WithHeader
                    .Times(1);
+            }
+        }
+
+        [Test]
+        public void Ver_Partitioned_By_ID()
+        {
+            using (var httpTest = new HttpTest())
+            {
+
+                var qs = new QueryService(_cfg);
+
+                var act = qs.CreateVersioned()
+                    .ForMarketData(new int[] {
+                        100001250, 100001251, 100001252, 100001253, 100001254,
+                        100001255, 100001256, 100001257, 100001258, 100001259,
+                        100001260, 100001261, 100001262, 100001263, 100001264,
+                        100001265, 100001266, 100001267, 100001268, 100001269,
+                        100001270, 100001271, 100001272, 100001273, 100001274,
+                        100001275, 100001276, 100001277, 100001278, 100001279,
+                        100001280, 100001281, 100001282, 100001283, 100001284,
+                        100001285, 100001286, 100001287, 100001289, 100001290,
+                        100001291, 100001292, 100001293, 100001294, 100001295,
+                        100001296, 100001297, 100001298, 100001299, 100001301,
+                        100001302, 100001303, 100001304, 100001305, 100001306,
+                        100001307, 100001308, 100001309, 100001310, 100001311,
+                        100001312, 100001313, 100001314, 100001315, 100001315 })
+                    .InGranularity(Granularity.Day)
+                    .InRelativePeriod(Period.FromDays(5))
+                    .ForVersion(new LocalDateTime(2018, 07, 19, 12, 0))
+                    .ExecuteAsync().ConfigureAwait(true).GetAwaiter().GetResult();
+
+                httpTest.ShouldHaveCalled($"{_cfg.BaseAddress}query/v1.0/vts/Version/2018-07-19T12:00:00/Day/P5D")
+                    .WithVerb(HttpMethod.Get)
+                    .WithQueryParamValue("id", new int[] {
+                        100001250, 100001251, 100001252, 100001253 , 100001254,
+                        100001255 , 100001256, 100001257, 100001258, 100001259,
+                        100001260, 100001261, 100001262, 100001263, 100001264,
+                        100001265, 100001266, 100001267, 100001268, 100001269,
+                        100001270, 100001271, 100001272, 100001273, 100001274
+                    })
+                    .Times(1);
+
+                httpTest.ShouldHaveCalled($"{_cfg.BaseAddress}query/v1.0/vts/Version/2018-07-19T12:00:00/Day/P5D")
+                    .WithVerb(HttpMethod.Get)
+                    .WithQueryParamValue("id", new int[] {
+                        100001275, 100001276, 100001277, 100001278, 100001279,
+                        100001280, 100001281, 100001282, 100001283, 100001284,
+                        100001285, 100001286, 100001287, 100001289, 100001290,
+                        100001291, 100001292, 100001293, 100001294, 100001295,
+                        100001296, 100001297, 100001298, 100001299, 100001301
+                    })
+                    .Times(1);
+
+                httpTest.ShouldHaveCalled($"{_cfg.BaseAddress}query/v1.0/vts/Version/2018-07-19T12:00:00/Day/P5D")
+                    .WithVerb(HttpMethod.Get)
+                    .WithQueryParamValue("id", new int[] {
+                        100001302, 100001303, 100001304, 100001305, 100001306,
+                        100001307, 100001308, 100001309, 100001310, 100001311,
+                        100001312, 100001313, 100001314, 100001315, 100001315
+                    })
+                    .Times(1);
             }
         }
         #endregion

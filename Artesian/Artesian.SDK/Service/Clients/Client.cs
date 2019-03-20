@@ -13,6 +13,7 @@ using NodaTime;
 using NodaTime.Serialization.JsonNet;
 using Polly;
 using Polly.Caching;
+using Polly.Wrap;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -42,6 +43,8 @@ namespace Artesian.SDK.Service
 
         private readonly string _url;
 
+        private readonly AsyncPolicy _resilienceStrategy;
+
         private readonly Polly.Caching.Memory.MemoryCacheProvider _memoryCacheProvider
            = new Polly.Caching.Memory.MemoryCacheProvider(new Microsoft.Extensions.Caching.Memory.MemoryCache(new Microsoft.Extensions.Caching.Memory.MemoryCacheOptions()));
 
@@ -54,7 +57,8 @@ namespace Artesian.SDK.Service
         /// </summary>
         /// <param name="config">Config</param>
         /// <param name="Url">String</param>
-        public Client(IArtesianServiceConfig config, string Url)
+        /// /// <param name="policy">String</param>
+        public Client(IArtesianServiceConfig config, string Url, ArtesianPolicyConfig policy)
         {
             _url = config.BaseAddress.ToString().AppendPathSegment(Url);
             _apiKey = config.ApiKey;
@@ -85,6 +89,9 @@ namespace Artesian.SDK.Service
             formatters.Add(_jsonFormatter);
             _formatters = formatters;
 
+            _resilienceStrategy = policy.GetResillianceStrategy();
+
+
             if (config.ApiKey == null)
             {
                 _auth0 = new AuthenticationApiClient($"{config.Domain}");
@@ -103,6 +110,7 @@ namespace Artesian.SDK.Service
 
         }
 
+       
         public async Task<TResult> Exec<TResult, TBody>(HttpMethod method, string resource, TBody body = default, CancellationToken ctk = default)
         {
             try
@@ -123,8 +131,8 @@ namespace Artesian.SDK.Service
                 {
                     if (body != null)
                         content = new ObjectContent(typeof(TBody), body, _lz4msgPackFormatter);
-                
-                    using (var res = await req.SendAsync(method, content: content, completionOption: HttpCompletionOption.ResponseContentRead, cancellationToken: ctk))
+
+                    using (var res =  await _resilienceStrategy.ExecuteAsync ( () =>  req.SendAsync(method, content: content, completionOption: HttpCompletionOption.ResponseContentRead, cancellationToken: ctk)))
                     {
                         if (res.StatusCode == HttpStatusCode.NoContent || res.StatusCode == HttpStatusCode.NotFound)
                             return default;

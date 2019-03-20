@@ -38,7 +38,7 @@ namespace Artesian.SDK.Service
         public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
         {
             if (!CanConvert(objectType))
-                throw new Exception(string.Format("This converter is not for {0}.", objectType));
+                throw new NotSupportedException(string.Format("This converter is not for {0}.", objectType));
 
             var keyType = objectType.GetGenericArguments()[0];
             var valueType = objectType.GetGenericArguments()[1];

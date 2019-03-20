@@ -9,17 +9,23 @@ namespace Artesian.SDK.Service
         Versioned,
         MAS
     }
-
-    enum ExtractionRangeType
+    /// <summary>
+    /// Extraction range type
+    /// </summary>
+    public enum ExtractionRangeType
     {
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         DateRange,
         Period,
         PeriodRange,
         RelativeInterval
     }
-
-    enum VersionSelectionType
+    /// <summary>
+    /// Version selection type
+    /// </summary>
+    public enum VersionSelectionType
     {
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         LastN,
         MUV,
         LastOfDays,

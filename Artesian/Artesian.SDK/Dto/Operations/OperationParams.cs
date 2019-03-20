@@ -8,7 +8,6 @@ namespace Artesian.SDK.Dto
     /// The OperationParams class.
     /// </summary>
     [MessagePackObject]
-    //[JsonConverter(typeof(OperationConverter))]
     public class OperationParams
     {
         /// <summary>

@@ -23,7 +23,7 @@ namespace Artesian.SDK.Service
 
         #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         public const int MaxParallelismDefault = 10;
-        public const int MaxQueuingActionsDefault = 15;
+        public const int MaxQueuingActionsDefault = 200;
         public const int MaxExceptionsDefault = 2;
         public const int RetryWaitTimeDefault = 200;
         public const int RetryCountDefault = 3;

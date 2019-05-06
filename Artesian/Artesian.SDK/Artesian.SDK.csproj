@@ -23,8 +23,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Ark.Tools.Auth0" Version="1.1.12" />
-    <PackageReference Include="Ark.Tools.Http" Version="1.1.12" />
+    <PackageReference Include="Ark.Tools.Auth0" Version="1.1.15" />
+    <PackageReference Include="Ark.Tools.Http" Version="1.1.15" />
     <PackageReference Include="System.ComponentModel.Annotations" Version="4.5.0" />
   </ItemGroup>
 

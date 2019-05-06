@@ -156,11 +156,8 @@ namespace Artesian.SDK.Service
 
             var taskList = urls.Select(url=> _client.Exec<IEnumerable<TimeSerieRow.Actual>>(HttpMethod.Get, url, ctk: ctk));
 
-            await Task.WhenAll(taskList.ToArray());
-
-            var res =  taskList.SelectMany(t => t.GetAwaiter().GetResult());
-
-            return res;
+            var res = await Task.WhenAll(taskList);
+            return res.SelectMany(x => x);
         }
 
         #region private

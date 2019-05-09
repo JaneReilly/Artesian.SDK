@@ -1,11 +1,14 @@
 ﻿// Copyright (c) ARK LTD. All rights reserved.
 // Licensed under the MIT License. See LICENSE in the project root for
 // license information. 
+#if !NET452 
 using Auth0.AuthenticationApi;
 using Auth0.AuthenticationApi.Models;
+using JWT.Builder;
+#endif
 using Flurl;
 using Flurl.Http;
-using JWT.Builder;
+
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Serialization;
@@ -29,10 +32,14 @@ namespace Artesian.SDK.Service
 {
     internal sealed class Client : IDisposable
     {
-        private readonly MediaTypeFormatterCollection _formatters;
-
+#if !NET452
         private readonly AuthenticationApiClient _auth0;
         private readonly ClientCredentialsTokenRequest _credentials;
+        private readonly Polly.Caching.Memory.MemoryCacheProvider _memoryCacheProvider
+           = new Polly.Caching.Memory.MemoryCacheProvider(new Microsoft.Extensions.Caching.Memory.MemoryCache(new Microsoft.Extensions.Caching.Memory.MemoryCacheOptions()));
+        private readonly AsyncPolicy<(string AccessToken, DateTimeOffset ExpiresOn)> _cachePolicy;
+#endif
+        private readonly MediaTypeFormatterCollection _formatters;
         private readonly IFlurlClient _client;
 
         private readonly JsonMediaTypeFormatter _jsonFormatter;
@@ -45,10 +52,7 @@ namespace Artesian.SDK.Service
 
         private readonly AsyncPolicy _resilienceStrategy;
 
-        private readonly Polly.Caching.Memory.MemoryCacheProvider _memoryCacheProvider
-           = new Polly.Caching.Memory.MemoryCacheProvider(new Microsoft.Extensions.Caching.Memory.MemoryCache(new Microsoft.Extensions.Caching.Memory.MemoryCacheOptions()));
-
-        private readonly AsyncPolicy<(string AccessToken, DateTimeOffset ExpiresOn)> _cachePolicy;
+        
 
         private readonly string _apiKey;
 
@@ -90,7 +94,7 @@ namespace Artesian.SDK.Service
             _formatters = formatters;
 
             _resilienceStrategy = policy.GetResillianceStrategy();
-
+#if !NET452 
 
             if (config.ApiKey == null)
             {
@@ -104,6 +108,7 @@ namespace Artesian.SDK.Service
 
                 _cachePolicy = Policy.CacheAsync(_memoryCacheProvider.AsyncFor<(string AccessToken, DateTimeOffset ExpiresOn)>(), new ResultTtl<(string AccessToken, DateTimeOffset ExpiresOn)>(r => new Ttl(r.ExpiresOn - DateTimeOffset.Now, false)));
             }
+#endif
 
             _client = new FlurlClient(_url);
             _client.WithTimeout(TimeSpan.FromMinutes(ArtesianConstants.ServiceRequestTimeOutMinutes));
@@ -119,12 +124,13 @@ namespace Artesian.SDK.Service
 
                 if (_apiKey != null)
                     req = req.WithHeader("X-Api-Key", _apiKey);
+#if !NET452
                 else
                 {
                     var (token, _) = await _getAccessToken();
                     req = req.WithOAuthBearerToken(token);
                 }
-
+#endif
                 ObjectContent content = null;
 
                 try
@@ -216,7 +222,8 @@ namespace Artesian.SDK.Service
         public async Task Exec<TBody>(HttpMethod method, string resource, TBody body, CancellationToken ctk = default)
             => await Exec<object, TBody>(method, resource, body, ctk);
 
-        #region private methods
+#region private methods
+#if !NET452
         private async Task<(string AccessToken, DateTimeOffset ExpiresOn)> _getAccessToken()
         {
             var res = await _cachePolicy.ExecuteAsync(async (ctx) =>
@@ -234,13 +241,14 @@ namespace Artesian.SDK.Service
 
             return res;
         }
+#endif
 
         public void Dispose()
         {
             _client.Dispose();
         }
 
-        #endregion private methods
+#endregion private methods
     }
     /// <summary>
     /// Flurl Extension

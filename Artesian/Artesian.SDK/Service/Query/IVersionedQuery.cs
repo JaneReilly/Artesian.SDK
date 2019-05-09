@@ -10,7 +10,11 @@ namespace Artesian.SDK.Service
     {
         T InGranularity(Granularity granularity);
         T ForLastNVersions(int lastN);
-        T ForMUV();
+        T ForMUV(LocalDateTime? versionLimit);
+        T ForMostRecent();
+        T ForMostRecent(LocalDate start, LocalDate end);
+        T ForMostRecent(Period lastOfPeriod);
+        T ForMostRecent(Period from, Period to);
         T ForLastOfDays(LocalDate start, LocalDate end);
         T ForLastOfDays(Period lastOfPeriod);
         T ForLastOfDays(Period from, Period to);
@@ -20,5 +24,9 @@ namespace Artesian.SDK.Service
         T ForVersion(LocalDateTime version);
         T WithTimeTransform(int tr);
         T WithTimeTransform(SystemTimeTransform tr);
+        T WithFillNull();
+        T WithFillCustom(double value);
+        T WithFillLatestValue(Period period);
+        T WithFillNone();
     }
 }

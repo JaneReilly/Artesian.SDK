@@ -421,6 +421,133 @@ namespace Artesian.SDK.Tests
         }
         #endregion
 
+        #region Filler
+        [Test]
+        public void FillerDefaultMasInAbsoluteDateRangeExtractionWindow()
+        {
+            using (var httpTest = new HttpTest())
+            {
+                var qs = new QueryService(_cfg);
+
+                var mas = qs.CreateMarketAssessment()
+                       .ForMarketData(new int[] { 100000001 })
+                       .ForProducts(new string[] { "M+1", "GY+1" })
+                       .InAbsoluteDateRange(new LocalDate(2018, 1, 1), new LocalDate(2018, 1, 10))
+                       .ExecuteAsync().Result;
+
+                httpTest.ShouldHaveCalled($"{_cfg.BaseAddress}query/v1.0/mas/2018-01-01/2018-01-10"
+                    .SetQueryParam("id", 100000001)
+                    .SetQueryParam("p", new string[] { "M+1", "GY+1" })
+                    .SetQueryParam("fillerK", FillerKind.LatestValidValue)
+                    .SetQueryParam("fillerP", "P14D"))
+                    .WithVerb(HttpMethod.Get)
+                    .Times(1);
+            }
+        }
+
+        [Test]
+        public void FillerNullMasInAbsoluteDateRangeExtractionWindow()
+        {
+            using (var httpTest = new HttpTest())
+            {
+                var qs = new QueryService(_cfg);
+
+                var mas = qs.CreateMarketAssessment()
+                       .ForMarketData(new int[] { 100000001 })
+                       .ForProducts(new string[] { "M+1", "GY+1" })
+                       .InAbsoluteDateRange(new LocalDate(2018, 1, 1), new LocalDate(2018, 1, 10))
+                       .WithFillNull()
+                       .ExecuteAsync().Result;
+
+                httpTest.ShouldHaveCalled($"{_cfg.BaseAddress}query/v1.0/mas/2018-01-01/2018-01-10"
+                    .SetQueryParam("id", 100000001)
+                    .SetQueryParam("p", new string[] { "M+1", "GY+1" })
+                    .SetQueryParam("fillerK",FillerKind.Null))
+                    .WithVerb(HttpMethod.Get)
+                    .Times(1);
+            }
+        }
+
+        [Test]
+        public void FillerNoFillMasInAbsoluteDateRangeExtractionWindow()
+        {
+            using (var httpTest = new HttpTest())
+            {
+                var qs = new QueryService(_cfg);
+
+                var mas = qs.CreateMarketAssessment()
+                       .ForMarketData(new int[] { 100000001 })
+                       .ForProducts(new string[] { "M+1", "GY+1" })
+                       .InAbsoluteDateRange(new LocalDate(2018, 1, 1), new LocalDate(2018, 1, 10))
+                       .WithFillNone()
+                       .ExecuteAsync().Result;
+
+                httpTest.ShouldHaveCalled($"{_cfg.BaseAddress}query/v1.0/mas/2018-01-01/2018-01-10"
+                    .SetQueryParam("id", 100000001)
+                    .SetQueryParam("p", new string[] { "M+1", "GY+1" })
+                    .SetQueryParam("fillerK", FillerKind.NoFill))
+                    .WithVerb(HttpMethod.Get)
+                    .Times(1);
+            }
+        }
+
+        [Test]
+        public void FillerLatestValidValueMasInAbsoluteDateRangeExtractionWindow()
+        {
+            using (var httpTest = new HttpTest())
+            {
+                var qs = new QueryService(_cfg);
+
+                var mas = qs.CreateMarketAssessment()
+                       .ForMarketData(new int[] { 100000001 })
+                       .ForProducts(new string[] { "M+1", "GY+1" })
+                       .InAbsoluteDateRange(new LocalDate(2018, 1, 1), new LocalDate(2018, 1, 10))
+                       .WithFillLatestValue(Period.FromDays(14))
+                       .ExecuteAsync().Result;
+
+                httpTest.ShouldHaveCalled($"{_cfg.BaseAddress}query/v1.0/mas/2018-01-01/2018-01-10"
+                    .SetQueryParam("id", 100000001)
+                    .SetQueryParam("p", new string[] { "M+1", "GY+1" })
+                    .SetQueryParam("fillerK", FillerKind.LatestValidValue)
+                    .SetQueryParam("fillerP","P14D"))
+                    .WithVerb(HttpMethod.Get)
+                    .Times(1);
+            }
+        }
+
+        [Test]
+        public void FillerCustomValueMasInAbsoluteDateRangeExtractionWindow()
+        {
+            using (var httpTest = new HttpTest())
+            {
+                var qs = new QueryService(_cfg);
+
+                var mas = qs.CreateMarketAssessment()
+                       .ForMarketData(new int[] { 100000001 })
+                       .ForProducts(new string[] { "M+1", "GY+1" })
+                       .InAbsoluteDateRange(new LocalDate(2018, 1, 1), new LocalDate(2018, 1, 10))
+                       .WithFillCustom(123,456,789,321,654,987,213,435)
+                       .ExecuteAsync().Result;
+
+                httpTest.ShouldHaveCalled($"{_cfg.BaseAddress}query/v1.0/mas/2018-01-01/2018-01-10"
+                    .SetQueryParam("id", 100000001)
+                    .SetQueryParam("p", new string[] { "M+1", "GY+1" })
+                    .SetQueryParam("fillerK", FillerKind.CustomValue)
+                    .SetQueryParam("fillerDVs",123)
+                    .SetQueryParam("fillerDVo", 456)
+                    .SetQueryParam("fillerDVc", 789)
+                    .SetQueryParam("fillerDVh", 321)
+                    .SetQueryParam("fillerDVl", 654)
+                    .SetQueryParam("fillerDVvp", 987)
+                    .SetQueryParam("fillerDVvg", 213)
+                    .SetQueryParam("fillerDVvt", 435)
+                    )
+                    .WithVerb(HttpMethod.Get)
+                    .Times(1);
+            }
+        }
+        #endregion
+
         [Test]
         public void MasExtractionWindow_MktChange()
         {

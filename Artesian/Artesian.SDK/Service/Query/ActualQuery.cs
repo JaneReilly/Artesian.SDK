@@ -146,6 +146,49 @@ namespace Artesian.SDK.Service
             return this;
         }
         /// <summary>
+        /// Set the Filler strategy to Null
+        /// </summary>
+        /// <returns>ActualQuery</returns>
+        public ActualQuery WithFillNull()
+        {
+            _queryParamaters.FillerKind = FillerKind.Null;
+            return this;
+        }
+        /// <summary>
+        /// Set the Filler Strategy to Custom Value
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns>ActualQuery</returns>
+        public ActualQuery WithFillCustom(double value)
+        {
+            _queryParamaters.FillerKind = FillerKind.CustomValue;
+            _queryParamaters.FillerDV = value;
+
+            return this;
+        }
+        /// <summary>
+        /// Set the Filler Strategy to Latest Value
+        /// </summary>
+        /// <param name="period"></param>
+        /// <returns>ActualQuery</returns>
+        public ActualQuery WithFillLatestValue(Period period)
+        {
+            _queryParamaters.FillerKind = FillerKind.LatestValidValue;
+            _queryParamaters.FillerPeriod = period;
+
+            return this;
+        }
+        /// <summary>
+        /// Set the Filler Strategy to Fill None
+        /// </summary>
+        /// <returns>ActualQuery</returns>
+        public ActualQuery WithFillNone()
+        {
+            _queryParamaters.FillerKind = FillerKind.NoFill;
+
+            return this;
+        }
+        /// <summary>
         /// Execute ActualQuery
         /// </summary>
         /// <param name="ctk">CancellationToken</param>
@@ -171,6 +214,9 @@ namespace Artesian.SDK.Service
                         .SetQueryParam("filterId", qp.FilterId)
                         .SetQueryParam("tz", qp.TimeZone)
                         .SetQueryParam("tr", qp.TransformId)
+                        .SetQueryParam("fillerK", qp.FillerKind)
+                        .SetQueryParam("fillerDV", qp.FillerDV)
+                        .SetQueryParam("fillerP", qp.FillerPeriod)
                         .ToString())
                 .ToList();
 
@@ -186,6 +232,27 @@ namespace Artesian.SDK.Service
 
             if (_queryParamaters.Granularity == null)
                 throw new ApplicationException("Extraction granularity must be provided. Use .InGranularity() argument takes a granularity type");
+
+            if (_queryParamaters.FillerKind == FillerKind.Default)
+            {
+                _queryParamaters.FillerKind = FillerKind.Null;
+            }
+
+            if (_queryParamaters.FillerKind == FillerKind.CustomValue)
+            {
+                if (_queryParamaters.FillerDV == null)
+                {
+                    throw new ApplicationException("Filler default value must be provided. Provide a value for default value when using custom value filler");
+                }
+            }
+
+            if (_queryParamaters.FillerKind == FillerKind.LatestValidValue)
+            {
+                if (_queryParamaters.FillerPeriod.ToString().Contains('-') == true || _queryParamaters.FillerPeriod == null)
+                {
+                    throw new ApplicationException("Latest valid value filler must contain a non negative Period");
+                }
+            }
         }
 
       

@@ -22,5 +22,9 @@ namespace Artesian.SDK.Service
         /// last of version <see cref="LastOfSelectionConfig"/>
         /// </summary>
         public LastOfSelectionConfig LastOf { get; set; } = new LastOfSelectionConfig();
+        /// <summary>
+        /// Most recent version <see cref="MostRecentConfig"/>
+        /// </summary>
+        public MostRecentConfig MostRecent { get; set; } = new MostRecentConfig();
     }
 }

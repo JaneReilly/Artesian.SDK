@@ -32,7 +32,10 @@ namespace Artesian.SDK.Service
                                 queryParamater.TimeZone,
                                 queryParamater.FilterId,
                                 queryParamater.Granularity,
-                                queryParamater.TransformId
+                                queryParamater.TransformId,
+                                queryParamater.FillerKind,
+                                queryParamater.FillerDV,
+                                queryParamater.FillerPeriod
                                 )));
                     
         }
@@ -57,7 +60,11 @@ namespace Artesian.SDK.Service
                                 queryParamater.Granularity,
                                 queryParamater.TransformId,
                                 queryParamater.VersionSelectionConfig,
-                                queryParamater.VersionSelectionType
+                                queryParamater.VersionSelectionType,
+                                queryParamater.VersionLimit,
+                                queryParamater.FillerKind,
+                                queryParamater.FillerDV,
+                                queryParamater.FillerPeriod
                                 )));
         }
         /// <summary>
@@ -78,7 +85,17 @@ namespace Artesian.SDK.Service
                                 queryParamater.ExtractionRangeType,
                                 queryParamater.TimeZone,
                                 queryParamater.FilterId,
-                                queryParamater.Products
+                                queryParamater.Products,
+                                queryParamater.FillerKind,
+                                queryParamater.FillerDVs,
+                                queryParamater.FillerDVo,
+                                queryParamater.FillerDVc,
+                                queryParamater.FillerDVh,
+                                queryParamater.FillerDVl,
+                                queryParamater.FillerDVvp,
+                                queryParamater.FillerDVvg,
+                                queryParamater.FillerDVvt,
+                                queryParamater.FillerPeriod
                                 )));
         }
 

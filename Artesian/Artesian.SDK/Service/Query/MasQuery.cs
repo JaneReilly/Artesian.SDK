@@ -118,10 +118,67 @@ namespace Artesian.SDK.Service
         /// Set list of market products to be queried
         /// </summary>
         /// <param name="products">List of products to be queried</param>
-        /// <returns></returns>
+        /// <returns>MasQuery</returns>
         public MasQuery ForProducts(params string[] products)
         {
             _queryParamaters.Products = products;
+            return this;
+        }
+        /// <summary>
+        /// Set the Filler strategy to Null
+        /// </summary>
+        /// <returns>MasQuery</returns>
+        public MasQuery WithFillNull()
+        {
+            _queryParamaters.FillerKind = FillerKind.Null;
+            return this;
+        }
+        /// <summary>
+        /// Set the Filler Strategy to Custom Value
+        /// </summary>
+        /// <param name="settlement"></param>
+        /// <param name="open"></param>
+        /// <param name="close"></param>
+        /// <param name="high"></param>
+        /// <param name="low"></param>
+        /// <param name="volumePaid"></param>
+        /// <param name="volumeGiven"></param>
+        /// <param name="volumeTotal"></param>
+        /// <returns>MasQuery</returns>
+        public MasQuery WithFillCustom(double settlement, double open, double close, double high, double low, double volumePaid, double volumeGiven, double volumeTotal)
+        {
+            _queryParamaters.FillerKind = FillerKind.CustomValue;
+            _queryParamaters.FillerDVs = settlement;
+            _queryParamaters.FillerDVo = open;
+            _queryParamaters.FillerDVc = close;
+            _queryParamaters.FillerDVh = high;
+            _queryParamaters.FillerDVl = low;
+            _queryParamaters.FillerDVvp = volumePaid;
+            _queryParamaters.FillerDVvg = volumeGiven;
+            _queryParamaters.FillerDVvt = volumeTotal;
+
+            return this;
+        }
+        /// <summary>
+        /// Set the Filler Strategy to Latest Value
+        /// </summary>
+        /// <param name="period"></param>
+        /// <returns>MasQuery</returns>
+        public MasQuery WithFillLatestValue(Period period)
+        {
+            _queryParamaters.FillerKind = FillerKind.LatestValidValue;
+            _queryParamaters.FillerPeriod = period;
+
+            return this;
+        }
+        /// <summary>
+        /// Set the Filler Strategy to Fill None
+        /// </summary>
+        /// <returns>MasQuery</returns>
+        public MasQuery WithFillNone()
+        {
+            _queryParamaters.FillerKind = FillerKind.NoFill;
+
             return this;
         }
         /// <summary>
@@ -152,6 +209,16 @@ namespace Artesian.SDK.Service
                         .SetQueryParam("filterId", qp.FilterId)
                         .SetQueryParam("p", qp.Products)
                         .SetQueryParam("tz", qp.TimeZone)
+                        .SetQueryParam("fillerK",qp.FillerKind)
+                        .SetQueryParam("fillerDVs",qp.FillerDVs)
+                        .SetQueryParam("fillerDVo", qp.FillerDVo)
+                        .SetQueryParam("fillerDVc", qp.FillerDVc)
+                        .SetQueryParam("fillerDVh", qp.FillerDVh)
+                        .SetQueryParam("fillerDVl", qp.FillerDVl)
+                        .SetQueryParam("fillerDVvp", qp.FillerDVvp)
+                        .SetQueryParam("fillerDVvg", qp.FillerDVvg)
+                        .SetQueryParam("fillerDVvt", qp.FillerDVvt)
+                        .SetQueryParam("fillerP" ,qp.FillerPeriod)
                         .ToString())
                 .ToList();
 
@@ -166,6 +233,27 @@ namespace Artesian.SDK.Service
 
             if (_queryParamaters.Products == null)
                 throw new ApplicationException("Products must be provided for extraction. Use .ForProducts() argument takes a string or string array of products");
+
+            if(_queryParamaters.FillerKind == FillerKind.Default)
+            {
+                WithFillLatestValue(Period.FromDays(14));
+            }
+
+            if (_queryParamaters.FillerKind == FillerKind.LatestValidValue)
+            {
+                if (_queryParamaters.FillerPeriod.ToString().Contains('-') == true || _queryParamaters.FillerPeriod == null)
+                {
+                    throw new ApplicationException("Latest valid value filler must contain a non negative Period");
+                }
+            }
+
+            if (_queryParamaters.FillerKind == FillerKind.CustomValue)
+            {
+                if (_queryParamaters.FillerDVs == null || _queryParamaters.FillerDVo == null || _queryParamaters.FillerDVc == null || _queryParamaters.FillerDVh == null || _queryParamaters.FillerDVl == null || _queryParamaters.FillerDVvp == null || _queryParamaters.FillerDVvg == null || _queryParamaters.FillerDVvt == null)
+                {
+                    throw new ApplicationException("All 8 Filler default values must be provided. Provide values for all default values when using custom value filler");
+                }
+            }
         }
         #endregion
         #endregion

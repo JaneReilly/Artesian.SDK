@@ -30,7 +30,8 @@ namespace Artesian.SDK.Service
         MUV,
         LastOfDays,
         LastOfMonths,
-        Version
+        Version,
+        MostRecent
     }
     /// <summary>
     /// Relative interval enums
@@ -46,6 +47,19 @@ namespace Artesian.SDK.Service
         MonthToDate,
         QuarterToDate,
         YearToDate
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
+    }
+    /// <summary>
+    /// Filler Kind enums
+    /// </summary>
+    public enum FillerKind
+    {
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
+        Default,
+        Null,
+        CustomValue,
+        LatestValidValue,
+        NoFill
 #pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
     }
 }

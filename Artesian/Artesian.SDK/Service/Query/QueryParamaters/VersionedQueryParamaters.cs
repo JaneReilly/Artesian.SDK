@@ -2,6 +2,7 @@
 // Licensed under the MIT License. See LICENSE in the project root for
 // license information. 
 using Artesian.SDK.Dto;
+using NodaTime;
 using System.Collections.Generic;
 
 namespace Artesian.SDK.Service
@@ -31,6 +32,10 @@ namespace Artesian.SDK.Service
         /// <param name="transformId"></param>
         /// <param name="timezone"></param>
         /// <param name="filterId"></param>
+        /// <param name="versionLimit"></param>
+        /// <param name="fillerK"></param>
+        /// <param name="fillerDV"></param>
+        /// <param name="fillerP"></param>
         public VersionedQueryParamaters(
             IEnumerable<int> ids, 
             ExtractionRangeSelectionConfig extractionRangeSelectionConfig, 
@@ -40,14 +45,21 @@ namespace Artesian.SDK.Service
             Granularity? granularity,
             int? transformId,
             VersionSelectionConfig versionSelectionConfig,
-            VersionSelectionType? versionSelectionType
+            VersionSelectionType? versionSelectionType,
+            LocalDateTime? versionLimit,
+            FillerKind fillerK,
+            double? fillerDV,
+            Period fillerP
             )
-            : base(ids, extractionRangeSelectionConfig, extractionRangeType, timezone, filterId)
+            : base(ids, extractionRangeSelectionConfig, extractionRangeType, timezone, filterId, fillerK)
         {
             this.VersionSelectionConfig = versionSelectionConfig;
             this.VersionSelectionType = versionSelectionType;
             this.Granularity = granularity;
             this.TransformId = transformId;
+            this.VersionLimit = versionLimit;
+            this.FillerDV = fillerDV;
+            this.FillerPeriod = fillerP;
         }
 
         /// <summary>
@@ -66,5 +78,17 @@ namespace Artesian.SDK.Service
         /// Time range
         /// </summary>
         public int? TransformId { get; set; }
+        /// <summary>
+        /// Version Limit
+        /// </summary>
+        public LocalDateTime? VersionLimit { get; set; }
+        /// <summary>
+        /// Filler Default Value
+        /// </summary>
+        public double? FillerDV { get; set; }
+        /// <summary>
+        /// Filler Period
+        /// </summary>
+        public Period FillerPeriod { get; set; }
     }
 }

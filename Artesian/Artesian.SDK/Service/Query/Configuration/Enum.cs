@@ -52,7 +52,7 @@ namespace Artesian.SDK.Service
     /// <summary>
     /// Filler Kind enums
     /// </summary>
-    public enum FillerKind
+    public enum FillerKindType
     {
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         Default,

@@ -322,7 +322,7 @@ namespace Artesian.SDK.Service
         /// <returns>VersionedQuery</returns>
         public VersionedQuery WithFillNull()
         {
-            _queryParamaters.FillerKind = FillerKind.Null;
+            _queryParamaters.FillerKindType = FillerKindType.Null;
             return this;
         }
         /// <summary>
@@ -330,10 +330,10 @@ namespace Artesian.SDK.Service
         /// </summary>
         /// <param name="value"></param>
         /// <returns>VersionedQuery</returns>
-        public VersionedQuery WithFillCustom(double value)
+        public VersionedQuery WithFillCustomValue(double value)
         {
-            _queryParamaters.FillerKind = FillerKind.CustomValue;
-            _queryParamaters.FillerDV = value;
+            _queryParamaters.FillerKindType = FillerKindType.CustomValue;
+            _queryParamaters.FillerConfig.FillerTimeSeriesDV = value;
 
             return this;
         }
@@ -344,8 +344,8 @@ namespace Artesian.SDK.Service
         /// <returns>VersionedQuery</returns>
         public VersionedQuery WithFillLatestValue(Period period)
         {
-            _queryParamaters.FillerKind = FillerKind.LatestValidValue;
-            _queryParamaters.FillerPeriod = period;
+            _queryParamaters.FillerKindType = FillerKindType.LatestValidValue;
+            _queryParamaters.FillerConfig.FillerPeriod = period;
 
             return this;
         }
@@ -355,7 +355,7 @@ namespace Artesian.SDK.Service
         /// <returns>VersionedQuery</returns>
         public VersionedQuery WithFillNone()
         {
-            _queryParamaters.FillerKind = FillerKind.NoFill;
+            _queryParamaters.FillerKindType = FillerKindType.NoFill;
 
             return this;
         }
@@ -389,22 +389,17 @@ namespace Artesian.SDK.Service
             if (_queryParamaters.VersionSelectionType == null)
                 throw new ApplicationException("Version selection must be provided. Provide a version to query. eg .ForLastOfDays() arguments take a date range , period or period range");
 
-            if(_queryParamaters.FillerKind == FillerKind.Default)
+            if(_queryParamaters.FillerKindType == FillerKindType.CustomValue)
             {
-                _queryParamaters.FillerKind = FillerKind.Null;
-            }
-
-            if(_queryParamaters.FillerKind == FillerKind.CustomValue)
-            {
-                if(_queryParamaters.FillerDV == null)
+                if(_queryParamaters.FillerConfig.FillerTimeSeriesDV == null)
                 {
                     throw new ApplicationException("Filler default value must be provided. Provide a value for default value when using custom value filler");
                 }
             }
 
-            if (_queryParamaters.FillerKind == FillerKind.LatestValidValue)
+            if (_queryParamaters.FillerKindType == FillerKindType.LatestValidValue)
             {
-                if (_queryParamaters.FillerPeriod.ToString().Contains('-') == true || _queryParamaters.FillerPeriod == null)
+                if (_queryParamaters.FillerConfig.FillerPeriod.ToString().Contains('-') == true || _queryParamaters.FillerConfig.FillerPeriod == null)
                 {
                     throw new ApplicationException("Latest valid value filler must contain a non negative Period");
                 }
@@ -484,9 +479,9 @@ namespace Artesian.SDK.Service
                             .SetQueryParam("tz", qp.TimeZone)
                             .SetQueryParam("tr", qp.TransformId)
                             .SetQueryParam("versionLimit", qp.VersionLimit)
-                            .SetQueryParam("fillerK",  qp.FillerKind)
-                            .SetQueryParam("fillerDV", qp.FillerDV)
-                            .SetQueryParam("fillerP", qp.FillerPeriod)
+                            .SetQueryParam("fillerK",  qp.FillerKindType)
+                            .SetQueryParam("FillerTimeSeriesDV", qp.FillerConfig.FillerTimeSeriesDV)
+                            .SetQueryParam("fillerP", qp.FillerConfig.FillerPeriod)
                             .ToString())
                     .ToList();
             

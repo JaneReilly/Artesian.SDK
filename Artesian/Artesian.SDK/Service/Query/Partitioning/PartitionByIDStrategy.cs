@@ -33,9 +33,8 @@ namespace Artesian.SDK.Service
                                 queryParamater.FilterId,
                                 queryParamater.Granularity,
                                 queryParamater.TransformId,
-                                queryParamater.FillerKind,
-                                queryParamater.FillerDV,
-                                queryParamater.FillerPeriod
+                                queryParamater.FillerKindType,
+                                queryParamater.FillerConfig
                                 )));
                     
         }
@@ -62,9 +61,8 @@ namespace Artesian.SDK.Service
                                 queryParamater.VersionSelectionConfig,
                                 queryParamater.VersionSelectionType,
                                 queryParamater.VersionLimit,
-                                queryParamater.FillerKind,
-                                queryParamater.FillerDV,
-                                queryParamater.FillerPeriod
+                                queryParamater.FillerKindType,
+                                queryParamater.FillerConfig
                                 )));
         }
         /// <summary>
@@ -86,16 +84,8 @@ namespace Artesian.SDK.Service
                                 queryParamater.TimeZone,
                                 queryParamater.FilterId,
                                 queryParamater.Products,
-                                queryParamater.FillerKind,
-                                queryParamater.FillerDVs,
-                                queryParamater.FillerDVo,
-                                queryParamater.FillerDVc,
-                                queryParamater.FillerDVh,
-                                queryParamater.FillerDVl,
-                                queryParamater.FillerDVvp,
-                                queryParamater.FillerDVvg,
-                                queryParamater.FillerDVvt,
-                                queryParamater.FillerPeriod
+                                queryParamater.FillerKindType,
+                                queryParamater.FillerConfig
                                 )));
         }
 

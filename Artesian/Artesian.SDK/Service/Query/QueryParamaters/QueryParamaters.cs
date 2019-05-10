@@ -26,6 +26,7 @@ namespace Artesian.SDK.Service
         /// <param name="timezone"></param>
         /// <param name="filterId"></param>
         /// <param name="fillerKind"></param>
+        /// <param name="fillerConfig"></param>
         public QueryParamaters(
             IEnumerable<int> ids, 
             ExtractionRangeSelectionConfig 
@@ -34,7 +35,8 @@ namespace Artesian.SDK.Service
             extractionRangeType, 
             string timezone, 
             int? filterId,
-            FillerKind fillerKind
+            FillerKindType fillerKind,
+            FillerConfig fillerConfig
             )
         {
             this.Ids = ids;
@@ -42,7 +44,8 @@ namespace Artesian.SDK.Service
             this.ExtractionRangeType = extractionRangeType;
             this.TimeZone = timezone;
             this.FilterId = filterId;
-            this.FillerKind = fillerKind;
+            this.FillerKindType = fillerKind;
+            this.FillerConfig = fillerConfig;
         }
 
         /// <summary>
@@ -58,17 +61,20 @@ namespace Artesian.SDK.Service
         /// </summary>
         public ExtractionRangeType? ExtractionRangeType { get; set; }
         /// <summary>
-        /// timezone
+        /// Timezone
         /// </summary>
         public string TimeZone { get; set; }
         /// <summary>
-        /// filterId
+        /// FilterId
         /// </summary>
         public int? FilterId { get; set; }
         /// <summary>
         /// Filler Kind
         /// </summary>
-        public FillerKind FillerKind { get; set; } = new FillerKind();
-
+        public FillerKindType FillerKindType { get; set; } = FillerKindType.Default;
+        /// <summary>
+        /// Filler config
+        /// </summary>
+        public FillerConfig FillerConfig { get; set; } = new FillerConfig();
     }
 }

@@ -5,6 +5,7 @@ using System.Net.Http;
 using NodaTime;
 using NUnit.Framework;
 using Flurl;
+using Artesian.SDK.Dto;
 
 namespace Artesian.SDK.Tests
 {
@@ -423,29 +424,6 @@ namespace Artesian.SDK.Tests
 
         #region Filler
         [Test]
-        public void FillerDefaultMasInAbsoluteDateRangeExtractionWindow()
-        {
-            using (var httpTest = new HttpTest())
-            {
-                var qs = new QueryService(_cfg);
-
-                var mas = qs.CreateMarketAssessment()
-                       .ForMarketData(new int[] { 100000001 })
-                       .ForProducts(new string[] { "M+1", "GY+1" })
-                       .InAbsoluteDateRange(new LocalDate(2018, 1, 1), new LocalDate(2018, 1, 10))
-                       .ExecuteAsync().Result;
-
-                httpTest.ShouldHaveCalled($"{_cfg.BaseAddress}query/v1.0/mas/2018-01-01/2018-01-10"
-                    .SetQueryParam("id", 100000001)
-                    .SetQueryParam("p", new string[] { "M+1", "GY+1" })
-                    .SetQueryParam("fillerK", FillerKind.LatestValidValue)
-                    .SetQueryParam("fillerP", "P14D"))
-                    .WithVerb(HttpMethod.Get)
-                    .Times(1);
-            }
-        }
-
-        [Test]
         public void FillerNullMasInAbsoluteDateRangeExtractionWindow()
         {
             using (var httpTest = new HttpTest())
@@ -462,7 +440,7 @@ namespace Artesian.SDK.Tests
                 httpTest.ShouldHaveCalled($"{_cfg.BaseAddress}query/v1.0/mas/2018-01-01/2018-01-10"
                     .SetQueryParam("id", 100000001)
                     .SetQueryParam("p", new string[] { "M+1", "GY+1" })
-                    .SetQueryParam("fillerK",FillerKind.Null))
+                    .SetQueryParam("fillerK",FillerKindType.Null))
                     .WithVerb(HttpMethod.Get)
                     .Times(1);
             }
@@ -485,12 +463,12 @@ namespace Artesian.SDK.Tests
                 httpTest.ShouldHaveCalled($"{_cfg.BaseAddress}query/v1.0/mas/2018-01-01/2018-01-10"
                     .SetQueryParam("id", 100000001)
                     .SetQueryParam("p", new string[] { "M+1", "GY+1" })
-                    .SetQueryParam("fillerK", FillerKind.NoFill))
+                    .SetQueryParam("fillerK", FillerKindType.NoFill))
                     .WithVerb(HttpMethod.Get)
                     .Times(1);
             }
         }
-
+        
         [Test]
         public void FillerLatestValidValueMasInAbsoluteDateRangeExtractionWindow()
         {
@@ -502,14 +480,14 @@ namespace Artesian.SDK.Tests
                        .ForMarketData(new int[] { 100000001 })
                        .ForProducts(new string[] { "M+1", "GY+1" })
                        .InAbsoluteDateRange(new LocalDate(2018, 1, 1), new LocalDate(2018, 1, 10))
-                       .WithFillLatestValue(Period.FromDays(14))
+                       .WithFillLatestValue(Period.FromDays(7))
                        .ExecuteAsync().Result;
 
                 httpTest.ShouldHaveCalled($"{_cfg.BaseAddress}query/v1.0/mas/2018-01-01/2018-01-10"
                     .SetQueryParam("id", 100000001)
                     .SetQueryParam("p", new string[] { "M+1", "GY+1" })
-                    .SetQueryParam("fillerK", FillerKind.LatestValidValue)
-                    .SetQueryParam("fillerP","P14D"))
+                    .SetQueryParam("fillerK", FillerKindType.LatestValidValue)
+                    .SetQueryParam("fillerP","P7D"))
                     .WithVerb(HttpMethod.Get)
                     .Times(1);
             }
@@ -526,13 +504,13 @@ namespace Artesian.SDK.Tests
                        .ForMarketData(new int[] { 100000001 })
                        .ForProducts(new string[] { "M+1", "GY+1" })
                        .InAbsoluteDateRange(new LocalDate(2018, 1, 1), new LocalDate(2018, 1, 10))
-                       .WithFillCustom(123,456,789,321,654,987,213,435)
+                       .WithFillCustomValue(new MarketAssessmentValue { Settlement = 123, Open = 456, Close = 789, High = 321, Low = 654, VolumePaid = 987, VolumeGiven = 213, Volume = 435 })
                        .ExecuteAsync().Result;
 
                 httpTest.ShouldHaveCalled($"{_cfg.BaseAddress}query/v1.0/mas/2018-01-01/2018-01-10"
                     .SetQueryParam("id", 100000001)
                     .SetQueryParam("p", new string[] { "M+1", "GY+1" })
-                    .SetQueryParam("fillerK", FillerKind.CustomValue)
+                    .SetQueryParam("fillerK", FillerKindType.CustomValue)
                     .SetQueryParam("fillerDVs",123)
                     .SetQueryParam("fillerDVo", 456)
                     .SetQueryParam("fillerDVc", 789)
@@ -541,6 +519,34 @@ namespace Artesian.SDK.Tests
                     .SetQueryParam("fillerDVvp", 987)
                     .SetQueryParam("fillerDVvg", 213)
                     .SetQueryParam("fillerDVvt", 435)
+                    )
+                    .WithVerb(HttpMethod.Get)
+                    .Times(1);
+            }
+        }
+
+        [Test]
+        public void FillerCustomValueOHLCMasInAbsoluteDateRangeExtractionWindow()
+        {
+            using (var httpTest = new HttpTest())
+            {
+                var qs = new QueryService(_cfg);
+
+                var mas = qs.CreateMarketAssessment()
+                       .ForMarketData(new int[] { 100000001 })
+                       .ForProducts(new string[] { "M+1", "GY+1" })
+                       .InAbsoluteDateRange(new LocalDate(2018, 1, 1), new LocalDate(2018, 1, 10))
+                       .WithFillCustomValue(new MarketAssessmentValue { Open = 456, Close = 789, High = 321, Low = 654 })
+                       .ExecuteAsync().Result;
+
+                httpTest.ShouldHaveCalled($"{_cfg.BaseAddress}query/v1.0/mas/2018-01-01/2018-01-10"
+                    .SetQueryParam("id", 100000001)
+                    .SetQueryParam("p", new string[] { "M+1", "GY+1" })
+                    .SetQueryParam("fillerK", FillerKindType.CustomValue)
+                    .SetQueryParam("fillerDVo", 456)
+                    .SetQueryParam("fillerDVc", 789)
+                    .SetQueryParam("fillerDVh", 321)
+                    .SetQueryParam("fillerDVl", 654)
                     )
                     .WithVerb(HttpMethod.Get)
                     .Times(1);

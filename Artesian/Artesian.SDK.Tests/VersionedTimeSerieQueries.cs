@@ -2677,7 +2677,7 @@ namespace Artesian.SDK.Tests
 
                 httpTest.ShouldHaveCalled($"{_cfg.BaseAddress}query/v1.0/vts/MostRecent/Day/2018-06-22/2018-07-23"
                  .SetQueryParam("id", 100000001)
-                 .SetQueryParam("fillerK",FillerKind.NoFill))
+                 .SetQueryParam("fillerK",FillerKindType.NoFill))
                  .WithVerb(HttpMethod.Get)
                  .Times(1);
             }
@@ -2700,7 +2700,7 @@ namespace Artesian.SDK.Tests
 
                 httpTest.ShouldHaveCalled($"{_cfg.BaseAddress}query/v1.0/vts/MostRecent/Day/2018-06-22/2018-07-23"
                  .SetQueryParam("id", 100000001)
-                 .SetQueryParam("fillerK", FillerKind.Null))
+                 .SetQueryParam("fillerK", FillerKindType.Null))
                  .WithVerb(HttpMethod.Get)
                  .Times(1);
             }
@@ -2718,13 +2718,13 @@ namespace Artesian.SDK.Tests
                         .InGranularity(Granularity.Day)
                         .ForMostRecent()
                         .InAbsoluteDateRange(new LocalDate(2018, 6, 22), new LocalDate(2018, 7, 23))
-                        .WithFillLatestValue(Period.FromDays(14))
+                        .WithFillLatestValue(Period.FromDays(7))
                         .ExecuteAsync().Result;
 
                 httpTest.ShouldHaveCalled($"{_cfg.BaseAddress}query/v1.0/vts/MostRecent/Day/2018-06-22/2018-07-23"
                  .SetQueryParam("id", 100000001)
-                 .SetQueryParam("fillerK", FillerKind.LatestValidValue)
-                 .SetQueryParam("fillerP","P14D"))
+                 .SetQueryParam("fillerK", FillerKindType.LatestValidValue)
+                 .SetQueryParam("fillerP","P7D"))
                  .WithVerb(HttpMethod.Get)
                  .Times(1);
             }
@@ -2742,35 +2742,13 @@ namespace Artesian.SDK.Tests
                         .InGranularity(Granularity.Day)
                         .ForMostRecent()
                         .InAbsoluteDateRange(new LocalDate(2018, 6, 22), new LocalDate(2018, 7, 23))
-                        .WithFillCustom(123)
+                        .WithFillCustomValue(123)
                         .ExecuteAsync().Result;
 
                 httpTest.ShouldHaveCalled($"{_cfg.BaseAddress}query/v1.0/vts/MostRecent/Day/2018-06-22/2018-07-23"
                  .SetQueryParam("id", 100000001)
-                 .SetQueryParam("fillerK", FillerKind.CustomValue)
-                 .SetQueryParam("fillerDV",123))
-                 .WithVerb(HttpMethod.Get)
-                 .Times(1);
-            }
-        }
-
-        [Test]
-        public void FillerDefaultVerInAbsoluteDateRangeMostRecent()
-        {
-            using (var httpTest = new HttpTest())
-            {
-                var qs = new QueryService(_cfg);
-
-                var ver = qs.CreateVersioned()
-                        .ForMarketData(new int[] { 100000001 })
-                        .InGranularity(Granularity.Day)
-                        .ForMostRecent()
-                        .InAbsoluteDateRange(new LocalDate(2018, 6, 22), new LocalDate(2018, 7, 23))
-                        .ExecuteAsync().Result;
-
-                httpTest.ShouldHaveCalled($"{_cfg.BaseAddress}query/v1.0/vts/MostRecent/Day/2018-06-22/2018-07-23"
-                 .SetQueryParam("id", 100000001)
-                 .SetQueryParam("fillerK", FillerKind.Null))
+                 .SetQueryParam("fillerK", FillerKindType.CustomValue)
+                 .SetQueryParam("FillerTimeSeriesDV",123))
                  .WithVerb(HttpMethod.Get)
                  .Times(1);
             }

@@ -34,8 +34,7 @@ namespace Artesian.SDK.Service
         /// <param name="filterId"></param>
         /// <param name="versionLimit"></param>
         /// <param name="fillerK"></param>
-        /// <param name="fillerDV"></param>
-        /// <param name="fillerP"></param>
+        /// <param name="fillerConfig"></param>
         public VersionedQueryParamaters(
             IEnumerable<int> ids, 
             ExtractionRangeSelectionConfig extractionRangeSelectionConfig, 
@@ -47,19 +46,17 @@ namespace Artesian.SDK.Service
             VersionSelectionConfig versionSelectionConfig,
             VersionSelectionType? versionSelectionType,
             LocalDateTime? versionLimit,
-            FillerKind fillerK,
-            double? fillerDV,
-            Period fillerP
+            FillerKindType fillerK,
+            FillerConfig fillerConfig
             )
-            : base(ids, extractionRangeSelectionConfig, extractionRangeType, timezone, filterId, fillerK)
+            : base(ids, extractionRangeSelectionConfig, extractionRangeType, timezone, filterId, fillerK, fillerConfig)
         {
             this.VersionSelectionConfig = versionSelectionConfig;
             this.VersionSelectionType = versionSelectionType;
             this.Granularity = granularity;
             this.TransformId = transformId;
             this.VersionLimit = versionLimit;
-            this.FillerDV = fillerDV;
-            this.FillerPeriod = fillerP;
+            this.FillerConfig = fillerConfig;
         }
 
         /// <summary>
@@ -82,13 +79,5 @@ namespace Artesian.SDK.Service
         /// Version Limit
         /// </summary>
         public LocalDateTime? VersionLimit { get; set; }
-        /// <summary>
-        /// Filler Default Value
-        /// </summary>
-        public double? FillerDV { get; set; }
-        /// <summary>
-        /// Filler Period
-        /// </summary>
-        public Period FillerPeriod { get; set; }
     }
 }

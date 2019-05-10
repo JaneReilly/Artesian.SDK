@@ -2,6 +2,7 @@
 // Licensed under the MIT License. See LICENSE in the project root for
 // license information. 
 using Artesian.SDK.Dto;
+using NodaTime;
 
 namespace Artesian.SDK.Service
 {
@@ -10,5 +11,6 @@ namespace Artesian.SDK.Service
         T InGranularity(Granularity granularity);
         T WithTimeTransform(int tr);
         T WithTimeTransform(SystemTimeTransform tr);
+        T WithFillCustomValue(double value);
     }
 }

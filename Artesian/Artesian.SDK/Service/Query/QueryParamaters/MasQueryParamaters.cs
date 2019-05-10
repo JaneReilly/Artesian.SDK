@@ -1,6 +1,8 @@
 ﻿// Copyright (c) ARK LTD. All rights reserved.
 // Licensed under the MIT License. See LICENSE in the project root for
 // license information. 
+using Artesian.SDK.Dto;
+using NodaTime;
 using System.Collections.Generic;
 
 namespace Artesian.SDK.Service
@@ -27,16 +29,22 @@ namespace Artesian.SDK.Service
         /// <param name="timezone"></param>
         /// <param name="filterId"></param>
         /// <param name="products"></param>
+        /// <param name="fillerK"></param>
+        /// <param name="fillerConfig"></param>
         public MasQueryParamaters(
             IEnumerable<int> ids , 
             ExtractionRangeSelectionConfig extractionRangeSelectionConfig, 
             ExtractionRangeType? extractionRangeType,
             string timezone,
             int? filterId,
-            IEnumerable<string> products)
-            : base(ids, extractionRangeSelectionConfig, extractionRangeType, timezone, filterId)
+            IEnumerable<string> products,
+            FillerKindType fillerK,
+            FillerConfig fillerConfig
+            )
+            : base(ids, extractionRangeSelectionConfig, extractionRangeType, timezone, filterId, fillerK, fillerConfig)
         {
             this.Products = products;
+            this.FillerConfig = fillerConfig;
         }
         /// <summary>
         /// Products

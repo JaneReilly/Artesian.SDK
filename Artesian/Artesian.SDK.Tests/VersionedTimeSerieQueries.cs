@@ -630,6 +630,280 @@ namespace Artesian.SDK.Tests
         }
 
         [Test]
+        public void VerInAbsoluteDateRangeMostRecent()
+        {
+            using (var httpTest = new HttpTest())
+            {
+                var qs = new QueryService(_cfg);
+
+                var ver = qs.CreateVersioned()
+                        .ForMarketData(new int[] { 100000001 })
+                        .InGranularity(Granularity.Day)
+                        .ForMostRecent()
+                        .InAbsoluteDateRange(new LocalDate(2018, 6, 22), new LocalDate(2018, 7, 23))
+                        .ExecuteAsync().Result;
+
+                httpTest.ShouldHaveCalled($"{_cfg.BaseAddress}query/v1.0/vts/MostRecent/Day/2018-06-22/2018-07-23"
+                 .SetQueryParam("id", 100000001))
+                 .WithVerb(HttpMethod.Get)
+                 .Times(1);
+            }
+        }
+
+        [Test]
+        public void VerInRelativePeriodExtractionWindowMostRecent()
+        {
+            using (var httpTest = new HttpTest())
+            {
+                var qs = new QueryService(_cfg);
+
+                var ver = qs.CreateVersioned()
+                        .ForMarketData(new int[] { 100000001 })
+                        .InGranularity(Granularity.Day)
+                        .ForMostRecent()
+                        .InRelativePeriod(Period.FromDays(5))
+                        .ExecuteAsync().Result;
+
+                httpTest.ShouldHaveCalled($"{_cfg.BaseAddress}query/v1.0/vts/MostRecent/Day/P5D"
+                   .SetQueryParam("id", 100000001))
+                   .WithVerb(HttpMethod.Get)
+                   .Times(1);
+            }
+        }
+
+        [Test]
+        public void VerInRelativePeriodRangeExtractionWindowMostRecent()
+        {
+            using (var httpTest = new HttpTest())
+            {
+                var qs = new QueryService(_cfg);
+
+                var ver = qs.CreateVersioned()
+                        .ForMarketData(new int[] { 100000001 })
+                        .InGranularity(Granularity.Day)
+                        .ForMostRecent()
+                        .InRelativePeriodRange(Period.FromWeeks(2), Period.FromDays(20))
+                        .ExecuteAsync().Result;
+
+                httpTest.ShouldHaveCalled($"{_cfg.BaseAddress}query/v1.0/vts/MostRecent/Day/P2W/P20D"
+                   .SetQueryParam("id", 100000001))
+                   .WithVerb(HttpMethod.Get)
+                   .Times(1);
+            }
+        }
+
+        [Test]
+        public void VerInDateRangeAbsoluteDateRangeMostRecent()
+        {
+            using (var httpTest = new HttpTest())
+            {
+                var qs = new QueryService(_cfg);
+
+                var ver = qs.CreateVersioned()
+                        .ForMarketData(new int[] { 100000001 })
+                        .InGranularity(Granularity.Day)
+                        .ForMostRecent(new LocalDate(2018, 6, 22), new LocalDate(2018, 7, 23))
+                        .InAbsoluteDateRange(new LocalDate(2018, 6, 22), new LocalDate(2018, 7, 23))
+                        .ExecuteAsync().Result;
+
+                httpTest.ShouldHaveCalled($"{_cfg.BaseAddress}query/v1.0/vts/MostRecent/2018-06-22/2018-07-23/Day/2018-06-22/2018-07-23"
+                 .SetQueryParam("id", 100000001))
+                 .WithVerb(HttpMethod.Get)
+                 .Times(1);
+            }
+        }
+
+        [Test]
+        public void VerInDateRangeRelativePeriodExtractionWindowMostRecent()
+        {
+            using (var httpTest = new HttpTest())
+            {
+                var qs = new QueryService(_cfg);
+
+                var ver = qs.CreateVersioned()
+                        .ForMarketData(new int[] { 100000001 })
+                        .InGranularity(Granularity.Day)
+                        .ForMostRecent(new LocalDate(2018, 6, 22), new LocalDate(2018, 7, 23))
+                        .InRelativePeriod(Period.FromDays(5))
+                        .ExecuteAsync().Result;
+
+                httpTest.ShouldHaveCalled($"{_cfg.BaseAddress}query/v1.0/vts/MostRecent/2018-06-22/2018-07-23/Day/P5D"
+                 .SetQueryParam("id", 100000001))
+                 .WithVerb(HttpMethod.Get)
+                 .Times(1);
+            }
+        }
+
+        [Test]
+        public void VerInDateRangeRelativePeriodRangeExtractionWindowMostRecent()
+        {
+            using (var httpTest = new HttpTest())
+            {
+                var qs = new QueryService(_cfg);
+
+                var ver = qs.CreateVersioned()
+                        .ForMarketData(new int[] { 100000001 })
+                        .InGranularity(Granularity.Day)
+                        .ForMostRecent(new LocalDate(2018, 6, 22), new LocalDate(2018, 7, 23))
+                        .InRelativePeriodRange(Period.FromWeeks(2), Period.FromDays(20))
+                        .ExecuteAsync().Result;
+
+                httpTest.ShouldHaveCalled($"{_cfg.BaseAddress}query/v1.0/vts/MostRecent/2018-06-22/2018-07-23/Day/P2W/P20D"
+                   .SetQueryParam("id", 100000001))
+                   .WithVerb(HttpMethod.Get)
+                   .Times(1);
+            }
+        }
+
+        [Test]
+        public void VerInPeriodRelativePeriodMostRecent()
+        {
+            using (var httpTest = new HttpTest())
+            {
+                var qs = new QueryService(_cfg);
+
+                var ver = qs.CreateVersioned()
+                        .ForMarketData(new int[] { 100000001 })
+                        .InGranularity(Granularity.Day)
+                        .ForMostRecent(Period.FromDays(-20))
+                        .InRelativePeriod(Period.FromMonths(-1))
+                        .ExecuteAsync().Result;
+
+                httpTest.ShouldHaveCalled($"{_cfg.BaseAddress}query/v1.0/vts/MostRecent/P-20D/Day/P-1M"
+                  .SetQueryParam("id", 100000001))
+                  .WithVerb(HttpMethod.Get)
+                  .Times(1);
+            }
+        }
+
+        [Test]
+        public void VerInPeriodAbsoluteDateRangeMostRecent()
+        {
+            using (var httpTest = new HttpTest())
+            {
+                var qs = new QueryService(_cfg);
+
+                var ver = qs.CreateVersioned()
+                        .ForMarketData(new int[] { 100000001 })
+                        .InGranularity(Granularity.Day)
+                        .ForMostRecent(Period.FromDays(-20))
+                        .InAbsoluteDateRange(new LocalDate(2018, 6, 22), new LocalDate(2018, 7, 23))
+                        .ExecuteAsync().Result;
+
+                httpTest.ShouldHaveCalled($"{_cfg.BaseAddress}query/v1.0/vts/MostRecent/P-20D/Day/2018-06-22/2018-07-23"
+                  .SetQueryParam("id", 100000001))
+                  .WithVerb(HttpMethod.Get)
+                  .Times(1);
+            }
+        }
+
+        [Test]
+        public void VerInPeriodRelativePeriodRangeMostRecent()
+        {
+            using (var httpTest = new HttpTest())
+            {
+                var qs = new QueryService(_cfg);
+
+                var ver = qs.CreateVersioned()
+                        .ForMarketData(new int[] { 100000001 })
+                        .InGranularity(Granularity.Day)
+                        .ForMostRecent(Period.FromDays(-20))
+                        .InRelativePeriodRange(Period.FromMonths(-1), Period.FromDays(5))
+                        .ExecuteAsync().Result;
+
+                httpTest.ShouldHaveCalled($"{_cfg.BaseAddress}query/v1.0/vts/MostRecent/P-20D/Day/P-1M/P5D"
+                  .SetQueryParam("id", 100000001))
+                  .WithVerb(HttpMethod.Get)
+                  .Times(1);
+            }
+        }
+
+        [Test]
+        public void VerInPeriodRangeRelativePeriodMostRecent()
+        {
+            using (var httpTest = new HttpTest())
+            {
+                var qs = new QueryService(_cfg);
+
+                var ver = qs.CreateVersioned()
+                        .ForMarketData(new int[] { 100000001 })
+                        .InGranularity(Granularity.Day)
+                        .ForMostRecent(Period.FromMonths(-1), Period.FromDays(20))
+                        .InRelativePeriod(Period.FromMonths(-1))
+                        .ExecuteAsync().Result;
+
+                httpTest.ShouldHaveCalled($"{_cfg.BaseAddress}query/v1.0/vts/MostRecent/P-1M/P20D/Day/P-1M"
+                 .SetQueryParam("id", 100000001))
+                 .WithVerb(HttpMethod.Get)
+                 .Times(1);
+            }
+        }
+
+        [Test]
+        public void VerInPeriodRangeAbsoluteDateRangeMostRecent()
+        {
+            using (var httpTest = new HttpTest())
+            {
+                var qs = new QueryService(_cfg);
+
+                var ver = qs.CreateVersioned()
+                        .ForMarketData(new int[] { 100000001 })
+                        .InGranularity(Granularity.Day)
+                        .ForMostRecent(Period.FromMonths(-1), Period.FromDays(20))
+                        .InAbsoluteDateRange(new LocalDate(2018, 6, 22), new LocalDate(2018, 7, 23))
+                        .ExecuteAsync().Result;
+
+                httpTest.ShouldHaveCalled($"{_cfg.BaseAddress}query/v1.0/vts/MostRecent/P-1M/P20D/Day/2018-06-22/2018-07-23"
+                 .SetQueryParam("id", 100000001))
+                 .WithVerb(HttpMethod.Get)
+                 .Times(1);
+            }
+        }
+
+        [Test]
+        public void VerInPeriodRangeRelativePeriodRangeMostRecent()
+        {
+            using (var httpTest = new HttpTest())
+            {
+                var qs = new QueryService(_cfg);
+
+                var ver = qs.CreateVersioned()
+                        .ForMarketData(new int[] { 100000001 })
+                        .InGranularity(Granularity.Day)
+                        .ForMostRecent(Period.FromMonths(-1), Period.FromDays(20))
+                        .InRelativePeriodRange(Period.FromMonths(-1), Period.FromDays(20))
+                        .ExecuteAsync().Result;
+
+                httpTest.ShouldHaveCalled($"{_cfg.BaseAddress}query/v1.0/vts/MostRecent/P-1M/P20D/Day/P-1M/P20D"
+                 .SetQueryParam("id", 100000001))
+                 .WithVerb(HttpMethod.Get)
+                 .Times(1);
+            }
+        }
+
+        [Test]
+        public void VerInDateRangeRelativeIntervalMostRecent()
+        {
+            using (var httpTest = new HttpTest())
+            {
+                var qs = new QueryService(_cfg);
+
+                var ver = qs.CreateVersioned()
+                        .ForMarketData(new int[] { 100000001 })
+                        .InGranularity(Granularity.Day)
+                        .ForMostRecent(new LocalDate(2018, 5, 22), new LocalDate(2018, 7, 23))
+                        .InRelativeInterval(RelativeInterval.MonthToDate)
+                        .ExecuteAsync().Result;
+
+                httpTest.ShouldHaveCalled($"{_cfg.BaseAddress}query/v1.0/vts/MostRecent/2018-05-22/2018-07-23/Day/MonthToDate"
+                 .SetQueryParam("id", 100000001))
+                 .WithVerb(HttpMethod.Get)
+                 .Times(1);
+            }
+        }
+
+
+        [Test]
         public void VerInRelativeIntervalVersion()
         {
             using (var httpTest = new HttpTest())
@@ -765,12 +1039,13 @@ namespace Artesian.SDK.Tests
                 var ver = qs.CreateVersioned()
                        .ForMarketData(new int[] { 100000001 })
                        .InGranularity(Granularity.Day)
-                       .ForMUV()
+                       .ForMUV(new LocalDateTime(2019, 05, 01, 2, 0, 0))
                        .InAbsoluteDateRange(new LocalDate(2018, 7, 22), new LocalDate(2018, 7, 23))
                        .ExecuteAsync().Result;
 
                 httpTest.ShouldHaveCalled($"{_cfg.BaseAddress}query/v1.0/vts/MUV/Day/2018-07-22/2018-07-23"
-                  .SetQueryParam("id", 100000001))
+                  .SetQueryParam("id", 100000001)
+                  .SetQueryParam("versionLimit", new LocalDateTime(2019, 05, 01, 2, 0, 0)))
                   .WithVerb(HttpMethod.Get)
                   .Times(1);
             }
@@ -817,6 +1092,7 @@ namespace Artesian.SDK.Tests
                   .Times(1);
             }
         }
+
 
         [Test]
         public void VerWithMultipleMarketDataWindowLastOfDays()
@@ -2379,6 +2655,102 @@ namespace Artesian.SDK.Tests
                            .WithVerb(HttpMethod.Get)
                            .Times(1);
 
+            }
+        }
+        #endregion
+
+        #region Filler
+        [Test]
+        public void FillerNoneVerInAbsoluteDateRangeMostRecent()
+        {
+            using (var httpTest = new HttpTest())
+            {
+                var qs = new QueryService(_cfg);
+
+                var ver = qs.CreateVersioned()
+                        .ForMarketData(new int[] { 100000001 })
+                        .InGranularity(Granularity.Day)
+                        .ForMostRecent()
+                        .InAbsoluteDateRange(new LocalDate(2018, 6, 22), new LocalDate(2018, 7, 23))
+                        .WithFillNone()
+                        .ExecuteAsync().Result;
+
+                httpTest.ShouldHaveCalled($"{_cfg.BaseAddress}query/v1.0/vts/MostRecent/Day/2018-06-22/2018-07-23"
+                 .SetQueryParam("id", 100000001)
+                 .SetQueryParam("fillerK",FillerKindType.NoFill))
+                 .WithVerb(HttpMethod.Get)
+                 .Times(1);
+            }
+        }
+
+        [Test]
+        public void FillerNullVerInAbsoluteDateRangeMostRecent()
+        {
+            using (var httpTest = new HttpTest())
+            {
+                var qs = new QueryService(_cfg);
+
+                var ver = qs.CreateVersioned()
+                        .ForMarketData(new int[] { 100000001 })
+                        .InGranularity(Granularity.Day)
+                        .ForMostRecent()
+                        .InAbsoluteDateRange(new LocalDate(2018, 6, 22), new LocalDate(2018, 7, 23))
+                        .WithFillNull()
+                        .ExecuteAsync().Result;
+
+                httpTest.ShouldHaveCalled($"{_cfg.BaseAddress}query/v1.0/vts/MostRecent/Day/2018-06-22/2018-07-23"
+                 .SetQueryParam("id", 100000001)
+                 .SetQueryParam("fillerK", FillerKindType.Null))
+                 .WithVerb(HttpMethod.Get)
+                 .Times(1);
+            }
+        }
+
+        [Test]
+        public void FillerLatestValueVerInAbsoluteDateRangeMostRecent()
+        {
+            using (var httpTest = new HttpTest())
+            {
+                var qs = new QueryService(_cfg);
+
+                var ver = qs.CreateVersioned()
+                        .ForMarketData(new int[] { 100000001 })
+                        .InGranularity(Granularity.Day)
+                        .ForMostRecent()
+                        .InAbsoluteDateRange(new LocalDate(2018, 6, 22), new LocalDate(2018, 7, 23))
+                        .WithFillLatestValue(Period.FromDays(7))
+                        .ExecuteAsync().Result;
+
+                httpTest.ShouldHaveCalled($"{_cfg.BaseAddress}query/v1.0/vts/MostRecent/Day/2018-06-22/2018-07-23"
+                 .SetQueryParam("id", 100000001)
+                 .SetQueryParam("fillerK", FillerKindType.LatestValidValue)
+                 .SetQueryParam("fillerP","P7D"))
+                 .WithVerb(HttpMethod.Get)
+                 .Times(1);
+            }
+        }
+
+        [Test]
+        public void FillerCustomValueVerInAbsoluteDateRangeMostRecent()
+        {
+            using (var httpTest = new HttpTest())
+            {
+                var qs = new QueryService(_cfg);
+
+                var ver = qs.CreateVersioned()
+                        .ForMarketData(new int[] { 100000001 })
+                        .InGranularity(Granularity.Day)
+                        .ForMostRecent()
+                        .InAbsoluteDateRange(new LocalDate(2018, 6, 22), new LocalDate(2018, 7, 23))
+                        .WithFillCustomValue(123)
+                        .ExecuteAsync().Result;
+
+                httpTest.ShouldHaveCalled($"{_cfg.BaseAddress}query/v1.0/vts/MostRecent/Day/2018-06-22/2018-07-23"
+                 .SetQueryParam("id", 100000001)
+                 .SetQueryParam("fillerK", FillerKindType.CustomValue)
+                 .SetQueryParam("FillerTimeSeriesDV",123))
+                 .WithVerb(HttpMethod.Get)
+                 .Times(1);
             }
         }
         #endregion

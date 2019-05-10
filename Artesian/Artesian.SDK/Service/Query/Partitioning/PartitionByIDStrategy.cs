@@ -32,7 +32,9 @@ namespace Artesian.SDK.Service
                                 queryParamater.TimeZone,
                                 queryParamater.FilterId,
                                 queryParamater.Granularity,
-                                queryParamater.TransformId
+                                queryParamater.TransformId,
+                                queryParamater.FillerKindType,
+                                queryParamater.FillerConfig
                                 )));
                     
         }
@@ -57,7 +59,10 @@ namespace Artesian.SDK.Service
                                 queryParamater.Granularity,
                                 queryParamater.TransformId,
                                 queryParamater.VersionSelectionConfig,
-                                queryParamater.VersionSelectionType
+                                queryParamater.VersionSelectionType,
+                                queryParamater.VersionLimit,
+                                queryParamater.FillerKindType,
+                                queryParamater.FillerConfig
                                 )));
         }
         /// <summary>
@@ -78,7 +83,9 @@ namespace Artesian.SDK.Service
                                 queryParamater.ExtractionRangeType,
                                 queryParamater.TimeZone,
                                 queryParamater.FilterId,
-                                queryParamater.Products
+                                queryParamater.Products,
+                                queryParamater.FillerKindType,
+                                queryParamater.FillerConfig
                                 )));
         }
 

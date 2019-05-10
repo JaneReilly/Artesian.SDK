@@ -118,10 +118,53 @@ namespace Artesian.SDK.Service
         /// Set list of market products to be queried
         /// </summary>
         /// <param name="products">List of products to be queried</param>
-        /// <returns></returns>
+        /// <returns>MasQuery</returns>
         public MasQuery ForProducts(params string[] products)
         {
             _queryParamaters.Products = products;
+            return this;
+        }
+        /// <summary>
+        /// Set the Filler strategy to Null
+        /// </summary>
+        /// <returns>MasQuery</returns>
+        public MasQuery WithFillNull()
+        {
+            _queryParamaters.FillerKindType = FillerKindType.Null;
+            return this;
+        }
+        /// <summary>
+        /// Set the Filler Strategy to Custom Value
+        /// </summary>
+        /// <param name="marketAssessmentValue"></param>
+        /// <returns>MasQuery</returns>
+        public MasQuery WithFillCustomValue(MarketAssessmentValue marketAssessmentValue)
+        {
+            _queryParamaters.FillerKindType = FillerKindType.CustomValue;
+            _queryParamaters.FillerConfig.FillerMasDV = marketAssessmentValue;
+
+            return this;
+        }
+        /// <summary>
+        /// Set the Filler Strategy to Latest Value
+        /// </summary>
+        /// <param name="period"></param>
+        /// <returns>MasQuery</returns>
+        public MasQuery WithFillLatestValue(Period period)
+        {
+            _queryParamaters.FillerKindType = FillerKindType.LatestValidValue;
+            _queryParamaters.FillerConfig.FillerPeriod = period;
+
+            return this;
+        }
+        /// <summary>
+        /// Set the Filler Strategy to Fill None
+        /// </summary>
+        /// <returns>MasQuery</returns>
+        public MasQuery WithFillNone()
+        {
+            _queryParamaters.FillerKindType = FillerKindType.NoFill;
+
             return this;
         }
         /// <summary>
@@ -145,13 +188,22 @@ namespace Artesian.SDK.Service
         {
             _validateQuery();
 
-
             var urlList = _partition.Partition(new List<MasQueryParamaters> { _queryParamaters })
                 .Select(qp => $"/{_routePrefix}/{_buildExtractionRangeRoute(qp)}"
                         .SetQueryParam("id", qp.Ids)
                         .SetQueryParam("filterId", qp.FilterId)
                         .SetQueryParam("p", qp.Products)
                         .SetQueryParam("tz", qp.TimeZone)
+                        .SetQueryParam("fillerK",qp.FillerKindType)
+                        .SetQueryParam("fillerDVs",qp.FillerConfig.FillerMasDV.Settlement)
+                        .SetQueryParam("fillerDVo", qp.FillerConfig.FillerMasDV.Open)
+                        .SetQueryParam("fillerDVc", qp.FillerConfig.FillerMasDV.Close)
+                        .SetQueryParam("fillerDVh", qp.FillerConfig.FillerMasDV.High)
+                        .SetQueryParam("fillerDVl", qp.FillerConfig.FillerMasDV.Low)
+                        .SetQueryParam("fillerDVvp", qp.FillerConfig.FillerMasDV.VolumePaid)
+                        .SetQueryParam("fillerDVvg", qp.FillerConfig.FillerMasDV.VolumeGiven)
+                        .SetQueryParam("fillerDVvt", qp.FillerConfig.FillerMasDV.Volume)
+                        .SetQueryParam("fillerP" ,qp.FillerConfig.FillerPeriod)
                         .ToString())
                 .ToList();
 
@@ -166,6 +218,15 @@ namespace Artesian.SDK.Service
 
             if (_queryParamaters.Products == null)
                 throw new ApplicationException("Products must be provided for extraction. Use .ForProducts() argument takes a string or string array of products");
+
+            if (_queryParamaters.FillerKindType == FillerKindType.LatestValidValue)
+            {
+                if (_queryParamaters.FillerConfig.FillerPeriod.ToString().Contains('-') == true || _queryParamaters.FillerConfig.FillerPeriod == null)
+                {
+                    throw new ApplicationException("Latest valid value filler must contain a non negative Period");
+                }
+            }
+
         }
         #endregion
         #endregion

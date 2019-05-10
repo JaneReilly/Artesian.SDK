@@ -14,5 +14,8 @@ namespace Artesian.SDK.Service
         T InRelativePeriodRange(Period from, Period to);
         T InRelativePeriod(Period extractionPeriod);
         T InRelativeInterval(RelativeInterval relativeInterval);
+        T WithFillNull();
+        T WithFillLatestValue(Period period);
+        T WithFillNone();
     }
 }

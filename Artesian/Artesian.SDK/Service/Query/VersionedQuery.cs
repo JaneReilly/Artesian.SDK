@@ -159,9 +159,63 @@ namespace Artesian.SDK.Service
         /// Set the version selection type to MUV. 
         /// </summary>
         /// <returns>VersionedQuery</returns>
-        public VersionedQuery ForMUV()
+        public VersionedQuery ForMUV(LocalDateTime? versionLimit = null)
         {
             _queryParamaters.VersionSelectionType = VersionSelectionType.MUV;
+            _queryParamaters.VersionLimit = versionLimit;
+            return this;
+        }
+        /// <summary>
+        /// Set MostRecent version selection
+        /// </summary>
+        /// <returns></returns>
+        public VersionedQuery ForMostRecent()
+        {
+            _queryParamaters.VersionSelectionType = VersionSelectionType.MostRecent;
+           
+            return this;
+        }
+        /// <summary>
+        /// Set Most Recent date range version selection
+        /// </summary>
+        /// <param name="start"></param>
+        /// <param name="end"></param>
+        /// <returns></returns>
+        public VersionedQuery ForMostRecent(LocalDate start, LocalDate end)
+        {
+            if (end <= start)
+                throw new ArgumentException("End date " + end + " must be greater than start date " + start);
+
+            _queryParamaters.VersionSelectionType = VersionSelectionType.MostRecent;
+            _queryParamaters.VersionSelectionConfig.MostRecent.DateStart = start;
+            _queryParamaters.VersionSelectionConfig.MostRecent.DateEnd = end;
+
+            return this;
+        }
+        /// <summary>
+        /// Set Most Recent period range version selection
+        /// </summary>
+        /// <param name="from">Start period of version range</param>
+        /// <param name="to">End period of version range</param>
+        /// <returns>VersionedQuery</returns>
+        public VersionedQuery ForMostRecent(Period from, Period to)
+        {
+            _queryParamaters.VersionSelectionType = VersionSelectionType.MostRecent;
+            _queryParamaters.VersionSelectionConfig.MostRecent.PeriodFrom = from;
+            _queryParamaters.VersionSelectionConfig.MostRecent.PeriodTo = to;
+
+            return this;
+        }
+        /// <summary>
+        /// Set Most Recent period version selection
+        /// </summary>
+        /// <param name="mostRecentPeriod">Period of version range</param>
+        /// <returns>VersionedQuery</returns>
+        public VersionedQuery ForMostRecent(Period mostRecentPeriod)
+        {
+            _queryParamaters.VersionSelectionType = VersionSelectionType.MostRecent;
+            _queryParamaters.VersionSelectionConfig.MostRecent.Period = mostRecentPeriod;
+
             return this;
         }
         /// <summary>
@@ -263,6 +317,49 @@ namespace Artesian.SDK.Service
             return this;
         }
         /// <summary>
+        /// Set the Filler strategy to Null
+        /// </summary>
+        /// <returns>VersionedQuery</returns>
+        public VersionedQuery WithFillNull()
+        {
+            _queryParamaters.FillerKindType = FillerKindType.Null;
+            return this;
+        }
+        /// <summary>
+        /// Set the Filler Strategy to Custom Value
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns>VersionedQuery</returns>
+        public VersionedQuery WithFillCustomValue(double value)
+        {
+            _queryParamaters.FillerKindType = FillerKindType.CustomValue;
+            _queryParamaters.FillerConfig.FillerTimeSeriesDV = value;
+
+            return this;
+        }
+        /// <summary>
+        /// Set the Filler Strategy to Latest Value
+        /// </summary>
+        /// <param name="period"></param>
+        /// <returns>VersionedQuery</returns>
+        public VersionedQuery WithFillLatestValue(Period period)
+        {
+            _queryParamaters.FillerKindType = FillerKindType.LatestValidValue;
+            _queryParamaters.FillerConfig.FillerPeriod = period;
+
+            return this;
+        }
+        /// <summary>
+        /// Set the Filler Strategy to Fill None
+        /// </summary>
+        /// <returns>VersionedQuery</returns>
+        public VersionedQuery WithFillNone()
+        {
+            _queryParamaters.FillerKindType = FillerKindType.NoFill;
+
+            return this;
+        }
+        /// <summary>
         /// Execute VersionedQuery
         /// </summary>
         /// <param name="ctk">CancellationToken</param>
@@ -291,6 +388,23 @@ namespace Artesian.SDK.Service
 
             if (_queryParamaters.VersionSelectionType == null)
                 throw new ApplicationException("Version selection must be provided. Provide a version to query. eg .ForLastOfDays() arguments take a date range , period or period range");
+
+            if(_queryParamaters.FillerKindType == FillerKindType.CustomValue)
+            {
+                if(_queryParamaters.FillerConfig.FillerTimeSeriesDV == null)
+                {
+                    throw new ApplicationException("Filler default value must be provided. Provide a value for default value when using custom value filler");
+                }
+            }
+
+            if (_queryParamaters.FillerKindType == FillerKindType.LatestValidValue)
+            {
+                if (_queryParamaters.FillerConfig.FillerPeriod.ToString().Contains('-') == true || _queryParamaters.FillerConfig.FillerPeriod == null)
+                {
+                    throw new ApplicationException("Latest valid value filler must contain a non negative Period");
+                }
+            }
+
         }
 
         private string _buildVersionRoute(VersionedQueryParamaters queryParamaters)
@@ -301,6 +415,9 @@ namespace Artesian.SDK.Service
             {
                 case VersionSelectionType.LastN:
                     subPath = $"Last{queryParamaters.VersionSelectionConfig.LastN}";
+                    break;
+                case VersionSelectionType.MostRecent:
+                    subPath = _buildMostRecentSubRoute(queryParamaters);
                     break;
                 case VersionSelectionType.MUV:
                     subPath = $"MUV";
@@ -315,6 +432,22 @@ namespace Artesian.SDK.Service
                 default:
                     throw new NotSupportedException("Unsupported version type");
             }
+
+            return subPath;
+        }
+
+        private string _buildMostRecentSubRoute(VersionedQueryParamaters queryParamaters)
+        {
+            string subPath;
+
+            if (queryParamaters.VersionSelectionConfig.MostRecent.DateStart != null && queryParamaters.VersionSelectionConfig.MostRecent.DateEnd != null)
+                subPath = $"MostRecent/{_toUrlParam(queryParamaters.VersionSelectionConfig.MostRecent.DateStart.Value, queryParamaters.VersionSelectionConfig.MostRecent.DateEnd.Value)}";
+            else if (queryParamaters.VersionSelectionConfig.MostRecent.Period != null)
+                subPath = $"MostRecent/{queryParamaters.VersionSelectionConfig.MostRecent.Period}";
+            else if (queryParamaters.VersionSelectionConfig.MostRecent.PeriodFrom != null && queryParamaters.VersionSelectionConfig.MostRecent.PeriodTo != null)
+                subPath = $"MostRecent/{queryParamaters.VersionSelectionConfig.MostRecent.PeriodFrom}/{queryParamaters.VersionSelectionConfig.MostRecent.PeriodTo}";
+            else
+                subPath = $"MostRecent";
 
             return subPath;
         }
@@ -345,6 +478,10 @@ namespace Artesian.SDK.Service
                             .SetQueryParam("filterId", qp.FilterId)
                             .SetQueryParam("tz", qp.TimeZone)
                             .SetQueryParam("tr", qp.TransformId)
+                            .SetQueryParam("versionLimit", qp.VersionLimit)
+                            .SetQueryParam("fillerK",  qp.FillerKindType)
+                            .SetQueryParam("FillerTimeSeriesDV", qp.FillerConfig.FillerTimeSeriesDV)
+                            .SetQueryParam("fillerP", qp.FillerConfig.FillerPeriod)
                             .ToString())
                     .ToList();
             

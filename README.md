@@ -188,6 +188,37 @@ Period Range
 ```csharp
  .InRelativePeriodRange(Period.FromWeeks(2), Period.FromDays(20))
 ```
+### Filler Strategy
+All extraction types (Actual,Versioned and Market Assessment) have an optional filler strategy.  
+
+```csharp
+var versionedSeries = await qs.CreateVersioned()
+    .ForMarketData(new int[] { 100000001 })
+	.InGranularity(Granularity.Day)
+	.ForMostRecent()
+	.InAbsoluteDateRange(new LocalDate(2018, 6, 22), new LocalDate(2018, 7, 23))
+	.WithFillLatestValue(Period.FromDays(7))
+```	
+				   
+Null
+```csharp
+ .WithFillNull()
+```
+None
+```csharp
+ .WithFillNone()
+```
+Custom Value
+```csharp
+ //Timeseries
+ .WithFillCustomValue(123)
+ // Market Assessment
+ ..WithFillCustomValue(new MarketAssessmentValue { Settlement = 123, Open = 456, Close = 789, High = 321, Low = 654, VolumePaid = 987, VolumeGiven = 213, Volume = 435 })
+```
+Latest Value
+```csharp
+ .WithLFillLatestValue(Period.FromDays(7))
+```
 
 ## MarketData Service
 

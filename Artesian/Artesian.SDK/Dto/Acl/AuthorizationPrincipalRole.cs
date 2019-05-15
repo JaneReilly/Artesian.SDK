@@ -18,7 +18,7 @@ namespace Artesian.SDK.Dto
     /// The Principal Entity
     /// </summary>
     [MessagePackObject]
-    public struct Principal : IEquatable<Principal>
+    public class Principal : IEquatable<Principal>
     {
         /// <summary>
         /// The Principal Type
@@ -42,6 +42,10 @@ namespace Artesian.SDK.Dto
             return obj is Principal p && this.Equals(p);
         }
 
+        public Principal()
+        {
+
+        }
         public Principal(string s)
         {
             PrincipalId = s.Substring(2);

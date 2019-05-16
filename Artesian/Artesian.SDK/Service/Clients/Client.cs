@@ -80,8 +80,9 @@ namespace Artesian.SDK.Service
             var jsonFormatter = new JsonMediaTypeFormatter
             {
                 SerializerSettings = cfg
-            };
+        };
             _jsonFormatter = jsonFormatter;
+            _jsonFormatter.SupportedMediaTypes.Add(new MediaTypeHeaderValue("application/problem+json"));
 
             _msgPackFormatter = new MessagePackFormatter(CustomCompositeResolver.Instance);
             _lz4msgPackFormatter = new LZ4MessagePackFormatter(CustomCompositeResolver.Instance);
@@ -147,13 +148,51 @@ namespace Artesian.SDK.Service
                         {
                             var responseText = await res.Content.ReadAsStringAsync();
                             var exceptionMessage = $"Failed handling REST call to WebInterface {method} {_url + resource}. Returned status: {res.StatusCode}. Content: \n";
+                            var responseDeserialized = await res.Content.ReadAsAsync<object>(_formatters, ctk);
 
                             if (res.StatusCode == HttpStatusCode.BadRequest)
                             {
-                                var responseDeserialized = await res.Content.ReadAsAsync<object>(_formatters, ctk);
+                                if (res.Content.Headers.ContentType.MediaType == "application/problem+json")
+                                {
+                                    ArtesianSdkProblemDetail problemDetail = JsonConvert.DeserializeObject<ArtesianSdkProblemDetail>(responseDeserialized.ToString());
+
+                                    if (problemDetail.Detail != null)
+                                    {
+                                        responseText = problemDetail.Detail;
+                                    }
+                                    else if (problemDetail.Extensions["Errors"].Count() > 0)
+                                    {
+                                        responseText = "";
+                                        for (int i = 0; i < problemDetail.Extensions["Errors"].Count(); i++)
+                                        {
+                                            responseText += problemDetail.Extensions["Errors"][i]["Value"][0]["ErrorMessage"];
+                                        }
+                                    }
+                                    else if (problemDetail.Title != null)
+                                    {
+                                        responseText = problemDetail.Title;
+                                    }
+                                    throw new ArtesianSdkValidationException(exceptionMessage + responseText, problemDetail);
+                                }
+
                                 responseText = _tryDecodeText(responseDeserialized);
 
                                 throw new ArtesianSdkValidationException(exceptionMessage + responseText);
+                            }
+
+                            if (res.Content.Headers.ContentType.MediaType == "application/problem+json")
+                            {
+                                ArtesianSdkProblemDetail problemDetail = JsonConvert.DeserializeObject<ArtesianSdkProblemDetail>(responseDeserialized.ToString());
+
+                                if (problemDetail.Detail != null)
+                                {
+                                    responseText = problemDetail.Detail;
+                                }
+                                else if (problemDetail.Title != null)
+                                {
+                                    responseText = problemDetail.Title;
+                                }
+                                throw new ArtesianSdkValidationException(exceptionMessage + responseText, problemDetail);
                             }
 
                             if (res.StatusCode == HttpStatusCode.Conflict || res.StatusCode == HttpStatusCode.PreconditionFailed)
@@ -161,7 +200,7 @@ namespace Artesian.SDK.Service
 
                             if (res.StatusCode == HttpStatusCode.Forbidden)
                                 throw new ArtesianSdkForbiddenException(exceptionMessage + responseText);
-
+                                
                             throw new ArtesianSdkRemoteException(exceptionMessage + responseText);
                         }
 

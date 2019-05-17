@@ -8,7 +8,7 @@ namespace Artesian.SDK.Service
     /// <summary>
     /// Problem Deatail
     /// </summary>
-    public class ArtesianSdkProblemDetail : Exception
+    public class ArtesianSdkProblemDetail
     {
         /// <summary>
         ///    A URI reference [RFC3986] that identifies the problem type. This specification

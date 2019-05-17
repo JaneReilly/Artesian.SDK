@@ -146,62 +146,40 @@ namespace Artesian.SDK.Service
 
                         if (!res.IsSuccessStatusCode)
                         {
-                            var responseText = await res.Content.ReadAsStringAsync();
-                            var exceptionMessage = $"Failed handling REST call to WebInterface {method} {_url + resource}. Returned status: {res.StatusCode}. Content: \n";
-                            var responseDeserialized = await res.Content.ReadAsAsync<object>(_formatters, ctk);
-
-                            if (res.StatusCode == HttpStatusCode.BadRequest)
-                            {
-                                if (res.Content.Headers.ContentType.MediaType == "application/problem+json")
-                                {
-                                    ArtesianSdkProblemDetail problemDetail = JsonConvert.DeserializeObject<ArtesianSdkProblemDetail>(responseDeserialized.ToString());
-
-                                    if (problemDetail.Detail != null)
-                                    {
-                                        responseText = problemDetail.Detail;
-                                    }
-                                    else if (problemDetail.Extensions["Errors"].Count() > 0)
-                                    {
-                                        responseText = "";
-                                        for (int i = 0; i < problemDetail.Extensions["Errors"].Count(); i++)
-                                        {
-                                            responseText += problemDetail.Extensions["Errors"][i]["Value"][0]["ErrorMessage"];
-                                        }
-                                    }
-                                    else if (problemDetail.Title != null)
-                                    {
-                                        responseText = problemDetail.Title;
-                                    }
-                                    throw new ArtesianSdkValidationException(exceptionMessage + responseText, problemDetail);
-                                }
-
-                                responseText = _tryDecodeText(responseDeserialized);
-
-                                throw new ArtesianSdkValidationException(exceptionMessage + responseText);
-                            }
+                            ArtesianSdkProblemDetail problemDetail = null;
+                            string responseText = string.Empty;
 
                             if (res.Content.Headers.ContentType.MediaType == "application/problem+json")
                             {
-                                ArtesianSdkProblemDetail problemDetail = JsonConvert.DeserializeObject<ArtesianSdkProblemDetail>(responseDeserialized.ToString());
-
-                                if (problemDetail.Detail != null)
+                                problemDetail = await res.Content.ReadAsAsync<ArtesianSdkProblemDetail>(_formatters, ctk);
+                            }
+                            else
+                            {
+                                if (res.StatusCode == HttpStatusCode.BadRequest)
                                 {
-                                    responseText = problemDetail.Detail;
+                                    responseText = _tryDecodeText(await res.Content.ReadAsAsync<ArtesianSdkProblemDetail>(_formatters, ctk));
                                 }
-                                else if (problemDetail.Title != null)
+                                else
                                 {
-                                    responseText = problemDetail.Title;
+                                    responseText = await res.Content.ReadAsStringAsync();
                                 }
-                                throw new ArtesianSdkValidationException(exceptionMessage + responseText, problemDetail);
                             }
 
-                            if (res.StatusCode == HttpStatusCode.Conflict || res.StatusCode == HttpStatusCode.PreconditionFailed)
-                                throw new ArtesianSdkOptimisticConcurrencyException(exceptionMessage + responseText);
+                            var detailMessage = problemDetail?.Detail ?? problemDetail?.Title ?? problemDetail?.Type ?? "Content:" + Environment.NewLine + responseText;
+                            var exceptionMessage = $"Failed handling REST call to WebInterface {method} {_url + resource}. Returned status: {res.StatusCode}. {detailMessage}";
 
-                            if (res.StatusCode == HttpStatusCode.Forbidden)
-                                throw new ArtesianSdkForbiddenException(exceptionMessage + responseText);
-                                
-                            throw new ArtesianSdkRemoteException(exceptionMessage + responseText);
+                            switch (res.StatusCode)
+                            {
+                                case HttpStatusCode.BadRequest:
+                                    throw new ArtesianSdkValidationException(exceptionMessage, problemDetail);
+                                case HttpStatusCode.Conflict:
+                                case HttpStatusCode.PreconditionFailed:
+                                    throw new ArtesianSdkOptimisticConcurrencyException(exceptionMessage, problemDetail);
+                                case HttpStatusCode.Forbidden:
+                                    throw new ArtesianSdkForbiddenException(exceptionMessage, problemDetail);
+                                default:
+                                    throw new ArtesianSdkRemoteException(exceptionMessage, problemDetail);
+                            }
                         }
 
                         return await res.Content.ReadAsAsync<TResult>(_formatters, ctk);

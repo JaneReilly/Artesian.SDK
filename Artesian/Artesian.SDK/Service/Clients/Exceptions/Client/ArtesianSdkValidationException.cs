@@ -25,6 +25,10 @@ namespace Artesian.SDK.Service
             : base(string.Format(format, args))
         {
         }
+        public ArtesianSdkValidationException(string message, ArtesianSdkProblemDetail problemDetail)
+           : base(message,problemDetail)
+        {
+        }
 #pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
     }
 }

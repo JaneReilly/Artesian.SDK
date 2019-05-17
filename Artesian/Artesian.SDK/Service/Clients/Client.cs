@@ -157,7 +157,7 @@ namespace Artesian.SDK.Service
                             {
                                 if (res.StatusCode == HttpStatusCode.BadRequest)
                                 {
-                                    responseText = _tryDecodeText(await res.Content.ReadAsAsync<ArtesianSdkProblemDetail>(_formatters, ctk));
+                                    responseText = _tryDecodeText(await res.Content.ReadAsAsync<object>(_formatters, ctk));
                                 }
                                 else
                                 {

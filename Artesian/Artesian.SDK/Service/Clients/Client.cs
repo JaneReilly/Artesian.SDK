@@ -80,8 +80,9 @@ namespace Artesian.SDK.Service
             var jsonFormatter = new JsonMediaTypeFormatter
             {
                 SerializerSettings = cfg
-            };
+        };
             _jsonFormatter = jsonFormatter;
+            _jsonFormatter.SupportedMediaTypes.Add(new MediaTypeHeaderValue("application/problem+json"));
 
             _msgPackFormatter = new MessagePackFormatter(CustomCompositeResolver.Instance);
             _lz4msgPackFormatter = new LZ4MessagePackFormatter(CustomCompositeResolver.Instance);
@@ -145,24 +146,40 @@ namespace Artesian.SDK.Service
 
                         if (!res.IsSuccessStatusCode)
                         {
-                            var responseText = await res.Content.ReadAsStringAsync();
-                            var exceptionMessage = $"Failed handling REST call to WebInterface {method} {_url + resource}. Returned status: {res.StatusCode}. Content: \n";
+                            ArtesianSdkProblemDetail problemDetail = null;
+                            string responseText = string.Empty;
 
-                            if (res.StatusCode == HttpStatusCode.BadRequest)
+                            if (res.Content.Headers.ContentType.MediaType == "application/problem+json")
                             {
-                                var responseDeserialized = await res.Content.ReadAsAsync<object>(_formatters, ctk);
-                                responseText = _tryDecodeText(responseDeserialized);
-
-                                throw new ArtesianSdkValidationException(exceptionMessage + responseText);
+                                problemDetail = await res.Content.ReadAsAsync<ArtesianSdkProblemDetail>(_formatters, ctk);
+                            }
+                            else
+                            {
+                                if (res.StatusCode == HttpStatusCode.BadRequest)
+                                {
+                                    responseText = _tryDecodeText(await res.Content.ReadAsAsync<object>(_formatters, ctk));
+                                }
+                                else
+                                {
+                                    responseText = await res.Content.ReadAsStringAsync();
+                                }
                             }
 
-                            if (res.StatusCode == HttpStatusCode.Conflict || res.StatusCode == HttpStatusCode.PreconditionFailed)
-                                throw new ArtesianSdkOptimisticConcurrencyException(exceptionMessage + responseText);
+                            var detailMessage = problemDetail?.Detail ?? problemDetail?.Title ?? problemDetail?.Type ?? "Content:" + Environment.NewLine + responseText;
+                            var exceptionMessage = $"Failed handling REST call to WebInterface {method} {_url + resource}. Returned status: {res.StatusCode}. {detailMessage}";
 
-                            if (res.StatusCode == HttpStatusCode.Forbidden)
-                                throw new ArtesianSdkForbiddenException(exceptionMessage + responseText);
-
-                            throw new ArtesianSdkRemoteException(exceptionMessage + responseText);
+                            switch (res.StatusCode)
+                            {
+                                case HttpStatusCode.BadRequest:
+                                    throw new ArtesianSdkValidationException(exceptionMessage, problemDetail);
+                                case HttpStatusCode.Conflict:
+                                case HttpStatusCode.PreconditionFailed:
+                                    throw new ArtesianSdkOptimisticConcurrencyException(exceptionMessage, problemDetail);
+                                case HttpStatusCode.Forbidden:
+                                    throw new ArtesianSdkForbiddenException(exceptionMessage, problemDetail);
+                                default:
+                                    throw new ArtesianSdkRemoteException(exceptionMessage, problemDetail);
+                            }
                         }
 
                         return await res.Content.ReadAsAsync<TResult>(_formatters, ctk);

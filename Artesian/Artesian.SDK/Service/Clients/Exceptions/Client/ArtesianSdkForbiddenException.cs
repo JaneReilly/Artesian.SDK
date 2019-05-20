@@ -11,6 +11,7 @@ namespace Artesian.SDK.Service
     public class ArtesianSdkForbiddenException : Exception
     {
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
+        public ArtesianSdkProblemDetail ProblemDetail { get; }
         public ArtesianSdkForbiddenException(string message)
             : base(message)
         {
@@ -24,6 +25,12 @@ namespace Artesian.SDK.Service
         public ArtesianSdkForbiddenException(string format, params object[] args)
             : base(string.Format(format, args))
         {
+        }
+
+        public ArtesianSdkForbiddenException(string message, ArtesianSdkProblemDetail problemDetail)
+         : base(message)
+        {
+            this.ProblemDetail = problemDetail;
         }
 #pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
     }

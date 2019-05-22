@@ -134,7 +134,7 @@ namespace Artesian.SDK.Service
             throw new NotImplementedException();
         }
 
-        public Task<PagedResult<AuthorizationPath.Output>> GetRoles(int page, int pageSize, string[] principalIds, LocalDateTime? asOf = null, CancellationToken ctk = default)
+        public Task<PagedResult<AclPath>> GetRoles(int page, int pageSize, string[] principalIds, LocalDateTime? asOf = null, CancellationToken ctk = default)
         {
             throw new NotImplementedException();
         }

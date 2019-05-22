@@ -4,7 +4,6 @@
 
 using Artesian.SDK.Dto;
 using NodaTime;
-using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
@@ -184,8 +183,8 @@ namespace Artesian.SDK.Service
         /// <param name="principalIds">The principal ids I want to inspect, encoded.( ex. u:user@example.com for users and clients,g:1001 for groups)</param>
         /// <param name="asOf">LocalDateTime we want to inspect</param>
         /// <param name="ctk">CancellationToken</param>
-        /// <returns>AuthorizationPath Output entity</returns>
-        Task<PagedResult<AuthorizationPath.Output>> GetRoles(int page, int pageSize, string[] principalIds, LocalDateTime? asOf = null, CancellationToken ctk = default);
+        /// <returns>AclPath entity</returns>
+        Task<PagedResult<AclPath>> GetRoles(int page, int pageSize, string[] principalIds, LocalDateTime? asOf = null, CancellationToken ctk = default);
         /// <summary>
         /// Upsert the ACL Path Roles
         /// </summary>

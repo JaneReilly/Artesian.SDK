@@ -38,8 +38,8 @@ namespace Artesian.SDK.Service
         /// <param name="principalIds">The principal ids I want to inspect, encoded.( ex. u:user@example.com for users and clients,g:1001 for groups)</param>
         /// <param name="asOf">LocalDateTime we want to inspect</param>
         /// <param name="ctk">CancellationToken</param>
-        /// <returns>AuthorizationPath Output entity</returns>
-        public Task<PagedResult<AuthorizationPath.Output>> GetRoles(int page, int pageSize, string[] principalIds, LocalDateTime? asOf = null, CancellationToken ctk = default)
+        /// <returns>AclPath entity</returns>
+        public Task<PagedResult<AclPath>> GetRoles(int page, int pageSize, string[] principalIds, LocalDateTime? asOf = null, CancellationToken ctk = default)
         {
             if (page < 1 || pageSize < 1)
                 throw new ArgumentException("Page and Page number need to be greater than 0. Page:" + page + " Page Size:" + pageSize);
@@ -51,7 +51,7 @@ namespace Artesian.SDK.Service
                     .SetQueryParam("asOf", asOf)
                     ;
 
-            return _client.Exec<PagedResult<AuthorizationPath.Output>>(HttpMethod.Get, url);
+            return _client.Exec<PagedResult<AclPath>>(HttpMethod.Get, url);
         }
 
         /// <summary>

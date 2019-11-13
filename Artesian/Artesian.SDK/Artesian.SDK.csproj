@@ -14,7 +14,6 @@
     <RepositoryUrl>https://github.com/ARKlab/Artesian.SDK</RepositoryUrl>
     <Description>Artesian SDK library</Description>
     <PackageTags>Ark;c#;Visual Studio;Framework;Arkive;Artesian;</PackageTags>
-    <PackageLicenseUrl>https://github.com/ARKlab/Artesian.SDK/blob/master/LICENSE</PackageLicenseUrl>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     
     <Version>1.7.0</Version>
@@ -25,6 +24,7 @@
 
     <IncludeSymbols>True</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+    <Platforms>AnyCPU;x64;x86</Platforms>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -37,7 +37,7 @@
     <AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0-beta2-19554-01" PrivateAssets="All"/>
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0-beta2-19554-01" PrivateAssets="All" />
   </ItemGroup>
 
   <ItemGroup>
@@ -54,21 +54,10 @@
   </Target>
 
 
-  <Target Name="_ResolvePublishNuGetPackagePdbsAndXml"
-			AfterTargets="RunResolvePublishAssemblies">
+  <Target Name="_ResolvePublishNuGetPackagePdbsAndXml" AfterTargets="RunResolvePublishAssemblies">
     <ItemGroup>
-      <ResolvedFileToPublish
-			Include="@(ResolvedAssembliesToPublish->'%(RootDir)%(Directory)%(Filename).pdb')"
-			RelativePath="$([System.IO.Path]::ChangeExtension(%(ResolvedAssembliesToPublish.DestinationSubPath), '.pdb'))"
-			DestinationSubPath="$([System.IO.Path]::ChangeExtension(%(ResolvedAssembliesToPublish.DestinationSubPath), '.pdb'))"
-			Condition="'%(ResolvedAssembliesToPublish.PackageName)' != ''
-						and Exists('%(RootDir)%(Directory)%(Filename).pdb')" />
-      <ResolvedFileToPublish
-			Include="@(ResolvedAssembliesToPublish->'%(RootDir)%(Directory)%(Filename).xml')"
-			RelativePath="$([System.IO.Path]::ChangeExtension(%(ResolvedAssembliesToPublish.DestinationSubPath), '.xml'))"
-			DestinationSubPath="$([System.IO.Path]::ChangeExtension(%(ResolvedAssembliesToPublish.DestinationSubPath), '.xml'))"
-			Condition="'%(ResolvedAssembliesToPublish.PackageName)' != ''
-						and Exists('%(RootDir)%(Directory)%(Filename).xml')" />
+      <ResolvedFileToPublish Include="@(ResolvedAssembliesToPublish->'%(RootDir)%(Directory)%(Filename).pdb')" RelativePath="$([System.IO.Path]::ChangeExtension(%(ResolvedAssembliesToPublish.DestinationSubPath), '.pdb'))" DestinationSubPath="$([System.IO.Path]::ChangeExtension(%(ResolvedAssembliesToPublish.DestinationSubPath), '.pdb'))" Condition="'%(ResolvedAssembliesToPublish.PackageName)' != ''&#xD;&#xA;      and Exists('%(RootDir)%(Directory)%(Filename).pdb')" />
+      <ResolvedFileToPublish Include="@(ResolvedAssembliesToPublish->'%(RootDir)%(Directory)%(Filename).xml')" RelativePath="$([System.IO.Path]::ChangeExtension(%(ResolvedAssembliesToPublish.DestinationSubPath), '.xml'))" DestinationSubPath="$([System.IO.Path]::ChangeExtension(%(ResolvedAssembliesToPublish.DestinationSubPath), '.xml'))" Condition="'%(ResolvedAssembliesToPublish.PackageName)' != ''&#xD;&#xA;      and Exists('%(RootDir)%(Directory)%(Filename).xml')" />
     </ItemGroup>
   </Target>
 
@@ -81,6 +70,5 @@
       <BuildOutputInPackage Include="@(ReferenceCopyLocalPaths-&gt;WithMetadataValue('ReferenceSourceTarget', 'ProjectReference')-&gt;WithMetadataValue('PrivateAssets', 'All'))" />
     </ItemGroup>
   </Target>
-
 
 </Project>

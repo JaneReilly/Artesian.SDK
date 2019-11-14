@@ -16,7 +16,7 @@
     <PackageTags>Ark;c#;Visual Studio;Framework;Arkive;Artesian;</PackageTags>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     
-    <Version>1.7.0</Version>
+    <Version>1.7.2</Version>
     <VersionSuffix></VersionSuffix>
     <Version Condition=" '$(VersionSuffix)' != '' ">$(Version)-$(VersionSuffix)</Version>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>

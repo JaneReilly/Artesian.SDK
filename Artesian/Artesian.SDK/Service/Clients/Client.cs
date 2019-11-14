@@ -1,22 +1,20 @@
 ﻿// Copyright (c) ARK LTD. All rights reserved.
 // Licensed under the MIT License. See LICENSE in the project root for
 // license information. 
-#if !NET452 
+#if !NET452
+using Ark.Tools.Auth0;
 using Auth0.AuthenticationApi;
 using Auth0.AuthenticationApi.Models;
 using JWT.Builder;
 #endif
 using Flurl;
 using Flurl.Http;
-
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Serialization;
 using NodaTime;
 using NodaTime.Serialization.JsonNet;
 using Polly;
-using Polly.Caching;
-using Polly.Wrap;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -33,11 +31,8 @@ namespace Artesian.SDK.Service
     internal sealed class Client : IDisposable
     {
 #if !NET452
-        private readonly AuthenticationApiClient _auth0;
+        private readonly IAuthenticationApiClient _auth0;
         private readonly ClientCredentialsTokenRequest _credentials;
-        private readonly Polly.Caching.Memory.MemoryCacheProvider _memoryCacheProvider
-           = new Polly.Caching.Memory.MemoryCacheProvider(new Microsoft.Extensions.Caching.Memory.MemoryCache(new Microsoft.Extensions.Caching.Memory.MemoryCacheOptions()));
-        private readonly AsyncPolicy<(string AccessToken, DateTimeOffset ExpiresOn)> _cachePolicy;
 #endif
         private readonly MediaTypeFormatterCollection _formatters;
         private readonly IFlurlClient _client;
@@ -46,14 +41,9 @@ namespace Artesian.SDK.Service
         private readonly MessagePackFormatter _msgPackFormatter;
         private readonly LZ4MessagePackFormatter _lz4msgPackFormatter;
 
-        private readonly object _gate = new { };
 
         private readonly string _url;
-
         private readonly AsyncPolicy _resilienceStrategy;
-
-        
-
         private readonly string _apiKey;
 
         /// <summary>
@@ -99,15 +89,14 @@ namespace Artesian.SDK.Service
 
             if (config.ApiKey == null)
             {
-                _auth0 = new AuthenticationApiClient($"{config.Domain}");
+				_auth0 = new AuthenticationApiClientCachingDecorator(new AuthenticationApiClient($"{config.Domain}"));
+
                 _credentials = new ClientCredentialsTokenRequest()
                 {
                     Audience = config.Audience,
                     ClientId = config.ClientId,
                     ClientSecret = config.ClientSecret,
                 };
-
-                _cachePolicy = Policy.CacheAsync(_memoryCacheProvider.AsyncFor<(string AccessToken, DateTimeOffset ExpiresOn)>(), new ResultTtl<(string AccessToken, DateTimeOffset ExpiresOn)>(r => new Ttl(r.ExpiresOn - DateTimeOffset.Now, false)));
             }
 #endif
 
@@ -243,20 +232,14 @@ namespace Artesian.SDK.Service
 #if !NET452
         private async Task<(string AccessToken, DateTimeOffset ExpiresOn)> _getAccessToken()
         {
-            var res = await _cachePolicy.ExecuteAsync(async (ctx) =>
-            {
-                var result = await _auth0.GetTokenAsync(_credentials);
-                var decode = new JwtBuilder()
-                    .DoNotVerifySignature()
-                    .Decode<IDictionary<string, object>>(result.AccessToken);
+			var result = await _auth0.GetTokenAsync(_credentials);
+			var decode = new JwtBuilder()
+				.DoNotVerifySignature()
+				.Decode<IDictionary<string, object>>(result.AccessToken);
 
-                var exp = (long)decode["exp"];
+			var exp = (long)decode["exp"];
 
-                return (result.AccessToken, DateTimeOffset.FromUnixTimeSeconds(exp) - TimeSpan.FromMinutes(2));
-
-            }, new Context("_getAccessToken"));
-
-            return res;
+			return (result.AccessToken, DateTimeOffset.FromUnixTimeSeconds(exp) - TimeSpan.FromMinutes(2));
         }
 #endif
 

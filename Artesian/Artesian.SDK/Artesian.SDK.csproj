@@ -10,17 +10,36 @@
     <Copyright>Copyright (C) 2018 ARK LTD</Copyright>
     <Company>ARK Labs</Company>
     <Authors>ARK Labs</Authors>
-    <PackageIconUrl>http://www.ark-energy.eu/wp-content/uploads/ark-dark.png</PackageIconUrl>
+    <PackageIcon>ark-dark.png</PackageIcon>
     <RepositoryUrl>https://github.com/ARKlab/Artesian.SDK</RepositoryUrl>
     <Description>Artesian SDK library</Description>
     <PackageTags>Ark;c#;Visual Studio;Framework;Arkive;Artesian;</PackageTags>
-    <PackageLicenseUrl>https://github.com/ARKlab/Artesian.SDK/blob/master/LICENSE</PackageLicenseUrl>
-    <Version>1.7.2</Version>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    
+    <Version>1.8.0</Version>
     <VersionSuffix></VersionSuffix>
     <Version Condition=" '$(VersionSuffix)' != '' ">$(Version)-$(VersionSuffix)</Version>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
-    <LangVersion>latest</LangVersion>    
+    <LangVersion>latest</LangVersion>
+
+    <IncludeSymbols>True</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+    <Platforms>AnyCPU;x64;x86</Platforms>
   </PropertyGroup>
+
+  <PropertyGroup>
+    <!-- Optional: Publish the repository URL in the built .nupkg (in the NuSpec <Repository> element) -->
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+
+    <!-- Optional: Embed source files that are not tracked by the source control manager in the PDB -->
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
+
+    <AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
+  </PropertyGroup>
+  <ItemGroup>
+    <None Include="ark-dark.png" Pack="true" PackagePath="\"/>
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0-beta2-19554-01" PrivateAssets="All" />
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Ark.Tools.Http" Version="1.1.30" />
@@ -33,6 +52,24 @@
   <Target Name="PushNugetPackage" AfterTargets="Pack" Condition="('$(Configuration)' == 'Release' And $(VersionSuffix) == '') Or ('$(Configuration)' == 'Debug' And $(VersionSuffix) != '')">
     <Exec Command="dotnet nuget push -s https://api.nuget.org/v3/index.json $(MSBuildProjectDirectory)\$(OutputPath)$(PackageId).$(PackageVersion).nupkg" />
     <!--<Exec Command="dotnet nuget push -s https://nuget.smbsrc.net/ $(MSBuildProjectDirectory)\$(OutputPath)$(PackageId).$(PackageVersion).symbols.nupkg" />-->
+  </Target>
+
+
+  <Target Name="_ResolvePublishNuGetPackagePdbsAndXml" AfterTargets="RunResolvePublishAssemblies">
+    <ItemGroup>
+      <ResolvedFileToPublish Include="@(ResolvedAssembliesToPublish->'%(RootDir)%(Directory)%(Filename).pdb')" RelativePath="$([System.IO.Path]::ChangeExtension(%(ResolvedAssembliesToPublish.DestinationSubPath), '.pdb'))" DestinationSubPath="$([System.IO.Path]::ChangeExtension(%(ResolvedAssembliesToPublish.DestinationSubPath), '.pdb'))" Condition="'%(ResolvedAssembliesToPublish.PackageName)' != ''&#xD;&#xA;      and Exists('%(RootDir)%(Directory)%(Filename).pdb')" />
+      <ResolvedFileToPublish Include="@(ResolvedAssembliesToPublish->'%(RootDir)%(Directory)%(Filename).xml')" RelativePath="$([System.IO.Path]::ChangeExtension(%(ResolvedAssembliesToPublish.DestinationSubPath), '.xml'))" DestinationSubPath="$([System.IO.Path]::ChangeExtension(%(ResolvedAssembliesToPublish.DestinationSubPath), '.xml'))" Condition="'%(ResolvedAssembliesToPublish.PackageName)' != ''&#xD;&#xA;      and Exists('%(RootDir)%(Directory)%(Filename).xml')" />
+    </ItemGroup>
+  </Target>
+
+  <PropertyGroup>
+    <TargetsForTfmSpecificBuildOutput>$(TargetsForTfmSpecificBuildOutput);CopyProjectReferencesToPackage</TargetsForTfmSpecificBuildOutput>
+  </PropertyGroup>
+  
+  <Target Name="CopyProjectReferencesToPackage" DependsOnTargets="ResolveReferences">
+    <ItemGroup>
+      <BuildOutputInPackage Include="@(ReferenceCopyLocalPaths-&gt;WithMetadataValue('ReferenceSourceTarget', 'ProjectReference')-&gt;WithMetadataValue('PrivateAssets', 'All'))" />
+    </ItemGroup>
   </Target>
 
 </Project>

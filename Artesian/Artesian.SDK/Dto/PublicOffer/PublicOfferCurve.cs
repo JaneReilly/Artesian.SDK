@@ -6,6 +6,9 @@ using System.Text;
 
 namespace Artesian.SDK.Dto.PublicOffer
 {
+    /// <summary>
+    /// PublicOfferCurve class
+    /// </summary>
     [MessagePackObject]
     public class PublicOfferCurve
     {

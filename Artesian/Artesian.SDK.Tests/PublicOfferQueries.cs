@@ -60,7 +60,7 @@ namespace Artesian.SDK.Tests
                        .WithPagination(2,20)
                        .WithSort(new string[] { "id asc" })
                        .ExecuteAsync().Result;
-                // https://fake-artesian-env/gmepublicoffer/v1.0/extract/2019-01-01/OFF/INC?generationType=AUTOGENERATION&generationType=GAS
+
                 httpTest.ShouldHaveCalled($"{_cfg.BaseAddress}gmepublicoffer/v1.0/extract/2019-01-01/OFF/INC")
                     .WithQueryParamValue("generationType", "GAS")
                     .WithQueryParamValue("baType", "REV")
@@ -73,6 +73,90 @@ namespace Artesian.SDK.Tests
                     .WithQueryParamValue("page", "2")
                     .WithQueryParamValue("pageSize", "20")
                     .WithQueryParamValue("sort", "id asc")
+                    .WithVerb(HttpMethod.Get)
+                    .Times(1);
+            }
+        }
+
+        #endregion
+
+
+        #region Metadata 
+        [Test]
+        public void ReadOperatorsEnumVar1()
+        {
+            using (var httpTest = new HttpTest())
+            {
+
+                var qs = new PublicOfferService(_cfg);
+
+                var act = qs.ReadOperatorsAsync(2,20)
+                       .ConfigureAwait(true).GetAwaiter().GetResult();
+
+                httpTest.ShouldHaveCalled($"{_cfg.BaseAddress}gmepublicoffer/v1.0/enums/operators")
+                    .WithQueryParamValue("page", 2)
+                    .WithQueryParamValue("pageSize", 20)
+                    .WithVerb(HttpMethod.Get)
+                    .Times(1);
+            }
+        }
+
+        [Test]
+        public void ReadOperatorsEnumVar2()
+        {
+            using (var httpTest = new HttpTest())
+            {
+
+                var qs = new PublicOfferService(_cfg);
+
+                var act = qs.ReadOperatorsAsync(2, 20, operatorFilter: "myFilter", sort: new string[] { "operator asc" })
+                       .ConfigureAwait(true).GetAwaiter().GetResult();
+
+                httpTest.ShouldHaveCalled($"{_cfg.BaseAddress}gmepublicoffer/v1.0/enums/operators")
+                    .WithQueryParamValue("page", 2)
+                    .WithQueryParamValue("pageSize", 20)
+                    .WithQueryParamValue("operatorFilter", "myFilter")
+                    .WithQueryParamValue("sort", "operator asc")
+                    .WithVerb(HttpMethod.Get)
+                    .Times(1);
+            }
+        }
+
+        [Test]
+        public void ReadUnitsEnumVar1()
+        {
+            using (var httpTest = new HttpTest())
+            {
+
+                var qs = new PublicOfferService(_cfg);
+
+                var act = qs.ReadUnitsAsync(2, 4)
+                       .ConfigureAwait(true).GetAwaiter().GetResult();
+
+                httpTest.ShouldHaveCalled($"{_cfg.BaseAddress}gmepublicoffer/v1.0/enums/units")
+                    .WithQueryParamValue("page", 2)
+                    .WithQueryParamValue("pageSize", 4)
+                    .WithVerb(HttpMethod.Get)
+                    .Times(1);
+            }
+        }
+
+        [Test]
+        public void ReadUnitsEnumVar2()
+        {
+            using (var httpTest = new HttpTest())
+            {
+
+                var qs = new PublicOfferService(_cfg);
+
+                var act = qs.ReadUnitsAsync(2, 20, unitFilter: "myFilter", sort: new string[] { "unit asc" })
+                       .ConfigureAwait(true).GetAwaiter().GetResult();
+
+                httpTest.ShouldHaveCalled($"{_cfg.BaseAddress}gmepublicoffer/v1.0/enums/units")
+                    .WithQueryParamValue("page", 2)
+                    .WithQueryParamValue("pageSize", 20)
+                    .WithQueryParamValue("unitFilter", "myFilter")
+                    .WithQueryParamValue("sort", "unit asc")
                     .WithVerb(HttpMethod.Get)
                     .Times(1);
             }

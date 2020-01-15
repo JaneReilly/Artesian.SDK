@@ -6,7 +6,7 @@ namespace Artesian.SDK.Service.PublicOffer
     /// PublicOfferService class
     /// Contains query types to be created
     /// </summary>
-    public class PublicOfferService : IPublicOfferService
+    public partial class PublicOfferService : IPublicOfferService
     {
         private IArtesianServiceConfig _cfg;
         private ArtesianPolicyConfig _policy;
@@ -33,15 +33,5 @@ namespace Artesian.SDK.Service.PublicOffer
             _client = new Client(cfg, ArtesianConstants.PublicOfferRoute.AppendPathSegment(ArtesianConstants.PublicOfferVersion), _policy);
         }
 
-        /// <summary>
-        /// Create Public Offer Query
-        /// </summary>
-        /// <returns>
-        /// Public Offer Query <see cref="PublicOfferQuery"/>
-        /// </returns>
-        public PublicOfferQuery CreateRawCurveQuery()
-        {
-            return new PublicOfferQuery(_client);
-        }
     }
 }

@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Artesian.SDK.Dto.PublicOffer
+﻿namespace Artesian.SDK.Dto.PublicOffer
 {
     /// <summary>
     /// Purpose

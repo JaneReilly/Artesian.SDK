@@ -37,5 +37,42 @@ namespace Artesian.SDK.Service.PublicOffer
         /// <param name="ctk">CancellationToken</param>
         /// <returns>Paged result of UnitDto</returns>
         Task<PagedResult<UnitDto>> ReadUnitsAsync(int page, int pageSize, string unitFilter = null, string[] sort = null, CancellationToken ctk = default);
+
+
+
+        /// <summary>
+        /// Get unit configuration mapping by id
+        /// </summary>
+        /// <param name="unit">Unit to retrieve by</param>
+        /// <param name="ctk">CancellationToken</param>
+        /// <returns>UnitConfiguration result</returns>
+        Task<UnitConfiguration> ReadUnitConfigurationMappingAsync(string unit, CancellationToken ctk = default);
+
+        /// <summary>
+        /// Get paged unit configuration mappings
+        /// </summary>
+        /// <param name="page">Page number</param>
+        /// <param name="pageSize">Page size</param>
+        /// <param name="unitFilter">Unit substring filter</param>
+        /// <param name="sort">Sort by</param>
+        /// <param name="ctk">CancellationToken</param>
+        /// <returns>UnitConfiguration result</returns>
+        Task<PagedResult<UnitConfiguration>> ReadUnitConfigurationMappingsAsync(int page, int pageSize, string unitFilter = null, string[] sort = null, CancellationToken ctk = default);
+
+        /// <summary>
+        /// Upsert unit configuration mapping by id
+        /// </summary>
+        /// <param name="unit">Unit to upsert</param>
+        /// <param name="ctk">CancellationToken</param>
+        /// <returns>UnitConfiguration result</returns>
+        Task<UnitConfiguration> UpsertUnitConfigurationMappingAsync(UnitConfiguration unit, CancellationToken ctk = default);
+
+        /// <summary>
+        /// Delete unit configuration mapping by id
+        /// </summary>
+        /// <param name="unit">Unit to be deleted</param>
+        /// <param name="ctk">CancellationToken</param>
+        /// <returns></returns>
+        Task DeleteUnitConfigurationMappingAsync(string unit, CancellationToken ctk = default);
     }
 }

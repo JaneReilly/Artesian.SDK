@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Net.Http;
 using Artesian.SDK.Dto;
 using Artesian.SDK.Dto.PublicOffer;
@@ -158,6 +159,106 @@ namespace Artesian.SDK.Tests
                     .WithQueryParamValue("unitFilter", "myFilter")
                     .WithQueryParamValue("sort", "unit asc")
                     .WithVerb(HttpMethod.Get)
+                    .Times(1);
+            }
+        }
+
+
+        [Test]
+        public void ReadUnitConfigurationMappingVar1()
+        {
+            using (var httpTest = new HttpTest())
+            {
+
+                var qs = new PublicOfferService(_cfg);
+
+                var req = qs.ReadUnitConfigurationMappingAsync("myUnit")
+                       .ConfigureAwait(true).GetAwaiter().GetResult();
+
+                httpTest.ShouldHaveCalled($"{_cfg.BaseAddress}gmepublicoffer/v1.0/unitconfigurationmappings/myUnit")
+                    .WithVerb(HttpMethod.Get)
+                    .Times(1);
+            }
+        }
+
+        [Test]
+        public void ReadUnitConfigurationMappingsVar1()
+        {
+            using (var httpTest = new HttpTest())
+            {
+                var qs = new PublicOfferService(_cfg);
+
+                var req = qs.ReadUnitConfigurationMappingsAsync(1, 20)
+                       .ConfigureAwait(true).GetAwaiter().GetResult();
+
+                httpTest.ShouldHaveCalled($"{_cfg.BaseAddress}gmepublicoffer/v1.0/unitconfigurationmappings")
+                    .WithQueryParamValue("page", 1)
+                    .WithQueryParamValue("pageSize", 20)
+                    .WithVerb(HttpMethod.Get)
+                    .Times(1);
+            }
+        }
+
+        [Test]
+        public void ReadUnitConfigurationMappingsVar2()
+        {
+            using (var httpTest = new HttpTest())
+            {
+                var qs = new PublicOfferService(_cfg);
+
+                var req = qs.ReadUnitConfigurationMappingsAsync(1, 20, unitFilter: "unitFilterTest", sort: new string[] { "unit desc" })
+                       .ConfigureAwait(true).GetAwaiter().GetResult();
+
+                httpTest.ShouldHaveCalled($"{_cfg.BaseAddress}gmepublicoffer/v1.0/unitconfigurationmappings")
+                    .WithQueryParamValue("page", 1)
+                    .WithQueryParamValue("pageSize", 20)
+                    .WithQueryParamValue("unitFilter", "unitFilterTest")
+                    .WithQueryParamValue("sort", "unit desc")
+                    .WithVerb(HttpMethod.Get)
+                    .Times(1);
+            }
+        }
+
+        [Test]
+        public void UpsertUnitConfigurationMapping()
+        {
+            using (var httpTest = new HttpTest())
+            {
+                var qs = new PublicOfferService(_cfg);
+
+                var unitCfg = new UnitConfiguration() {
+                
+                    Unit = "unitName",
+                    Mappings = new List<GenerationTypeMapping>() {
+                        new GenerationTypeMapping(){
+                            From = new LocalDate(2019,1,1),
+                            To = new LocalDate(2020,1,1),
+                            GenerationType = GenerationType.COAL
+                        }
+                    }
+                };
+
+                var req = qs.UpsertUnitConfigurationMappingAsync(unitCfg)
+                       .ConfigureAwait(true).GetAwaiter().GetResult();
+
+                httpTest.ShouldHaveCalled($"{_cfg.BaseAddress}gmepublicoffer/v1.0/unitconfigurationmappings/{unitCfg.Unit}")
+                    .WithVerb(HttpMethod.Put)
+                    .Times(1);
+            }
+        }
+
+        [Test]
+        public void DeleteUnitConfigurationMapping()
+        {
+            using (var httpTest = new HttpTest())
+            {
+                var qs = new PublicOfferService(_cfg);
+
+                qs.DeleteUnitConfigurationMappingAsync("unitToDelete")
+                       .ConfigureAwait(true).GetAwaiter().GetResult();
+
+                httpTest.ShouldHaveCalled($"{_cfg.BaseAddress}gmepublicoffer/v1.0/unitconfigurationmappings/unitToDelete")
+                    .WithVerb(HttpMethod.Delete)
                     .Times(1);
             }
         }

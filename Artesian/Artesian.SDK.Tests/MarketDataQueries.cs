@@ -159,7 +159,7 @@ namespace Artesian.SDK.Tests
                     Filters = filterDict,
                     Sorts = new List<string>() { "OriginalTimezone" }
                 };
-                var mdq = mds.SearchFacetAsync(filter: filter, doNotLoadAdditionalInfo: false).ConfigureAwait(true).GetAwaiter().GetResult();
+                var mdq = mds.SearchFacetAsync(filter).ConfigureAwait(true).GetAwaiter().GetResult();
 
                 httpTest.ShouldHaveCalled($"{_cfg.BaseAddress}v2.1/marketdata/searchfacet"
                     .SetQueryParam("pageSize", 1)
@@ -172,6 +172,7 @@ namespace Artesian.SDK.Tests
                     .Times(1);
             }
         }
+
         #endregion
 
         #region Operations

@@ -12,6 +12,16 @@ namespace Artesian.SDK.Service
 {
     public partial class MarketDataService : IMarketDataService
     {
+
+        /// <summary>
+        /// Search the marketdata metadata
+        /// </summary>
+        /// <param name="filter">ArtesianSearchFilter containing the search params</param>
+        /// <param name="ctk">CancellationToken</param>
+        /// <returns>ArtesianSearchResults entity</returns>
+        public Task<ArtesianSearchResults> SearchFacetAsync(ArtesianSearchFilter filter, CancellationToken ctk = default)
+            => SearchFacetAsync(filter: filter, doNotLoadAdditionalInfo: false, ctk: ctk);
+
         /// <summary>
         /// Search the marketdata metadata
         /// </summary>
@@ -19,7 +29,7 @@ namespace Artesian.SDK.Service
         /// <param name="doNotLoadAdditionalInfo">Skip loading up-to-date curve range and transform</param>
         /// <param name="ctk">CancellationToken</param>
         /// <returns>ArtesianSearchResults entity</returns>
-        public Task<ArtesianSearchResults> SearchFacetAsync(ArtesianSearchFilter filter, bool doNotLoadAdditionalInfo = false, CancellationToken ctk = default)
+        public Task<ArtesianSearchResults> SearchFacetAsync(ArtesianSearchFilter filter, bool doNotLoadAdditionalInfo, CancellationToken ctk = default)
         {
             filter.Validate();
 

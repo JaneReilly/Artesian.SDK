@@ -46,7 +46,7 @@ namespace Artesian.SDK.Service.PublicOffer
         /// <param name="unit">Unit to retrieve by</param>
         /// <param name="ctk">CancellationToken</param>
         /// <returns>UnitConfiguration result</returns>
-        Task<UnitConfiguration> ReadUnitConfigurationMappingAsync(string unit, CancellationToken ctk = default);
+        Task<UnitConfigurationDto> ReadUnitConfigurationMappingAsync(string unit, CancellationToken ctk = default);
 
         /// <summary>
         /// Get paged unit configuration mappings
@@ -57,7 +57,7 @@ namespace Artesian.SDK.Service.PublicOffer
         /// <param name="sort">Sort by</param>
         /// <param name="ctk">CancellationToken</param>
         /// <returns>UnitConfiguration result</returns>
-        Task<PagedResult<UnitConfiguration>> ReadUnitConfigurationMappingsAsync(int page, int pageSize, string unitFilter = null, string[] sort = null, CancellationToken ctk = default);
+        Task<PagedResult<UnitConfigurationDto>> ReadUnitConfigurationMappingsAsync(int page, int pageSize, string unitFilter = null, string[] sort = null, CancellationToken ctk = default);
 
         /// <summary>
         /// Upsert unit configuration mapping by id
@@ -65,7 +65,7 @@ namespace Artesian.SDK.Service.PublicOffer
         /// <param name="unit">Unit to upsert</param>
         /// <param name="ctk">CancellationToken</param>
         /// <returns>UnitConfiguration result</returns>
-        Task<UnitConfiguration> UpsertUnitConfigurationMappingAsync(UnitConfiguration unit, CancellationToken ctk = default);
+        Task<UnitConfigurationDto> UpsertUnitConfigurationMappingAsync(UnitConfigurationDto unit, CancellationToken ctk = default);
 
         /// <summary>
         /// Delete unit configuration mapping by id

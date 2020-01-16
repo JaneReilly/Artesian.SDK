@@ -8,7 +8,7 @@ namespace Artesian.SDK.Dto.PublicOffer
     /// UnitConfiguration class
     /// </summary>
     [MessagePackObject]
-    public class UnitConfiguration
+    public class UnitConfigurationDto
     {
         /// <summary>
         /// Unit name

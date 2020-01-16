@@ -135,7 +135,7 @@ namespace Artesian.SDK.Service.PublicOffer
         }
 
         /// <summary>
-        /// Set the unot types to be queried
+        /// Set the unit types to be queried
         /// </summary>
         /// <param name="unitType">Unit types to be queried</param>
         /// <returns>PublicOfferQuery</returns>
@@ -189,11 +189,11 @@ namespace Artesian.SDK.Service.PublicOffer
         /// </summary>
         /// <param name="ctk">CancellationToken</param>
         /// <returns>Enumerable of TimeSerieRow Actual</returns>
-        public async Task<PagedResult<PublicOfferCurve>> ExecuteAsync(CancellationToken ctk = default)
+        public async Task<PagedResult<PublicOfferCurveDto>> ExecuteAsync(CancellationToken ctk = default)
         {
             string url = _buildRequest();
 
-            var res = await _client.Exec<PagedResult<PublicOfferCurve>>(HttpMethod.Get, url, ctk: ctk);
+            var res = await _client.Exec<PagedResult<PublicOfferCurveDto>>(HttpMethod.Get, url, ctk: ctk);
             return res;
         }
 

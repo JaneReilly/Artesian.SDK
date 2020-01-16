@@ -10,7 +10,7 @@ namespace Artesian.SDK.Dto.PublicOffer
     /// PublicOfferCurve class
     /// </summary>
     [MessagePackObject]
-    public class PublicOfferCurve
+    public class PublicOfferCurveDto
     {
         /// <summary>
         /// The Status

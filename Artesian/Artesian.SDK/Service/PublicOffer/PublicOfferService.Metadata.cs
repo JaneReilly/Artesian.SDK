@@ -70,14 +70,14 @@ namespace Artesian.SDK.Service.PublicOffer
         /// <param name="unit">Page number</param>
         /// <param name="ctk">CancellationToken</param>
         /// <returns>UnitConfiguration result</returns>
-        public Task<UnitConfiguration> ReadUnitConfigurationMappingAsync(string unit, CancellationToken ctk = default)
+        public Task<UnitConfigurationDto> ReadUnitConfigurationMappingAsync(string unit, CancellationToken ctk = default)
         {
             if (string.IsNullOrEmpty(unit))
                 throw new ArgumentException("Unit must be provided");
 
             var url = $"/unitconfigurationmappings/{unit}";
 
-            return _client.Exec<UnitConfiguration>(HttpMethod.Get, url);
+            return _client.Exec<UnitConfigurationDto>(HttpMethod.Get, url);
         }
 
         /// <summary>
@@ -89,7 +89,7 @@ namespace Artesian.SDK.Service.PublicOffer
         /// <param name="sort">Sort by</param>
         /// <param name="ctk">CancellationToken</param>
         /// <returns>UnitConfiguration result</returns>
-        public Task<PagedResult<UnitConfiguration>> ReadUnitConfigurationMappingsAsync(int page, int pageSize, string unitFilter = null, string[] sort = null, CancellationToken ctk = default)
+        public Task<PagedResult<UnitConfigurationDto>> ReadUnitConfigurationMappingsAsync(int page, int pageSize, string unitFilter = null, string[] sort = null, CancellationToken ctk = default)
         {
             if (page < 1 || pageSize < 1)
                 throw new ArgumentException("Page and Page number need to be greater than 0. Page:" + page + " Page Size:" + pageSize);
@@ -100,7 +100,7 @@ namespace Artesian.SDK.Service.PublicOffer
                 .SetQueryParam("pageSize", pageSize)
                 .SetQueryParam("page", page);
 
-            return _client.Exec<PagedResult<UnitConfiguration>>(HttpMethod.Get, url);
+            return _client.Exec<PagedResult<UnitConfigurationDto>>(HttpMethod.Get, url);
         }
 
         /// <summary>
@@ -109,14 +109,14 @@ namespace Artesian.SDK.Service.PublicOffer
         /// <param name="unitCfg">UnitConfiguration to upsert</param>
         /// <param name="ctk">CancellationToken</param>
         /// <returns>Upsert UnitConfiguration</returns>
-        public Task<UnitConfiguration> UpsertUnitConfigurationMappingAsync(UnitConfiguration unitCfg, CancellationToken ctk = default)
+        public Task<UnitConfigurationDto> UpsertUnitConfigurationMappingAsync(UnitConfigurationDto unitCfg, CancellationToken ctk = default)
         {
             if (unitCfg?.Unit == null)
                 throw new ArgumentException($"Valid UnitConfiguration must be provided");
 
             var url = $"/unitconfigurationmappings/{unitCfg.Unit}";
 
-            return _client.Exec<UnitConfiguration, UnitConfiguration>(HttpMethod.Put, url, unitCfg);
+            return _client.Exec<UnitConfigurationDto, UnitConfigurationDto>(HttpMethod.Put, url, unitCfg);
 
         }
 
@@ -133,7 +133,7 @@ namespace Artesian.SDK.Service.PublicOffer
 
             var url = $"/unitconfigurationmappings/{unit}";
 
-            return _client.Exec<UnitConfiguration>(HttpMethod.Delete, url);
+            return _client.Exec<UnitConfigurationDto>(HttpMethod.Delete, url);
         }
     }
 }

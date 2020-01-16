@@ -226,7 +226,7 @@ namespace Artesian.SDK.Tests
             {
                 var qs = new PublicOfferService(_cfg);
 
-                var unitCfg = new UnitConfiguration() {
+                var unitCfg = new UnitConfigurationDto() {
                 
                     Unit = "unitName",
                     Mappings = new List<GenerationTypeMapping>() {

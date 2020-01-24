@@ -58,13 +58,13 @@ namespace Artesian.SDK.Dto.PublicOffer
         public Zone Zone { get; set; }
 
         /// <summary>
-        /// The UnitType
+        /// The Unit Type
         /// </summary>
         [Key(8)]
         public UnitType UnitType { get; set; }
 
         /// <summary>
-        /// The FuelType
+        /// The Generation Type
         /// </summary>
         [Key(9)]
         public GenerationType GenerationType { get; set; }
@@ -82,39 +82,46 @@ namespace Artesian.SDK.Dto.PublicOffer
         public string Operator { get; set; }
 
         /// <summary>
-        /// The AwardedQuantity
+        /// The Quantity
         /// </summary>
         [Key(12)]
-        public decimal? AwardedQuantity { get; set; }
+        public decimal Quantity { get; set; }
+
+        /// <summary>
+        /// The Awarded Quantity
+        /// </summary>
+        [Key(13)]
+        public decimal AwardedQuantity { get; set; }
 
         /// <summary>
         /// The Energy Price
         /// </summary>
-        [Key(13)]
+        [Key(14)]
         public decimal EnergyPrice { get; set; }
 
         /// <summary>
         /// Merit Order
         /// </summary>
-        [Key(14)]
+        [Key(15)]
         public decimal MeritOrder { get; set; }
 
         /// <summary>
         /// Partial Quantity Accepted
         /// </summary>
-        [Key(15)]
-        public string PartialQuantityAccepted { get; set; }
+        [Key(16)]
+        public bool PartialQuantityAccepted { get; set; }
 
         /// <summary>
         /// Adjacent Quantity
         /// </summary>
-        [Key(16)]
+        [Key(17)]
         public decimal ADJQuantity { get; set; }
 
         /// <summary>
         /// Adjacent Energy Price
         /// </summary>
-        [Key(17)]
+        [Key(18)]
         public decimal ADJEnergyPrice { get; set; }
+
     }
 }

@@ -8,7 +8,7 @@ using System;
 namespace Artesian.SDK.Service
 {
     /// <summary>
-    /// Query class
+    /// Query with fill class
     /// </summary>
     public abstract class QueryWithFill<TQueryParams>: BaseQuery<TQueryParams> where TQueryParams : QueryWithFillParamaters, new()
     {        

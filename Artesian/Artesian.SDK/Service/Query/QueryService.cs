@@ -1,6 +1,6 @@
 ﻿// Copyright (c) ARK LTD. All rights reserved.
 // Licensed under the MIT License. See LICENSE in the project root for
-// license information. 
+// license information.
 using Flurl;
 
 namespace Artesian.SDK.Service
@@ -9,7 +9,7 @@ namespace Artesian.SDK.Service
     /// QueryService class
     /// Contains query types to be created
     /// </summary>
-    public class QueryService: IQueryService
+    public class QueryService : IQueryService
     {
         private IArtesianServiceConfig _cfg;
         private ArtesianPolicyConfig _policy;
@@ -106,7 +106,6 @@ namespace Artesian.SDK.Service
             return new MasQuery(_client, partitionStrategy ?? _partitionStrategy);
         }
 
-
         /// <summary>
         /// Create Auction Time Serie Query
         /// </summary>
@@ -117,7 +116,6 @@ namespace Artesian.SDK.Service
         {
             return new AuctionQuery(_client, _partitionStrategy);
         }
-
 
         /// <summary>
         /// Create Auction Time Serie Query
@@ -130,6 +128,5 @@ namespace Artesian.SDK.Service
         {
             return new AuctionQuery(_client, partitionStrategy ?? _partitionStrategy);
         }
-
     }
 }

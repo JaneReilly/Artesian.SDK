@@ -1,6 +1,6 @@
 ﻿// Copyright (c) ARK LTD. All rights reserved.
 // Licensed under the MIT License. See LICENSE in the project root for
-// license information. 
+// license information.
 using Artesian.SDK.Dto;
 using Flurl;
 using NodaTime;
@@ -30,6 +30,7 @@ namespace Artesian.SDK.Service
         }
 
         #region facade methods
+
         /// <summary>
         /// Set the list of marketdata to be queried
         /// </summary>
@@ -40,6 +41,7 @@ namespace Artesian.SDK.Service
             _forMarketData(ids);
             return this;
         }
+
         /// <summary>
         /// Set the marketdata to be queried
         /// </summary>
@@ -50,6 +52,7 @@ namespace Artesian.SDK.Service
             _forMarketData(new int[] { id });
             return this;
         }
+
         /// <summary>
         /// Set the filter id to be queried
         /// </summary>
@@ -60,6 +63,7 @@ namespace Artesian.SDK.Service
             _forFilterId(filterId);
             return this;
         }
+
         /// <summary>
         /// Specify the timezone of extracted marketdata. Defaults to UTC
         /// </summary>
@@ -70,6 +74,7 @@ namespace Artesian.SDK.Service
             _inTimezone(tz);
             return this;
         }
+
         /// <summary>
         /// Set the date range to be queried
         /// </summary>
@@ -81,6 +86,7 @@ namespace Artesian.SDK.Service
             _inAbsoluteDateRange(start, end);
             return this;
         }
+
         /// <summary>
         /// Set the relative period range from today to be queried
         /// </summary>
@@ -98,21 +104,22 @@ namespace Artesian.SDK.Service
         /// </summary>
         /// <param name="ctk">CancellationToken</param>
         /// <returns>Enumerable of TimeSerieRow Auction</returns>
-        public async Task<IEnumerable<TimeSerieRow.Actual>> ExecuteAsync(CancellationToken ctk = default)
+        public async Task<IEnumerable<AuctionRow>> ExecuteAsync(CancellationToken ctk = default)
         {
             List<string> urls = _buildRequest();
 
-            var taskList = urls.Select(url => _client.Exec<IEnumerable<TimeSerieRow.Actual>>(HttpMethod.Get, url, ctk: ctk));
+            var taskList = urls.Select(url => _client.Exec<IEnumerable<AuctionRow>>(HttpMethod.Get, url, ctk: ctk));
 
             var res = await Task.WhenAll(taskList);
             return res.SelectMany(x => x);
         }
 
-        #endregion
+        #endregion facade methods
 
         #region auction query methods
 
         #region private
+
         private List<string> _buildRequest()
         {
             _validateQuery();
@@ -148,9 +155,11 @@ namespace Artesian.SDK.Service
                 case ExtractionRangeType.DateRange:
                     subPath = $"{_toUrlParam(queryParamaters.ExtractionRangeSelectionConfig.DateStart, queryParamaters.ExtractionRangeSelectionConfig.DateEnd)}";
                     break;
+
                 case ExtractionRangeType.PeriodRange:
                     subPath = $"{queryParamaters.ExtractionRangeSelectionConfig.PeriodFrom}/{queryParamaters.ExtractionRangeSelectionConfig.PeriodTo}";
                     break;
+
                 default:
                     throw new NotSupportedException("ExtractionRangeType");
             }
@@ -158,8 +167,8 @@ namespace Artesian.SDK.Service
             return subPath;
         }
 
+        #endregion private
 
-        #endregion
-        #endregion
+        #endregion auction query methods
     }
 }

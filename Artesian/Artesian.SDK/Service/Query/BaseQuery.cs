@@ -10,7 +10,7 @@ namespace Artesian.SDK.Service
     /// <summary>
     /// Query class
     /// </summary>
-    public abstract class Query<TQueryParams> where TQueryParams : QueryParamaters, new()
+    public abstract class BaseQuery<TQueryParams> where TQueryParams : BaseQueryParamaters, new()
     {
         /// <summary>
         /// Store for QueryParams
@@ -25,7 +25,7 @@ namespace Artesian.SDK.Service
         /// </summary>
         /// <param name="ids">Int[]</param>
         /// <returns>Query</returns>
-        protected Query<TQueryParams> _forMarketData(int[] ids)
+        protected BaseQuery<TQueryParams> _forMarketData(int[] ids)
         {
             _queryParamaters.FilterId = null;
 
@@ -37,7 +37,7 @@ namespace Artesian.SDK.Service
         /// </summary>
         /// <param name="filterId">The filter id to be queried</param>
         /// <returns>Query</returns>
-        protected Query<TQueryParams> _forFilterId(int filterId)
+        protected BaseQuery<TQueryParams> _forFilterId(int filterId)
         {
             _queryParamaters.Ids = null;
 
@@ -49,7 +49,7 @@ namespace Artesian.SDK.Service
         /// </summary>
         /// <param name="tz">String timezone in IANA format</param>
         /// <returns>Query</returns>
-        protected Query<TQueryParams> _inTimezone(string tz)
+        protected BaseQuery<TQueryParams> _inTimezone(string tz)
         {
             if (DateTimeZoneProviders.Tzdb.GetZoneOrNull(tz) == null)
                 throw new ArgumentException($"Timezone {tz} is not recognized");
@@ -63,7 +63,7 @@ namespace Artesian.SDK.Service
         /// <param name="start">Local date Start</param>
         /// <param name="end">Local date End</param>
         /// <returns>Query</returns>
-        protected Query<TQueryParams> _inAbsoluteDateRange(LocalDate start, LocalDate end)
+        protected BaseQuery<TQueryParams> _inAbsoluteDateRange(LocalDate start, LocalDate end)
         {
             if (end <= start)
                 throw new ArgumentException("End date " + end + " must be greater than start date " + start);
@@ -80,7 +80,7 @@ namespace Artesian.SDK.Service
         /// <param name="from">Period Start</param>
         /// <param name="to">Period End</param>
         /// <returns>Query</returns>
-        protected Query<TQueryParams> _inRelativePeriodRange(Period from, Period to)
+        protected BaseQuery<TQueryParams> _inRelativePeriodRange(Period from, Period to)
         {
             _queryParamaters.ExtractionRangeType = ExtractionRangeType.PeriodRange;
             _queryParamaters.ExtractionRangeSelectionConfig.PeriodFrom = from;
@@ -88,57 +88,6 @@ namespace Artesian.SDK.Service
             return this;
         }
 
-        /// <summary>
-        /// Query by relative period
-        /// </summary>
-        /// <param name="extractionPeriod">Period</param>
-        /// <returns>Query</returns>
-        protected Query<TQueryParams> _inRelativePeriod(Period extractionPeriod)
-        {
-            _queryParamaters.ExtractionRangeType = ExtractionRangeType.Period;
-            _queryParamaters.ExtractionRangeSelectionConfig.Period = extractionPeriod;
-            return this;
-        }
-
-        /// <summary>
-        /// Query by relative interval
-        /// </summary>
-        /// <param name="relativeInterval">RelativeInterval</param>
-        /// <returns>Query</returns>
-        protected Query<TQueryParams> _inRelativeInterval(RelativeInterval relativeInterval)
-        {
-            _queryParamaters.ExtractionRangeType = ExtractionRangeType.RelativeInterval;
-            _queryParamaters.ExtractionRangeSelectionConfig.Interval = relativeInterval;
-            return this;
-        }
-
-        /// <summary>
-        /// Build extraction range
-        /// </summary>
-        /// <returns>string</returns>
-        protected string _buildExtractionRangeRoute(QueryParamaters queryParamaters)
-        {
-            string subPath;
-            switch (queryParamaters.ExtractionRangeType)
-            {
-                case ExtractionRangeType.DateRange:
-                    subPath = $"{_toUrlParam(queryParamaters.ExtractionRangeSelectionConfig.DateStart, queryParamaters.ExtractionRangeSelectionConfig.DateEnd)}";
-                    break;
-                case ExtractionRangeType.Period:
-                    subPath = $"{queryParamaters.ExtractionRangeSelectionConfig.Period}";
-                    break;
-                case ExtractionRangeType.PeriodRange:
-                    subPath = $"{queryParamaters.ExtractionRangeSelectionConfig.PeriodFrom}/{queryParamaters.ExtractionRangeSelectionConfig.PeriodTo}";
-                    break;
-                case ExtractionRangeType.RelativeInterval:
-                    subPath = $"{queryParamaters.ExtractionRangeSelectionConfig.Interval}";
-                    break;
-                default:
-                    throw new NotSupportedException("ExtractionRangeType");
-            }
-
-            return subPath;
-        }
 
         /// <summary>
         /// Validate query

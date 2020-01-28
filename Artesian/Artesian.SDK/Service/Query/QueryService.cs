@@ -105,5 +105,31 @@ namespace Artesian.SDK.Service
         {
             return new MasQuery(_client, partitionStrategy ?? _partitionStrategy);
         }
+
+
+        /// <summary>
+        /// Create Auction Time Serie Query
+        /// </summary>
+        /// <returns>
+        /// Auction Time Serie <see cref="AuctionQuery"/>
+        /// </returns>
+        public AuctionQuery CreateAuction()
+        {
+            return new AuctionQuery(_client, _partitionStrategy);
+        }
+
+
+        /// <summary>
+        /// Create Auction Time Serie Query
+        /// </summary>
+        /// <param name="partitionStrategy">Partition Strategy</param>
+        /// <returns>
+        /// Auction Time Serie <see cref="AuctionQuery"/>
+        /// </returns>
+        public AuctionQuery CreateAuction(IPartitionStrategy partitionStrategy)
+        {
+            return new AuctionQuery(_client, partitionStrategy ?? _partitionStrategy);
+        }
+
     }
 }

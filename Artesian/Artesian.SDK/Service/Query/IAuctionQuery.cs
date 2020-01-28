@@ -6,9 +6,7 @@ using NodaTime;
 
 namespace Artesian.SDK.Service
 {
-    interface IMasQuery<T>: IQueryWithFill<T>
+    interface IAuctionQuery<T>: IBaseQuery<T>
     {
-        T ForProducts(params string[] products);
-        T WithFillCustomValue(MarketAssessmentValue fillerDefaultValues);
     }
 }

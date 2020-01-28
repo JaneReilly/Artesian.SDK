@@ -89,6 +89,26 @@ namespace Artesian.SDK.Service
                                 )));
         }
 
+        /// <summary>
+        /// Partition strategy for Auction Time Serie Query
+        /// </summary>
+        /// <param name="queryParamaters">The list of Auction Time Serie Query paramaters to be partitioned. See <see cref="AuctionQueryParamaters"/></param>
+        /// <returns>
+        /// The input list of Auction Time Serie Query paramaters partitioned by MarketData ID. See <see cref="AuctionQueryParamaters"/>
+        /// </returns>
+        public IEnumerable<AuctionQueryParamaters> Partition(IEnumerable<AuctionQueryParamaters> queryParamaters)
+        {
+            if (queryParamaters.Any(g => g.Ids == null)) return queryParamaters;
+            return queryParamaters.SelectMany(queryParamater =>
+                        _partitionIds(queryParamater.Ids)
+                            .Select(g => new AuctionQueryParamaters(g,
+                                queryParamater.ExtractionRangeSelectionConfig,
+                                queryParamater.ExtractionRangeType,
+                                queryParamater.TimeZone,
+                                queryParamater.FilterId
+                                )));
+        }
+
         private IEnumerable<IEnumerable<int>> _partitionIds(IEnumerable<int> ids)
         {
             return ids.Select((x, i) => (value: x, index: i))

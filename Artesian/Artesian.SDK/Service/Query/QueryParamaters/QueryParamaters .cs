@@ -8,12 +8,12 @@ namespace Artesian.SDK.Service
     /// <summary>
     /// Query Paramaters DTO
     /// </summary>
-    public abstract class BaseQueryParamaters
+    public abstract class QueryParamaters
     {
         /// <summary>
         /// 
         /// </summary>
-        public BaseQueryParamaters()
+        public QueryParamaters()
         {
         }
 
@@ -21,23 +21,15 @@ namespace Artesian.SDK.Service
         /// 
         /// </summary>
         /// <param name="ids"></param>
-        /// <param name="extractionRangeSelectionConfig"></param>
-        /// <param name="extractionRangeType"></param>
         /// <param name="timezone"></param>
         /// <param name="filterId"></param>
-        public BaseQueryParamaters(
-            IEnumerable<int> ids, 
-            ExtractionRangeSelectionConfig 
-            extractionRangeSelectionConfig, 
-            ExtractionRangeType? 
-            extractionRangeType, 
+        public QueryParamaters(
+            IEnumerable<int> ids,
             string timezone, 
             int? filterId
             )
         {
             this.Ids = ids;
-            this.ExtractionRangeSelectionConfig = extractionRangeSelectionConfig;
-            this.ExtractionRangeType = extractionRangeType;
             this.TimeZone = timezone;
             this.FilterId = filterId;
         }
@@ -46,14 +38,6 @@ namespace Artesian.SDK.Service
         /// IDs
         /// </summary>
         public IEnumerable<int> Ids { get; set; }
-        /// <summary>
-        /// Extraction range config
-        /// </summary>
-        public ExtractionRangeSelectionConfig ExtractionRangeSelectionConfig { get; set; } = new ExtractionRangeSelectionConfig();
-        /// <summary>
-        /// Extraction range type
-        /// </summary>
-        public ExtractionRangeType? ExtractionRangeType { get; set; }
         /// <summary>
         /// Timezone
         /// </summary>

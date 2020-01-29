@@ -6,14 +6,14 @@ using System.Collections.Generic;
 namespace Artesian.SDK.Service
 {
     /// <summary>
-    /// Query Paramaters DTO
+    /// Query with Fill and Interval Paramaters DTO
     /// </summary>
-    public abstract class QueryWithFillParamaters: BaseQueryParamaters
+    public abstract class QueryWithFillAndIntervalParamaters : QueryWithRangeParamaters
     {
         /// <summary>
         /// 
         /// </summary>
-        public QueryWithFillParamaters()
+        public QueryWithFillAndIntervalParamaters ()
         {
         }
 
@@ -27,7 +27,7 @@ namespace Artesian.SDK.Service
         /// <param name="filterId"></param>
         /// <param name="fillerKind"></param>
         /// <param name="fillerConfig"></param>
-        public QueryWithFillParamaters(
+        public QueryWithFillAndIntervalParamaters (
             IEnumerable<int> ids, 
             ExtractionRangeSelectionConfig 
             extractionRangeSelectionConfig, 

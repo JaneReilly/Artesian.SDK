@@ -6,7 +6,7 @@ using NodaTime;
 
 namespace Artesian.SDK.Service
 {
-    interface IAuctionQuery<T>: IBaseQuery<T>
+    interface IAuctionQuery<T>: IQuery<T>, IQueryWithExtractionRange<T>
     {
     }
 }

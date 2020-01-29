@@ -5,10 +5,9 @@ using NodaTime;
 
 namespace Artesian.SDK.Service
 {
-    interface IQueryWithFill<T>: IQuery<T>
+    interface IQueryWithExtractionRange<T>: IQuery<T>
     {
-        T WithFillNull();
-        T WithFillLatestValue(Period period);
-        T WithFillNone();
+        T InAbsoluteDateRange(LocalDate from, LocalDate to);
+        T InRelativePeriodRange(Period from, Period to);
     }
 }

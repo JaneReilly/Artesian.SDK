@@ -10,7 +10,7 @@ namespace Artesian.SDK.Service
     /// <summary>
     /// Mas Query Paramaters DTO
     /// </summary>
-    public class MasQueryParamaters : QueryWithFillParamaters
+    public class MasQueryParamaters : QueryWithFillAndIntervalParamaters 
     {    
         /// <summary>
         /// 

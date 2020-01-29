@@ -8,9 +8,9 @@ using System;
 namespace Artesian.SDK.Service
 {
     /// <summary>
-    /// Base Query class
+    /// Query with range class
     /// </summary>
-    public abstract class BaseQuery<TQueryParams> where TQueryParams : BaseQueryParamaters, new()
+    public abstract class QueryWithRange<TQueryParams> where TQueryParams : QueryWithRangeParamaters, new()
     {
         /// <summary>
         /// Store for QueryParams
@@ -25,7 +25,7 @@ namespace Artesian.SDK.Service
         /// </summary>
         /// <param name="ids">Int[]</param>
         /// <returns>Query</returns>
-        protected BaseQuery<TQueryParams> _forMarketData(int[] ids)
+        protected QueryWithRange<TQueryParams> _forMarketData(int[] ids)
         {
             _queryParamaters.FilterId = null;
 
@@ -37,7 +37,7 @@ namespace Artesian.SDK.Service
         /// </summary>
         /// <param name="filterId">The filter id to be queried</param>
         /// <returns>Query</returns>
-        protected BaseQuery<TQueryParams> _forFilterId(int filterId)
+        protected QueryWithRange<TQueryParams> _forFilterId(int filterId)
         {
             _queryParamaters.Ids = null;
 
@@ -49,7 +49,7 @@ namespace Artesian.SDK.Service
         /// </summary>
         /// <param name="tz">String timezone in IANA format</param>
         /// <returns>Query</returns>
-        protected BaseQuery<TQueryParams> _inTimezone(string tz)
+        protected QueryWithRange<TQueryParams> _inTimezone(string tz)
         {
             if (DateTimeZoneProviders.Tzdb.GetZoneOrNull(tz) == null)
                 throw new ArgumentException($"Timezone {tz} is not recognized");
@@ -63,7 +63,7 @@ namespace Artesian.SDK.Service
         /// <param name="start">Local date Start</param>
         /// <param name="end">Local date End</param>
         /// <returns>Query</returns>
-        protected BaseQuery<TQueryParams> _inAbsoluteDateRange(LocalDate start, LocalDate end)
+        protected QueryWithRange<TQueryParams> _inAbsoluteDateRange(LocalDate start, LocalDate end)
         {
             if (end <= start)
                 throw new ArgumentException("End date " + end + " must be greater than start date " + start);
@@ -80,7 +80,7 @@ namespace Artesian.SDK.Service
         /// <param name="from">Period Start</param>
         /// <param name="to">Period End</param>
         /// <returns>Query</returns>
-        protected BaseQuery<TQueryParams> _inRelativePeriodRange(Period from, Period to)
+        protected QueryWithRange<TQueryParams> _inRelativePeriodRange(Period from, Period to)
         {
             _queryParamaters.ExtractionRangeType = ExtractionRangeType.PeriodRange;
             _queryParamaters.ExtractionRangeSelectionConfig.PeriodFrom = from;

@@ -16,7 +16,7 @@ namespace Artesian.SDK.Service
     /// <summary>
     /// Auction Time Serie Query Class
     /// </summary>
-    public class AuctionQuery : BaseQuery<AuctionQueryParamaters>, IAuctionQuery<AuctionQuery>
+    public class AuctionQuery : QueryWithRange<AuctionQueryParamaters>, IAuctionQuery<AuctionQuery>
     {
         private Client _client;
         private IPartitionStrategy _partition;
@@ -147,7 +147,7 @@ namespace Artesian.SDK.Service
         /// Build extraction range
         /// </summary>
         /// <returns>string</returns>
-        protected string _buildExtractionRangeRoute(BaseQueryParamaters queryParamaters)
+        protected string _buildExtractionRangeRoute(QueryWithRangeParamaters queryParamaters)
         {
             string subPath;
             switch (queryParamaters.ExtractionRangeType)

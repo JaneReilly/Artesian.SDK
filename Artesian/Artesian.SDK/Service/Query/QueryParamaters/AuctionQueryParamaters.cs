@@ -10,7 +10,7 @@ namespace Artesian.SDK.Service
     /// <summary>
     /// Auction Query Paramaters DTO
     /// </summary>
-    public class AuctionQueryParamaters : BaseQueryParamaters
+    public class AuctionQueryParamaters : QueryWithRangeParamaters
     {
         /// <summary>
         /// 

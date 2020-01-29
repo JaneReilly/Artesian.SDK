@@ -16,7 +16,7 @@ namespace Artesian.SDK.Service
     /// <summary>
     /// Versioned Time Serie Query Class
     /// </summary>
-    public class VersionedQuery : QueryWithFill<VersionedQueryParamaters>, IVersionedQuery<VersionedQuery>
+    public class VersionedQuery : QueryWithFillAndInterval<VersionedQueryParamaters>, IVersionedQuery<VersionedQuery>
     {
         private Client _client;
         private IPartitionStrategy _partition;

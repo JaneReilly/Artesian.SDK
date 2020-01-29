@@ -6,7 +6,7 @@ using NodaTime;
 
 namespace Artesian.SDK.Service
 {
-    interface IActualQuery<T>: IQueryWithFill<T>
+    interface IActualQuery<T>: IQueryWithFill<T>, IQueryWithExtractionInterval<T>, IQueryWithExtractionRange<T>
     {
         T InGranularity(Granularity granularity);
         T WithTimeTransform(int tr);

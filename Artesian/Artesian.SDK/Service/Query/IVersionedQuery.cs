@@ -6,7 +6,7 @@ using NodaTime;
 
 namespace Artesian.SDK.Service
 {
-    interface IVersionedQuery<T> : IQueryWithFill<T>
+    interface IVersionedQuery<T> : IQueryWithFill<T>, IQueryWithExtractionInterval<T>, IQueryWithExtractionRange<T>
     {
         T InGranularity(Granularity granularity);
         T ForLastNVersions(int lastN);

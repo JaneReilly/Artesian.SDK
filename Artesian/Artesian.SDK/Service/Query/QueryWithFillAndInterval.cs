@@ -8,16 +8,16 @@ using System;
 namespace Artesian.SDK.Service
 {
     /// <summary>
-    /// Query with fill class
+    /// Query with fill and interval class
     /// </summary>
-    public abstract class QueryWithFill<TQueryParams>: BaseQuery<TQueryParams> where TQueryParams : QueryWithFillParamaters, new()
+    public abstract class QueryWithFillAndInterval<TQueryParams>: QueryWithRange<TQueryParams> where TQueryParams : QueryWithFillAndIntervalParamaters , new()
     {        
         /// <summary>
         /// Query by relative period
         /// </summary>
         /// <param name="extractionPeriod">Period</param>
         /// <returns>Query</returns>
-        protected QueryWithFill<TQueryParams> _inRelativePeriod(Period extractionPeriod)
+        protected QueryWithFillAndInterval<TQueryParams> _inRelativePeriod(Period extractionPeriod)
         {
             _queryParamaters.ExtractionRangeType = ExtractionRangeType.Period;
             _queryParamaters.ExtractionRangeSelectionConfig.Period = extractionPeriod;
@@ -29,7 +29,7 @@ namespace Artesian.SDK.Service
         /// </summary>
         /// <param name="relativeInterval">RelativeInterval</param>
         /// <returns>Query</returns>
-        protected QueryWithFill<TQueryParams> _inRelativeInterval(RelativeInterval relativeInterval)
+        protected QueryWithFillAndInterval<TQueryParams> _inRelativeInterval(RelativeInterval relativeInterval)
         {
             _queryParamaters.ExtractionRangeType = ExtractionRangeType.RelativeInterval;
             _queryParamaters.ExtractionRangeSelectionConfig.Interval = relativeInterval;
@@ -40,7 +40,7 @@ namespace Artesian.SDK.Service
         /// Build extraction range
         /// </summary>
         /// <returns>string</returns>
-        protected string _buildExtractionRangeRoute(QueryWithFillParamaters queryParamaters)
+        protected string _buildExtractionRangeRoute(QueryWithFillAndIntervalParamaters  queryParamaters)
         {
             string subPath;
             switch (queryParamaters.ExtractionRangeType)

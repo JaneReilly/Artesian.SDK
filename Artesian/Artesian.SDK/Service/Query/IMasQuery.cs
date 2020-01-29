@@ -2,11 +2,10 @@
 // Licensed under the MIT License. See LICENSE in the project root for
 // license information. 
 using Artesian.SDK.Dto;
-using NodaTime;
 
 namespace Artesian.SDK.Service
 {
-    interface IMasQuery<T>: IQueryWithFill<T>
+    interface IMasQuery<T>: IQueryWithFill<T>, IQueryWithExtractionInterval<T>, IQueryWithExtractionRange<T>
     {
         T ForProducts(params string[] products);
         T WithFillCustomValue(MarketAssessmentValue fillerDefaultValues);

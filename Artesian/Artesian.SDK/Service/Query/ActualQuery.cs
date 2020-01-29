@@ -16,7 +16,7 @@ namespace Artesian.SDK.Service
     /// <summary>
     /// Actual Time Serie Query Class
     /// </summary>
-    public class ActualQuery : QueryWithFill<ActualQueryParamaters>, IActualQuery<ActualQuery>
+    public class ActualQuery : QueryWithFillAndInterval<ActualQueryParamaters>, IActualQuery<ActualQuery>
     {
         private Client _client;
         private IPartitionStrategy _partition;

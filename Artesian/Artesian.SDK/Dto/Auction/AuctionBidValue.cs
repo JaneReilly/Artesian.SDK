@@ -1,6 +1,6 @@
-﻿using System.ComponentModel.DataAnnotations;
-using EnsureThat;
+﻿using EnsureThat;
 using MessagePack;
+using System.ComponentModel.DataAnnotations;
 using KeyAttribute = MessagePack.KeyAttribute;
 
 namespace Artesian.SDK.Dto
@@ -23,12 +23,14 @@ namespace Artesian.SDK.Dto
             Price = price;
             Quantity = quantity;
         }
+
         /// <summary>
         /// The Bid Price
         /// </summary>
         [Required]
         [Key(0)]
         public double Price { get; protected set; }
+
         /// <summary>
         /// The Bid Quantity
         /// </summary>

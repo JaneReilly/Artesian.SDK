@@ -163,7 +163,7 @@ namespace Artesian.SDK.Factory
         /// <param name="bid">The bid</param>
         /// <param name="offer">The offer</param>
         /// <returns></returns>
-        AddTimeSerieOperationResult AddData(LocalDate localDate, AuctionBidValue[] bid, AuctionBidValue[] offer);
+        AddAuctionTimeSerieOperationResult AddData(LocalDate localDate, AuctionBidValue[] bid, AuctionBidValue[] offer);
 
         /// <summary>
         /// Auction AddData
@@ -175,7 +175,7 @@ namespace Artesian.SDK.Factory
         /// <param name="bid">The bid</param>
         /// <param name="offer">The offer</param>
         /// <returns></returns>
-        AddTimeSerieOperationResult AddData(Instant time, AuctionBidValue[] bid, AuctionBidValue[] offer);
+        AddAuctionTimeSerieOperationResult AddData(Instant time, AuctionBidValue[] bid, AuctionBidValue[] offer);
 
         /// <summary>
         /// Auction ClearData

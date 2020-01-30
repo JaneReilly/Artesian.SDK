@@ -2,10 +2,6 @@
 using Artesian.SDK.Service;
 using EnsureThat;
 using NodaTime;
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -42,7 +38,7 @@ namespace Artesian.SDK.Factory
             EnsureArg.IsNotNull(marketDataService, nameof(marketDataService));
 
             _marketDataService = marketDataService;
-          
+
             Identifier = id;
         }
 
@@ -115,7 +111,7 @@ namespace Artesian.SDK.Factory
         /// MarketData Update
         /// </summary>
         /// <remarks>
-        /// Update the MarketData 
+        /// Update the MarketData
         /// </remarks>
         /// <returns></returns>
         public async Task Update(CancellationToken ctk = default)
@@ -201,12 +197,11 @@ namespace Artesian.SDK.Factory
             if (_entity == null)
                 throw new MarketAssessmentException("Market Assessement is not yet registered");
 
-            if(_entity.Type != MarketDataType.MarketAssessment)
+            if (_entity.Type != MarketDataType.MarketAssessment)
                 throw new MarketAssessmentException("Entity is not a Market Assessement");
 
             var mas = new MarketAssessment(this);
             return mas;
         }
     }
-
 }

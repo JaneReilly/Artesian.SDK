@@ -90,6 +90,17 @@ namespace Artesian.SDK.Factory
             if (_bids.ContainsKey(bidTime))
                 return AddAuctionTimeSerieOperationResult.TimeAlreadyPresent;
 
+            foreach (var element in _bids)
+            {
+                foreach (var item in element.Value.Bid)
+                    if (item.Quantity < 0)
+                        throw new AuctionTimeSerieException($"Auction[{element.Key}] contains invalid Bid Quantity < 0");
+
+                foreach (var item in element.Value.Offer)
+                    if (item.Quantity < 0)
+                        throw new AuctionTimeSerieException($"Auction[{element.Key}] contains invalid Offer Quantity < 0");
+            }
+
             if (_entity.OriginalGranularity.IsTimeGranularity())
             {
                 var period = ArtesianUtils.MapTimePeriod(_entity.OriginalGranularity);

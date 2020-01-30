@@ -100,6 +100,17 @@ namespace Artesian.SDK.Service
         }
 
         /// <summary>
+        /// Set the relative period from today to be queried
+        /// </summary>
+        /// <param name="extractionPeriod">Period to be queried</param>
+        /// <returns>AuctionQuery</returns>
+        public AuctionQuery InRelativePeriod(Period extractionPeriod)
+        {
+            _inRelativePeriod(extractionPeriod);
+            return this;
+        }
+
+        /// <summary>
         /// Execute Auction
         /// </summary>
         /// <param name="ctk">CancellationToken</param>
@@ -158,6 +169,10 @@ namespace Artesian.SDK.Service
 
                 case ExtractionRangeType.PeriodRange:
                     subPath = $"{queryParamaters.ExtractionRangeSelectionConfig.PeriodFrom}/{queryParamaters.ExtractionRangeSelectionConfig.PeriodTo}";
+                    break;
+
+                case ExtractionRangeType.Period:
+                    subPath = $"{queryParamaters.ExtractionRangeSelectionConfig.Period}";
                     break;
 
                 default:

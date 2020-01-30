@@ -54,6 +54,25 @@ namespace Artesian.SDK.Tests
         }
 
         [Test]
+        public void AuctInRelativePeriodExtractionWindow()
+        {
+            using (var httpTest = new HttpTest())
+            {
+                var qs = new QueryService(_cfg);
+
+                var act = qs.CreateAuction()
+                       .ForMarketData(new int[] { 100000001 })
+                       .InRelativePeriod(Period.FromWeeks(2))
+                       .ExecuteAsync().Result;
+
+                httpTest.ShouldHaveCalled($"{_cfg.BaseAddress}query/v1.0/auction/P2W")
+                    .WithVerb(HttpMethod.Get)
+                    .WithQueryParamValue("id", 100000001)
+                    .Times(1);
+            }
+        }
+
+        [Test]
         public void AuctMultipleMarketDataWindow()
         {
             using (var httpTest = new HttpTest())

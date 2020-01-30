@@ -67,7 +67,7 @@ namespace Artesian.SDK.Factory
             metadata.MarketDataName = this.Identifier.Name;
 
             if (_entity != null)
-                throw new ActualTimeSerieException("Actual Time Serie is already registered with ID {0}", _entity.MarketDataId);
+                throw new ArtesianFactoryException("Market Data is already registered with ID {0}", _entity.MarketDataId);
 
             _entity = await _marketDataService.RegisterMarketDataAsync(metadata, ctk);
 
@@ -147,6 +147,25 @@ namespace Artesian.SDK.Factory
 
             var actual = new ActualTimeSerie(this);
             return actual;
+        }
+
+        /// <summary>
+        /// Auction Timeserie Edit
+        /// </summary>
+        /// <remarks>
+        /// Start write mode for Auction Timeserie
+        /// </remarks>
+        /// <returns> ITimeserieWritable </returns>
+        public IAuctionMarketDataWritable EditAuction()
+        {
+            if (_entity == null)
+                throw new AuctionTimeSerieException("Auction Time Serie is not yet registered");
+
+            if (_entity.Type != MarketDataType.AuctionTimeSerie)
+                throw new MarketAssessmentException("Entity is not an Auction Time Serie");
+
+            var auction = new AuctionTimeSerie(this);
+            return auction;
         }
 
         /// <summary>

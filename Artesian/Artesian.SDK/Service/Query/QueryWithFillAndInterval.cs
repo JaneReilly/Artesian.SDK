@@ -13,18 +13,6 @@ namespace Artesian.SDK.Service
     public abstract class QueryWithFillAndInterval<TQueryParams>: QueryWithRange<TQueryParams> where TQueryParams : QueryWithFillAndIntervalParamaters , new()
     {        
         /// <summary>
-        /// Query by relative period
-        /// </summary>
-        /// <param name="extractionPeriod">Period</param>
-        /// <returns>Query</returns>
-        protected QueryWithFillAndInterval<TQueryParams> _inRelativePeriod(Period extractionPeriod)
-        {
-            _queryParamaters.ExtractionRangeType = ExtractionRangeType.Period;
-            _queryParamaters.ExtractionRangeSelectionConfig.Period = extractionPeriod;
-            return this;
-        }
-
-        /// <summary>
         /// Query by relative interval
         /// </summary>
         /// <param name="relativeInterval">RelativeInterval</param>

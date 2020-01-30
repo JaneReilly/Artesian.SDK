@@ -9,5 +9,6 @@ namespace Artesian.SDK.Service
     {
         T InAbsoluteDateRange(LocalDate from, LocalDate to);
         T InRelativePeriodRange(Period from, Period to);
+        T InRelativePeriod(Period extractionPeriod);
     }
 }

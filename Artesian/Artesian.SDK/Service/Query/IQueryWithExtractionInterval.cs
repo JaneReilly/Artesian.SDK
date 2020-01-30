@@ -7,7 +7,6 @@ namespace Artesian.SDK.Service
 {
     interface IQueryWithExtractionInterval<T>: IQuery<T>
     {
-        T InRelativePeriod(Period extractionPeriod);
         T InRelativeInterval(RelativeInterval relativeInterval);
     }
 }

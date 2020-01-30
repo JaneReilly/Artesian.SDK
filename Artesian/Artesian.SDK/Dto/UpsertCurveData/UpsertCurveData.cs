@@ -78,22 +78,28 @@ namespace Artesian.SDK.Dto
         public IDictionary<LocalDateTime, double?> Rows { get; set; }
 
         /// <summary>
-        /// The timeserie data in OriginalTimezone or, when Hourly, must be UTC.
-        /// </summary>
-        [MessagePack.Key(6)]
-        public IDictionary<LocalDateTime, AuctionBids> AuctionRows { get; set; }
-
-        /// <summary>
         /// Flag to choose between synchronous and asynchronous command execution
         /// </summary>
-        [MessagePack.Key(7)]
+        [MessagePack.Key(6)]
         public bool DeferCommandExecution { get; set; } = true;
 
         /// <summary>
         /// Flag to choose between synchronous and asynchronous precomputed data generation
         /// </summary>
-        [MessagePack.Key(8)]
+        [MessagePack.Key(7)]
         public bool DeferDataGeneration { get; set; } = true;
+
+        /// <summary>
+        /// Flag to choose between syncronoys and asyncronous precomputed data generation
+        /// </summary>
+        [MessagePack.Key(8)]
+        public bool KeepNulls { get; set; } = false;
+
+        /// <summary>
+        /// The timeserie data in OriginalTimezone or, when Hourly, must be UTC.
+        /// </summary>
+        [MessagePack.Key(9)]
+        public IDictionary<LocalDateTime, AuctionBids> AuctionRows { get; set; }
     }
 
     internal static class UpsertCurveDataExt

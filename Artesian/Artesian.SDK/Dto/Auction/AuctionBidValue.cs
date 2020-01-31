@@ -18,8 +18,6 @@ namespace Artesian.SDK.Dto
         /// <param name="quantity"></param>
         public AuctionBidValue(double price, double quantity)
         {
-            EnsureArg.IsGt(quantity, 0);
-
             Price = price;
             Quantity = quantity;
         }

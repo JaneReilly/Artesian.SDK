@@ -11,6 +11,7 @@ namespace Artesian.SDK.Dto
     /// <summary>
     /// The AuctionRow entity
     /// </summary>
+    [MessagePackObject]
     public class AuctionRow
     {
         /// <summary>

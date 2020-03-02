@@ -1,13 +1,13 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>netstandard2.0;net461;net452</TargetFrameworks>
+    <TargetFrameworks>netstandard2.1;netstandard2.0;net461</TargetFrameworks>
     <ApplicationIcon />
     <Win32Resource />
     <OutputType>Library</OutputType>
     <StartupObject />
     <PackageProjectUrl>https://github.com/ARKlab/Artesian.SDK</PackageProjectUrl>
-    <Copyright>Copyright (C) 2018 ARK LTD</Copyright>
+    <Copyright>Copyright (C) 2020 ARK LTD</Copyright>
     <Company>ARK Labs</Company>
     <Authors>ARK Labs</Authors>
     <PackageIcon>ark-dark.png</PackageIcon>
@@ -15,9 +15,9 @@
     <Description>Artesian SDK library</Description>
     <PackageTags>Ark;c#;Visual Studio;Framework;Arkive;Artesian;</PackageTags>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    
-    <Version>1.9.0</Version>
-    <VersionSuffix>beta01</VersionSuffix>
+
+    <Version>2.0.0</Version>
+    <VersionSuffix></VersionSuffix>
     <Version Condition=" '$(VersionSuffix)' != '' ">$(Version)-$(VersionSuffix)</Version>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <LangVersion>latest</LangVersion>
@@ -36,22 +36,21 @@
 
     <AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
   </PropertyGroup>
+  
   <ItemGroup>
     <None Include="ark-dark.png" Pack="true" PackagePath="\" />
-    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0-beta2-19554-01" PrivateAssets="All" />
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Ark.Tools.Http" Version="1.1.30" />
-    <PackageReference Include="System.ComponentModel.Annotations" Version="4.6.0" />
+    <PackageReference Include="Ark.Tools.Http" Version="2.1.5" />
+    <PackageReference Include="System.ComponentModel.Annotations" Version="4.7.0" />
+    <PackageReference Include="Ark.Tools.Auth0" Version="2.1.5" />
   </ItemGroup>
-  <ItemGroup Condition=" '$(TargetFramework)' != 'net452' ">
-    <PackageReference Include="Ark.Tools.Auth0" Version="1.1.30" />
-  </ItemGroup>
+
 
   <Target Name="PushNugetPackage" AfterTargets="Pack" Condition="('$(Configuration)' == 'Release' And $(VersionSuffix) == '') Or ('$(Configuration)' == 'Debug' And $(VersionSuffix) != '')">
     <Exec Command="dotnet nuget push -s https://api.nuget.org/v3/index.json $(MSBuildProjectDirectory)\$(OutputPath)$(PackageId).$(PackageVersion).nupkg" />
-    <!--<Exec Command="dotnet nuget push -s https://nuget.smbsrc.net/ $(MSBuildProjectDirectory)\$(OutputPath)$(PackageId).$(PackageVersion).symbols.nupkg" />-->
   </Target>
 
 

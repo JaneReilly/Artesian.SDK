@@ -12,7 +12,7 @@ namespace Artesian.SDK.Service
     {
         public static IFormatterResolver Instance = new CustomCompositeResolver();
 
-        static readonly IFormatterResolver[] resolvers = new[]
+        static readonly IFormatterResolver[] _resolvers = new[]
         {
             BuiltinResolver.Instance,
             NodatimeResolver.Instance,
@@ -36,7 +36,7 @@ namespace Artesian.SDK.Service
 
             static FormatterCache()
             {
-                foreach (var item in resolvers)
+                foreach (var item in _resolvers)
                 {
                     var f = item.GetFormatter<T>();
                     if (f != null)

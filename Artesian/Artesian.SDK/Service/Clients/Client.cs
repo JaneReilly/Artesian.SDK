@@ -25,21 +25,20 @@ using System.Net.Http.Headers;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Ark.Tools.Http;
 
 namespace Artesian.SDK.Service
 {
     internal sealed class Client : IDisposable
     {
-#if !NET452
         private readonly IAuthenticationApiClient _auth0;
         private readonly ClientCredentialsTokenRequest _credentials;
-#endif
         private readonly MediaTypeFormatterCollection _formatters;
         private readonly IFlurlClient _client;
 
         private readonly JsonMediaTypeFormatter _jsonFormatter;
-        private readonly MessagePackFormatter _msgPackFormatter;
-        private readonly LZ4MessagePackFormatter _lz4msgPackFormatter;
+        private readonly MessagePackMediaTypeFormatter _msgPackFormatter;
+        private readonly LZ4MessagePackMediaTypeFormatter _lz4msgPackFormatter;
 
 
         private readonly string _url;
@@ -70,12 +69,12 @@ namespace Artesian.SDK.Service
             var jsonFormatter = new JsonMediaTypeFormatter
             {
                 SerializerSettings = cfg
-        };
+            };
             _jsonFormatter = jsonFormatter;
             _jsonFormatter.SupportedMediaTypes.Add(new MediaTypeHeaderValue("application/problem+json"));
 
-            _msgPackFormatter = new MessagePackFormatter(CustomCompositeResolver.Instance);
-            _lz4msgPackFormatter = new LZ4MessagePackFormatter(CustomCompositeResolver.Instance);
+            _msgPackFormatter = new MessagePackMediaTypeFormatter(CustomCompositeResolver.Instance);
+            _lz4msgPackFormatter = new LZ4MessagePackMediaTypeFormatter(CustomCompositeResolver.Instance);
             //Order of formatters important for correct weight in accept header
             var formatters = new MediaTypeFormatterCollection();
             formatters.Clear();
@@ -85,7 +84,6 @@ namespace Artesian.SDK.Service
             _formatters = formatters;
 
             _resilienceStrategy = policy.GetResillianceStrategy();
-#if !NET452 
 
             if (config.ApiKey == null)
             {
@@ -98,7 +96,6 @@ namespace Artesian.SDK.Service
                     ClientSecret = config.ClientSecret,
                 };
             }
-#endif
 
             _client = new FlurlClient(_url);
             _client.WithTimeout(TimeSpan.FromMinutes(ArtesianConstants.ServiceRequestTimeOutMinutes));
@@ -114,13 +111,13 @@ namespace Artesian.SDK.Service
 
                 if (_apiKey != null)
                     req = req.WithHeader("X-Api-Key", _apiKey);
-#if !NET452
+
                 else
                 {
                     var (token, _) = await _getAccessToken();
                     req = req.WithOAuthBearerToken(token);
                 }
-#endif
+
                 ObjectContent content = null;
 
                 try
@@ -229,7 +226,6 @@ namespace Artesian.SDK.Service
             => await Exec<object, TBody>(method, resource, body, ctk);
 
 #region private methods
-#if !NET452
         private async Task<(string AccessToken, DateTimeOffset ExpiresOn)> _getAccessToken()
         {
 			var result = await _auth0.GetTokenAsync(_credentials);
@@ -241,7 +237,6 @@ namespace Artesian.SDK.Service
 
 			return (result.AccessToken, DateTimeOffset.FromUnixTimeSeconds(exp) - TimeSpan.FromMinutes(2));
         }
-#endif
 
         public void Dispose()
         {

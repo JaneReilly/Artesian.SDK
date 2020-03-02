@@ -1,8 +1,9 @@
 ﻿// Copyright (c) ARK LTD. All rights reserved.
 // Licensed under the MIT License. See LICENSE in the project root for
-// license information. 
+// license information.
 using System.Collections.Generic;
 using System.Linq;
+
 namespace Artesian.SDK.Service
 {
     /// <summary>
@@ -21,7 +22,6 @@ namespace Artesian.SDK.Service
         /// </returns>
         public IEnumerable<ActualQueryParamaters> Partition(IEnumerable<ActualQueryParamaters> queryParamaters)
         {
-            
             if (queryParamaters.Any(g => g.Ids == null)) return queryParamaters;
 
             return queryParamaters.SelectMany(queryParamater =>
@@ -36,8 +36,8 @@ namespace Artesian.SDK.Service
                                 queryParamater.FillerKindType,
                                 queryParamater.FillerConfig
                                 )));
-                    
         }
+
         /// <summary>
         /// Partition strategy for Versioned Time Serie Query
         /// </summary>
@@ -49,7 +49,7 @@ namespace Artesian.SDK.Service
         {
             if (queryParamaters.Any(g => g.Ids == null)) return queryParamaters;
 
-            return queryParamaters.SelectMany(queryParamater => 
+            return queryParamaters.SelectMany(queryParamater =>
                          _partitionIds(queryParamater.Ids)
                             .Select(g => new VersionedQueryParamaters(g,
                                 queryParamater.ExtractionRangeSelectionConfig,
@@ -65,6 +65,7 @@ namespace Artesian.SDK.Service
                                 queryParamater.FillerConfig
                                 )));
         }
+
         /// <summary>
         /// Partition strategy for Market Assessment Query
         /// </summary>
@@ -76,7 +77,7 @@ namespace Artesian.SDK.Service
         {
             if (queryParamaters.Any(g => g.Ids == null)) return queryParamaters;
 
-            return queryParamaters.SelectMany(queryParamater => 
+            return queryParamaters.SelectMany(queryParamater =>
                         _partitionIds(queryParamater.Ids)
                             .Select(g => new MasQueryParamaters(g,
                                 queryParamater.ExtractionRangeSelectionConfig,
@@ -89,6 +90,26 @@ namespace Artesian.SDK.Service
                                 )));
         }
 
+        /// <summary>
+        /// Partition strategy for Auction Time Serie Query
+        /// </summary>
+        /// <param name="queryParamaters">The list of Auction Time Serie Query paramaters to be partitioned. See <see cref="AuctionQueryParamaters"/></param>
+        /// <returns>
+        /// The input list of Auction Time Serie Query paramaters partitioned by MarketData ID. See <see cref="AuctionQueryParamaters"/>
+        /// </returns>
+        public IEnumerable<AuctionQueryParamaters> Partition(IEnumerable<AuctionQueryParamaters> queryParamaters)
+        {
+            if (queryParamaters.Any(g => g.Ids == null)) return queryParamaters;
+            return queryParamaters.SelectMany(queryParamater =>
+                        _partitionIds(queryParamater.Ids)
+                            .Select(g => new AuctionQueryParamaters(g,
+                                queryParamater.ExtractionRangeSelectionConfig,
+                                queryParamater.ExtractionRangeType,
+                                queryParamater.TimeZone,
+                                queryParamater.FilterId
+                                )));
+        }
+
         private IEnumerable<IEnumerable<int>> _partitionIds(IEnumerable<int> ids)
         {
             return ids.Select((x, i) => (value: x, index: i))
@@ -96,5 +117,4 @@ namespace Artesian.SDK.Service
                 .Select(g => g.Select(x => x.value));
         }
     }
-   
 }

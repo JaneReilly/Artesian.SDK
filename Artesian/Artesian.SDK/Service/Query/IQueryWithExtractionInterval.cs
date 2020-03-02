@@ -5,10 +5,8 @@ using NodaTime;
 
 namespace Artesian.SDK.Service
 {
-    interface IQuery<T>
+    interface IQueryWithExtractionInterval<T>: IQuery<T>
     {
-        T ForMarketData(int[] ids);
-        T ForFilterId(int filterId);
-        T InTimezone(string tz);
+        T InRelativeInterval(RelativeInterval relativeInterval);
     }
 }

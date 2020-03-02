@@ -30,7 +30,7 @@ namespace Artesian.SDK.Dto
         /// <summary>
         /// The constructor with id and version
         /// </summary>
-        public UpsertCurveData(MarketDataIdentifier id, LocalDateTime version )
+        public UpsertCurveData(MarketDataIdentifier id, LocalDateTime version)
         {
             ID = id;
             Version = version;
@@ -77,7 +77,6 @@ namespace Artesian.SDK.Dto
         [MessagePack.Key(5)]
         public IDictionary<LocalDateTime, double?> Rows { get; set; }
 
-
         /// <summary>
         /// Flag to choose between synchronous and asynchronous command execution
         /// </summary>
@@ -89,6 +88,18 @@ namespace Artesian.SDK.Dto
         /// </summary>
         [MessagePack.Key(7)]
         public bool DeferDataGeneration { get; set; } = true;
+
+        /// <summary>
+        /// Flag to choose between syncronoys and asyncronous precomputed data generation
+        /// </summary>
+        [MessagePack.Key(8)]
+        public bool KeepNulls { get; set; } = false;
+
+        /// <summary>
+        /// The timeserie data in OriginalTimezone or, when Hourly, must be UTC.
+        /// </summary>
+        [MessagePack.Key(9)]
+        public IDictionary<LocalDateTime, AuctionBids> AuctionRows { get; set; }
     }
 
     internal static class UpsertCurveDataExt
@@ -104,24 +115,21 @@ namespace Artesian.SDK.Dto
             if (upsertCurveData.DownloadedAt == null)
                 throw new ArgumentException("UpsertCurveData DownloadedAt must be valorized");
 
-            if (upsertCurveData.MarketAssessment == null && (upsertCurveData.Rows == null || upsertCurveData.Rows.Count == 0))
-                throw new ArgumentException("UpsertCurveData Rows must be valorized if MarketAssessment is null");
-
-            if (upsertCurveData.MarketAssessment != null && upsertCurveData.Rows != null)
-                throw new ArgumentException("UpsertCurveData MarketAssessment must be valorized if Rows are null");
-
             if (upsertCurveData.Rows == null)
             {
                 if (upsertCurveData.Version != null)
                     throw new ArgumentException("UpsertCurveData Version must be NULL if Rows are NULL");
 
-                if (upsertCurveData.MarketAssessment == null || upsertCurveData.MarketAssessment.Count == 0)
-                    throw new ArgumentException("UpsertCurveData MarketAssessment must be valorized if Rows are NULL");
+                if ((upsertCurveData.MarketAssessment == null || upsertCurveData.MarketAssessment.Count == 0) && (upsertCurveData.AuctionRows == null || upsertCurveData.AuctionRows.Count == 0))
+                    throw new ArgumentException("UpsertCurveData MarketAssessment/Bids must be valorized if Rows are NULL");
             }
             else
             {
                 if (upsertCurveData.MarketAssessment != null)
                     throw new ArgumentException("UpsertCurveData MarketAssessment must be NULL if Rows are Valorized");
+
+                if (upsertCurveData.AuctionRows != null)
+                    throw new ArgumentException("UpsertCurveData Bids must be NULL if Rows are Valorized");
 
                 foreach (var row in upsertCurveData.Rows)
                 {
@@ -130,6 +138,33 @@ namespace Artesian.SDK.Dto
                 }
             }
 
+            if (upsertCurveData.MarketAssessment == null)
+            {
+                if ((upsertCurveData.Rows == null || upsertCurveData.Rows.Count == 0) && (upsertCurveData.AuctionRows == null || upsertCurveData.AuctionRows.Count == 0))
+                    throw new ArgumentException("UpsertCurveData Rows/Bids must be valorized if MarketAssesment are NULL");
+            }
+            else
+            {
+                if (upsertCurveData.Rows != null)
+                    throw new ArgumentException("UpsertCurveData Rows must be NULL if MarketAssessment are Valorized");
+
+                if (upsertCurveData.AuctionRows != null)
+                    throw new ArgumentException("UpsertCurveData Bids must be NULL if MarketAssessment are Valorized");
+            }
+
+            if (upsertCurveData.AuctionRows == null)
+            {
+                if ((upsertCurveData.Rows == null || upsertCurveData.Rows.Count == 0) && (upsertCurveData.MarketAssessment == null || upsertCurveData.MarketAssessment.Count == 0))
+                    throw new ArgumentException("UpsertCurveData Rows/MarketAssessment must be valorized if Bids are NULL");
+            }
+            else
+            {
+                if (upsertCurveData.Rows != null)
+                    throw new ArgumentException("UpsertCurveData Rows must be NULL if Bids are Valorized");
+
+                if (upsertCurveData.MarketAssessment != null)
+                    throw new ArgumentException("UpsertCurveData MarketAssesment must be NULL if Bids are Valorized");
+            }
         }
     }
 }

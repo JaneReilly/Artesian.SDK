@@ -159,7 +159,7 @@ namespace Artesian.SDK.Tests
                     Filters = filterDict,
                     Sorts = new List<string>() { "OriginalTimezone" }
                 };
-                var mdq = mds.SearchFacetAsync(filter).ConfigureAwait(true).GetAwaiter().GetResult();
+                var mdq = mds.SearchFacetAsync(filter, false).ConfigureAwait(true).GetAwaiter().GetResult();
 
                 httpTest.ShouldHaveCalled($"{_cfg.BaseAddress}v2.1/marketdata/searchfacet"
                     .SetQueryParam("pageSize", 1)
@@ -379,6 +379,37 @@ namespace Artesian.SDK.Tests
 
                 data.MarketAssessment.Add(localDateTime, new Dictionary<string, MarketAssessmentValue>());
                 data.MarketAssessment[localDateTime].Add("test", new MarketAssessmentValue());
+
+                mds.UpsertCurveDataAsync(data).ConfigureAwait(true).GetAwaiter().GetResult();
+
+                httpTest.ShouldHaveCalled($"{_cfg.BaseAddress}v2.1/marketdata/upsertdata")
+                    .WithVerb(HttpMethod.Post)
+                    .Times(1);
+            }
+        }
+
+        [Test]
+        public void UpsertCurve_UpsertCurveDataAsync_Auction()
+        {
+            using (var httpTest = new HttpTest())
+            {
+                var mds = new MarketDataService(_cfg);
+
+                var data = new UpsertCurveData()
+                {
+                    ID = new MarketDataIdentifier("test", "testName"),
+                    Timezone = "CET",
+                    DownloadedAt = new Instant(),
+                    AuctionRows = new Dictionary<LocalDateTime, AuctionBids>()
+                };
+
+                var localDateTime = new LocalDateTime(2018, 09, 24, 00, 00);
+                var bid = new List<AuctionBidValue>();
+                var offer = new List<AuctionBidValue>();
+                bid.Add(new AuctionBidValue(100, 10));
+                offer.Add(new AuctionBidValue(120, 12));
+
+                data.AuctionRows.Add(localDateTime, new AuctionBids(localDateTime, bid.ToArray(), offer.ToArray()));
 
                 mds.UpsertCurveDataAsync(data).ConfigureAwait(true).GetAwaiter().GetResult();
 

@@ -5,10 +5,10 @@ using NodaTime;
 
 namespace Artesian.SDK.Service
 {
-    interface IQuery<T>
+    interface IQueryWithFill<T>: IQuery<T>
     {
-        T ForMarketData(int[] ids);
-        T ForFilterId(int filterId);
-        T InTimezone(string tz);
+        T WithFillNull();
+        T WithFillLatestValue(Period period);
+        T WithFillNone();
     }
 }

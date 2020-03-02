@@ -16,7 +16,7 @@ namespace Artesian.SDK.Service
     /// <summary>
     /// Market Assessment Query Class
     /// </summary>
-    public class MasQuery : Query<MasQueryParamaters>, IMasQuery<MasQuery>
+    public class MasQuery : QueryWithFillAndInterval<MasQueryParamaters>, IMasQuery<MasQuery>
     {        
         private string _routePrefix = "mas";
         private Client _client;

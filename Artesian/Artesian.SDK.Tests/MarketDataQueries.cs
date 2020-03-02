@@ -172,6 +172,7 @@ namespace Artesian.SDK.Tests
                     .Times(1);
             }
         }
+
         #endregion
 
         #region Operations

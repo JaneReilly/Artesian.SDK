@@ -71,7 +71,7 @@ namespace Artesian.SDK.Service
                 SerializerSettings = cfg
             };
             _jsonFormatter = jsonFormatter;
-            _jsonFormatter.SupportedMediaTypes.Add(new MediaTypeHeaderValue("application/problem+json"));
+            _jsonFormatter.SupportedMediaTypes.Add(MediaTypeHeaderValue.Parse("application/*+json"));
 
             _msgPackFormatter = new MessagePackMediaTypeFormatter(CustomCompositeResolver.Instance);
             _lz4msgPackFormatter = new LZ4MessagePackMediaTypeFormatter(CustomCompositeResolver.Instance);
@@ -99,7 +99,6 @@ namespace Artesian.SDK.Service
 
             _client = new FlurlClient(_url);
             _client.WithTimeout(TimeSpan.FromMinutes(ArtesianConstants.ServiceRequestTimeOutMinutes));
-
         }
 
        
@@ -111,11 +110,10 @@ namespace Artesian.SDK.Service
 
                 if (_apiKey != null)
                     req = req.WithHeader("X-Api-Key", _apiKey);
-
                 else
                 {
-                    var (token, _) = await _getAccessToken();
-                    req = req.WithOAuthBearerToken(token);
+                    var res = await _auth0.GetTokenAsync(_credentials);
+                    req = req.WithOAuthBearerToken(res.AccessToken);
                 }
 
                 ObjectContent content = null;
@@ -225,25 +223,11 @@ namespace Artesian.SDK.Service
         public async Task Exec<TBody>(HttpMethod method, string resource, TBody body, CancellationToken ctk = default)
             => await Exec<object, TBody>(method, resource, body, ctk);
 
-#region private methods
-        private async Task<(string AccessToken, DateTimeOffset ExpiresOn)> _getAccessToken()
-        {
-			var result = await _auth0.GetTokenAsync(_credentials);
-			var decode = new JwtBuilder()
-				.DoNotVerifySignature()
-				.Decode<IDictionary<string, object>>(result.AccessToken);
-
-			var exp = (long)decode["exp"];
-
-			return (result.AccessToken, DateTimeOffset.FromUnixTimeSeconds(exp) - TimeSpan.FromMinutes(2));
-        }
-
         public void Dispose()
         {
             _client.Dispose();
         }
 
-#endregion private methods
     }
     /// <summary>
     /// Flurl Extension

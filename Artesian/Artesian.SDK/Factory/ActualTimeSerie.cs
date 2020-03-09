@@ -118,8 +118,9 @@ namespace Artesian.SDK.Factory
         /// <param name="downloadedAt">Downloaded at</param>
         /// <param name="deferCommandExecution">DeferCommandExecution</param>
         /// <param name="deferDataGeneration">DeferDataGeneration</param>
+        /// <param name="keepNulls">if <see langword="false"/> nulls are ignored (server-side). That is the default behaviour.</param>
         /// <returns></returns>
-        public async Task Save(Instant downloadedAt, bool deferCommandExecution = false, bool deferDataGeneration = true)
+        public async Task Save(Instant downloadedAt, bool deferCommandExecution = false, bool deferDataGeneration = true, bool keepNulls = false)
         {
             Ensure.Any.IsNotNull(_entity);
 
@@ -131,7 +132,8 @@ namespace Artesian.SDK.Factory
                     DownloadedAt = downloadedAt,
                     Rows = _values,
                     DeferCommandExecution = deferCommandExecution,
-                    DeferDataGeneration = deferDataGeneration
+                    DeferDataGeneration = deferDataGeneration,
+                    KeepNulls = keepNulls
                 };
 
                 await _marketDataService.UpsertCurveDataAsync(data);

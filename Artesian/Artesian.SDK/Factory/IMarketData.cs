@@ -144,8 +144,9 @@ namespace Artesian.SDK.Factory
         /// <param name="downloadedAt">The instant downloaded</param>
         /// <param name="deferCommandExecution">Defer Command Execution</param>
         /// <param name="deferDataGeneration">Defer Data Generation</param>
+        /// <param name="keepNulls">if <see langword="false"/> Settlement=null are ignored (server-side). That is the default behaviour.</param>
         /// <returns></returns>
-        Task Save(Instant downloadedAt, bool deferCommandExecution = false, bool deferDataGeneration = true);
+        Task Save(Instant downloadedAt, bool deferCommandExecution = false, bool deferDataGeneration = true, bool keepNulls = false);
     }
 
     /// <summary>
@@ -191,8 +192,9 @@ namespace Artesian.SDK.Factory
         /// <param name="downloadedAt">The instant downloaded</param>
         /// <param name="deferCommandExecution">Defer Command Execution</param>
         /// <param name="deferDataGeneration">Defer Data Generation</param>
+        /// <param name="keepNulls">if <see langword="false"/> nulls are ignored (server-side). That is the default behaviour.</param>
         /// <returns></returns>
-        Task Save(Instant downloadedAt, bool deferCommandExecution = false, bool deferDataGeneration = true);
+        Task Save(Instant downloadedAt, bool deferCommandExecution = false, bool deferDataGeneration = true, bool keepNulls = false);
     }
 
     /// <summary>
@@ -244,7 +246,8 @@ namespace Artesian.SDK.Factory
         /// <param name="downloadedAt">The instant downloaded</param>
         /// <param name="deferCommandExecution">Defer Command Execution</param>
         /// <param name="deferDataGeneration">Defer Data Generation</param>
+        /// <param name="keepNulls">if <see langword="false"/> nulls are ignored (server-side). That is the default behaviour.</param>
         /// <returns></returns>
-        Task Save(Instant downloadedAt, bool deferCommandExecution = false, bool deferDataGeneration = true);
+        Task Save(Instant downloadedAt, bool deferCommandExecution = false, bool deferDataGeneration = true, bool keepNulls = false);
     }
 }

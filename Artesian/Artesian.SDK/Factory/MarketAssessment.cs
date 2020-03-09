@@ -115,8 +115,9 @@ namespace Artesian.SDK.Factory
         /// <param name="downloadedAt">Downloaded at</param>
         /// <param name="deferCommandExecution">DeferCommandExecution</param>
         /// <param name="deferDataGeneration">DeferDataGeneration</param>
+        /// <param name="keepNulls">if <see langword="false"/> nulls are ignored (server-side). That is the default behaviour.</param>
         /// <returns></returns>
-        public async Task Save(Instant downloadedAt, bool deferCommandExecution = false, bool deferDataGeneration = true)
+        public async Task Save(Instant downloadedAt, bool deferCommandExecution = false, bool deferDataGeneration = true, bool keepNulls = false)
         {
             Ensure.Any.IsNotNull(_entity);
 
@@ -127,7 +128,8 @@ namespace Artesian.SDK.Factory
                     Timezone = _entity.OriginalTimezone,
                     DownloadedAt = downloadedAt,
                     DeferCommandExecution = deferCommandExecution,
-                    MarketAssessment = new Dictionary<LocalDateTime, IDictionary<string, MarketAssessmentValue>>()
+                    MarketAssessment = new Dictionary<LocalDateTime, IDictionary<string, MarketAssessmentValue>>(),
+                    KeepNulls = keepNulls
                 };
 
                 foreach (var reportTime in Assessments.GroupBy(g => g.ReportTime))

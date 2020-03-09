@@ -57,7 +57,7 @@ namespace Artesian.SDK.Service
 
                 if (reader.TokenType == JsonToken.StartObject)
                 {
-                    AddObjectToDictionary(reader, result, serializer, keyType, valueType);
+                    _addObjectToDictionary(reader, result, serializer, keyType, valueType);
                 }
             }
 
@@ -69,7 +69,7 @@ namespace Artesian.SDK.Service
             return objectType.IsGenericType && (objectType.GetGenericTypeDefinition() == typeof(IDictionary<,>) || objectType.GetGenericTypeDefinition() == typeof(Dictionary<,>));
         }
 
-        private void AddObjectToDictionary(JsonReader reader, IDictionary result, JsonSerializer serializer, Type keyType, Type valueType)
+        private void _addObjectToDictionary(JsonReader reader, IDictionary result, JsonSerializer serializer, Type keyType, Type valueType)
         {
             object key = null;
             object value = null;

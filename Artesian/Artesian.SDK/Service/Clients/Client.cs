@@ -71,7 +71,7 @@ namespace Artesian.SDK.Service
                 SerializerSettings = cfg
             };
             _jsonFormatter = jsonFormatter;
-            _jsonFormatter.SupportedMediaTypes.Add(MediaTypeHeaderValue.Parse("application/*+json"));
+            _jsonFormatter.SupportedMediaTypes.Add(MediaTypeHeaderValue.Parse("application/problem+json"));
 
             _msgPackFormatter = new MessagePackMediaTypeFormatter(CustomCompositeResolver.Instance);
             _lz4msgPackFormatter = new LZ4MessagePackMediaTypeFormatter(CustomCompositeResolver.Instance);

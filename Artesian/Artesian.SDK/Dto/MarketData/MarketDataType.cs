@@ -12,7 +12,7 @@ namespace Artesian.SDK.Dto
           ActualTimeSerie
         , VersionedTimeSerie
         , MarketAssessment
-        , AuctionTimeSerie
+        , Auction
 #pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
     }
 }

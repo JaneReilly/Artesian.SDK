@@ -157,7 +157,7 @@ namespace Artesian.SDK.Factory
             if (_entity == null)
                 throw new AuctionTimeSerieException("Auction Time Serie is not yet registered");
 
-            if (_entity.Type != MarketDataType.AuctionTimeSerie)
+            if (_entity.Type != MarketDataType.Auction)
                 throw new MarketAssessmentException("Entity is not an Auction Time Serie");
 
             var auction = new AuctionTimeSerie(this);

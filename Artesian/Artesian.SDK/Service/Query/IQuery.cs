@@ -10,12 +10,5 @@ namespace Artesian.SDK.Service
         T ForMarketData(int[] ids);
         T ForFilterId(int filterId);
         T InTimezone(string tz);
-        T InAbsoluteDateRange(LocalDate from, LocalDate to);
-        T InRelativePeriodRange(Period from, Period to);
-        T InRelativePeriod(Period extractionPeriod);
-        T InRelativeInterval(RelativeInterval relativeInterval);
-        T WithFillNull();
-        T WithFillLatestValue(Period period);
-        T WithFillNone();
     }
 }

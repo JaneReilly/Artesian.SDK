@@ -34,6 +34,14 @@ namespace Artesian.SDK.Service
         /// The input list of Market Assessment Query paramaters partitioned with the defined strategy. See <see cref="MasQueryParamaters"/>
         /// </returns>
         IEnumerable<MasQueryParamaters> Partition(IEnumerable<MasQueryParamaters> paramaters);
+        /// <summary>
+        /// Partition strategy for Auction Time Serie Query
+        /// </summary>
+        /// <param name="paramaters">The list of Auction Time Serie Query paramaters to be partitioned. See <see cref="AuctionQueryParamaters"/></param>
+        /// <returns>
+        /// The input list of Auction Time Serie Query paramaters partitioned with the defined strategy. See <see cref="AuctionQueryParamaters"/>
+        /// </returns>
+        IEnumerable<AuctionQueryParamaters> Partition(IEnumerable<AuctionQueryParamaters> paramaters);
 
     }
 }

@@ -67,14 +67,6 @@ namespace Artesian.SDK.Service
 
         #region SearchFacet
         /// <summary>
-        /// Search the market data collection with faceted results
-        /// </summary>
-        /// <param name="filter">ArtesianSearchFilter</param>
-        /// <param name="ctk">CancellationToken</param>
-        /// <returns>ArtesianSearchResults entity</returns>
-        Task<ArtesianSearchResults> SearchFacetAsync(ArtesianSearchFilter filter, CancellationToken ctk = default);
-
-        /// <summary>
         /// Search the marketdata metadata
         /// </summary>
         /// <param name="filter">ArtesianSearchFilter containing the search params</param>

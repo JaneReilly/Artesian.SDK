@@ -6,14 +6,14 @@ using System.Collections.Generic;
 namespace Artesian.SDK.Service
 {
     /// <summary>
-    /// Query Paramaters DTO
+    /// Query with Fill and Interval Paramaters DTO
     /// </summary>
-    public abstract class QueryParamaters
+    public abstract class QueryWithFillAndIntervalParamaters : QueryWithRangeParamaters
     {
         /// <summary>
         /// 
         /// </summary>
-        public QueryParamaters()
+        public QueryWithFillAndIntervalParamaters ()
         {
         }
 
@@ -27,7 +27,7 @@ namespace Artesian.SDK.Service
         /// <param name="filterId"></param>
         /// <param name="fillerKind"></param>
         /// <param name="fillerConfig"></param>
-        public QueryParamaters(
+        public QueryWithFillAndIntervalParamaters (
             IEnumerable<int> ids, 
             ExtractionRangeSelectionConfig 
             extractionRangeSelectionConfig, 
@@ -37,37 +37,12 @@ namespace Artesian.SDK.Service
             int? filterId,
             FillerKindType fillerKind,
             FillerConfig fillerConfig
-            )
+            ): base(ids, extractionRangeSelectionConfig, extractionRangeType, timezone, filterId)
         {
-            this.Ids = ids;
-            this.ExtractionRangeSelectionConfig = extractionRangeSelectionConfig;
-            this.ExtractionRangeType = extractionRangeType;
-            this.TimeZone = timezone;
-            this.FilterId = filterId;
             this.FillerKindType = fillerKind;
             this.FillerConfig = fillerConfig;
         }
 
-        /// <summary>
-        /// IDs
-        /// </summary>
-        public IEnumerable<int> Ids { get; set; }
-        /// <summary>
-        /// Extraction range config
-        /// </summary>
-        public ExtractionRangeSelectionConfig ExtractionRangeSelectionConfig { get; set; } = new ExtractionRangeSelectionConfig();
-        /// <summary>
-        /// Extraction range type
-        /// </summary>
-        public ExtractionRangeType? ExtractionRangeType { get; set; }
-        /// <summary>
-        /// Timezone
-        /// </summary>
-        public string TimeZone { get; set; }
-        /// <summary>
-        /// FilterId
-        /// </summary>
-        public int? FilterId { get; set; }
         /// <summary>
         /// Filler Kind
         /// </summary>

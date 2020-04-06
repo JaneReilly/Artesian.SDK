@@ -10,7 +10,7 @@ namespace Artesian.SDK.Service
     /// <summary>
     /// Versioned Query Paramaters DTO
     /// </summary>
-    public class VersionedQueryParamaters : QueryParamaters
+    public class VersionedQueryParamaters : QueryWithFillAndIntervalParamaters 
     {
         /// <summary>
         /// 

@@ -10,7 +10,7 @@ namespace Artesian.SDK.Service
     /// <summary>
     /// Actual Query Paramaters DTO
     /// </summary>
-    public class ActualQueryParamaters : QueryParamaters
+    public class ActualQueryParamaters : QueryWithFillAndIntervalParamaters 
     {
         /// <summary>
         /// 

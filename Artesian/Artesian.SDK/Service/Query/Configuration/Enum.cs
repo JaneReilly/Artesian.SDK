@@ -62,4 +62,14 @@ namespace Artesian.SDK.Service
         NoFill
 #pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
     }
+    /// <summary>
+    /// Auction side enums
+    /// </summary>
+    public enum AuctionSide
+    {
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
+        Bid = 0
+      , Offer = 1
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
+    }
 }

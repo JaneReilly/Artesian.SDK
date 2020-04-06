@@ -23,5 +23,10 @@ namespace Artesian.SDK.Service
         /// </summary>
         /// <returns></returns>
         MasQuery CreateMarketAssessment();
+        /// <summary>
+        /// Create Auction Time Serie
+        /// </summary>
+        /// <returns></returns>
+        AuctionQuery CreateAuction();
     }
 }

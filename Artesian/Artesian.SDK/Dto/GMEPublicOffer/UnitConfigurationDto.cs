@@ -2,7 +2,7 @@
 using NodaTime;
 using System.Collections.Generic;
 
-namespace Artesian.SDK.Dto.PublicOffer
+namespace Artesian.SDK.Dto.GMEPublicOffer
 {
     /// <summary>
     /// UnitConfiguration class

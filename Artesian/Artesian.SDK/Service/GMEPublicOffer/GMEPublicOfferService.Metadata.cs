@@ -1,18 +1,18 @@
 ﻿using Artesian.SDK.Dto;
-using Artesian.SDK.Dto.PublicOffer;
+using Artesian.SDK.Dto.GMEPublicOffer;
 using Flurl;
 using System;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Artesian.SDK.Service.PublicOffer
+namespace Artesian.SDK.Service.GMEPublicOffer
 {
     /// <summary>
-    /// PublicOfferService class
+    /// GMEPublicOfferService class
     /// Contains query types to be created
     /// </summary>
-    public partial class PublicOfferService
+    public partial class GMEPublicOfferService
     {
 
         /// <summary>

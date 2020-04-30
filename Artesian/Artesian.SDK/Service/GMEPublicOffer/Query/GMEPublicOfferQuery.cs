@@ -1,5 +1,5 @@
 ﻿using Artesian.SDK.Dto;
-using Artesian.SDK.Dto.PublicOffer;
+using Artesian.SDK.Dto.GMEPublicOffer;
 using Flurl;
 using NodaTime;
 using NodaTime.Text;
@@ -10,18 +10,18 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Artesian.SDK.Service.PublicOffer
+namespace Artesian.SDK.Service.GMEPublicOffer
 {
     /// <summary>
-    /// Public Offer Query Class
+    /// GME Public Offer Query Class
     /// </summary>
-    public class PublicOfferQuery: IPublicOfferQuery
+    public class GMEPublicOfferQuery: IGMEPublicOfferQuery
     {
         private Client _client;
-        private PublicOfferQueryParamaters _queryParamaters = new PublicOfferQueryParamaters();
+        private GMEPublicOfferQueryParamaters _queryParamaters = new GMEPublicOfferQueryParamaters();
         private static LocalDatePattern _localDatePattern = LocalDatePattern.Iso;
 
-        internal PublicOfferQuery(Client client)
+        internal GMEPublicOfferQuery(Client client)
         {
             _client = client;
         }
@@ -30,8 +30,8 @@ namespace Artesian.SDK.Service.PublicOffer
         /// Set the date to be queried
         /// </summary>
         /// <param name="date">Date to be queried</param>
-        /// <returns>PublicOfferQuery</returns>
-        public PublicOfferQuery ForDate(LocalDate date)
+        /// <returns>GMEPublicOfferQuery</returns>
+        public GMEPublicOfferQuery ForDate(LocalDate date)
         {
             _queryParamaters.Date = date;
 
@@ -42,8 +42,8 @@ namespace Artesian.SDK.Service.PublicOffer
         /// Set the Status to be queried
         /// </summary>
         /// <param name="status">Status to be queried</param>
-        /// <returns>PublicOfferQuery</returns>
-        public PublicOfferQuery ForStatus(Status status)
+        /// <returns>GMEPublicOfferQuery</returns>
+        public GMEPublicOfferQuery ForStatus(Status status)
         {
             _queryParamaters.Status = status;
 
@@ -54,8 +54,8 @@ namespace Artesian.SDK.Service.PublicOffer
         /// Set the Purpose to be queried
         /// </summary>
         /// <param name="purpose">Purpose to be queried</param>
-        /// <returns>PublicOfferQuery</returns>
-        public PublicOfferQuery ForPurpose(Purpose purpose)
+        /// <returns>GMEPublicOfferQuery</returns>
+        public GMEPublicOfferQuery ForPurpose(Purpose purpose)
         {
             _queryParamaters.Purpose = purpose;
 
@@ -66,8 +66,8 @@ namespace Artesian.SDK.Service.PublicOffer
         /// Set the BATypes to be queried
         /// </summary>
         /// <param name="baType">BATypes to be queried</param>
-        /// <returns>PublicOfferQuery</returns>
-        public PublicOfferQuery ForBAType(BAType[] baType)
+        /// <returns>GMEPublicOfferQuery</returns>
+        public GMEPublicOfferQuery ForBAType(BAType[] baType)
         {
             _queryParamaters.BAType = baType;
 
@@ -78,8 +78,8 @@ namespace Artesian.SDK.Service.PublicOffer
         /// Set the generation types to be queried
         /// </summary>
         /// <param name="generationType">GenerationTypes to be queried</param>
-        /// <returns>PublicOfferQuery</returns>
-        public PublicOfferQuery ForGenerationType(GenerationType[] generationType)
+        /// <returns>GMEPublicOfferQuery</returns>
+        public GMEPublicOfferQuery ForGenerationType(GenerationType[] generationType)
         {
             _queryParamaters.GenerationType = generationType;
 
@@ -90,8 +90,8 @@ namespace Artesian.SDK.Service.PublicOffer
         /// Set the markets to be queried
         /// </summary>
         /// <param name="market">Markets to be queried</param>
-        /// <returns>PublicOfferQuery</returns>
-        public PublicOfferQuery ForMarket(Market[] market)
+        /// <returns>GMEPublicOfferQuery</returns>
+        public GMEPublicOfferQuery ForMarket(Market[] market)
         {
             _queryParamaters.Market = market;
 
@@ -102,8 +102,8 @@ namespace Artesian.SDK.Service.PublicOffer
         /// Set the operators to be queried
         /// </summary>
         /// <param name="operator">Operators to be queried</param>
-        /// <returns>PublicOfferQuery</returns>
-        public PublicOfferQuery ForOperator(string[] @operator)
+        /// <returns>GMEPublicOfferQuery</returns>
+        public GMEPublicOfferQuery ForOperator(string[] @operator)
         {
             _queryParamaters.Operator = @operator;
 
@@ -114,8 +114,8 @@ namespace Artesian.SDK.Service.PublicOffer
         /// Set the scopes to be queried
         /// </summary>
         /// <param name="scope">Scopes to be queried</param>
-        /// <returns>PublicOfferQuery</returns>
-        public PublicOfferQuery ForScope(Scope[] scope)
+        /// <returns>GMEPublicOfferQuery</returns>
+        public GMEPublicOfferQuery ForScope(Scope[] scope)
         {
             _queryParamaters.Scope = scope;
 
@@ -126,8 +126,8 @@ namespace Artesian.SDK.Service.PublicOffer
         /// Set the units to be queried
         /// </summary>
         /// <param name="unit">Units to be queried</param>
-        /// <returns>PublicOfferQuery</returns>
-        public PublicOfferQuery ForUnit(string[] unit)
+        /// <returns>GMEPublicOfferQuery</returns>
+        public GMEPublicOfferQuery ForUnit(string[] unit)
         {
             _queryParamaters.Unit = unit;
 
@@ -138,8 +138,8 @@ namespace Artesian.SDK.Service.PublicOffer
         /// Set the unit types to be queried
         /// </summary>
         /// <param name="unitType">Unit types to be queried</param>
-        /// <returns>PublicOfferQuery</returns>
-        public PublicOfferQuery ForUnitType(UnitType[] unitType)
+        /// <returns>GMEPublicOfferQuery</returns>
+        public GMEPublicOfferQuery ForUnitType(UnitType[] unitType)
         {
             _queryParamaters.UnitType = unitType;
 
@@ -150,8 +150,8 @@ namespace Artesian.SDK.Service.PublicOffer
         /// Set the zones to be queried
         /// </summary>
         /// <param name="zone">Zones to be queried</param>
-        /// <returns>PublicOfferQuery</returns>
-        public PublicOfferQuery ForZone(Zone[] zone)
+        /// <returns>GMEPublicOfferQuery</returns>
+        public GMEPublicOfferQuery ForZone(Zone[] zone)
         {
             _queryParamaters.Zone = zone;
 
@@ -163,8 +163,8 @@ namespace Artesian.SDK.Service.PublicOffer
         /// </summary>
         /// <param name="page">Result page number</param>
         /// <param name="pageSize">Result Page size</param>
-        /// <returns>PublicOfferQuery</returns>
-        public PublicOfferQuery WithPagination(int page, int pageSize)
+        /// <returns>GMEPublicOfferQuery</returns>
+        public GMEPublicOfferQuery WithPagination(int page, int pageSize)
         {
             _queryParamaters.Page = page;
             _queryParamaters.PageSize = pageSize;
@@ -176,8 +176,8 @@ namespace Artesian.SDK.Service.PublicOffer
         /// Set the data sort
         /// </summary>
         /// <param name="sort">Sort by</param>
-        /// <returns>PublicOfferQuery</returns>
-        public PublicOfferQuery WithSort(string[] sort)
+        /// <returns>GMEPublicOfferQuery</returns>
+        public GMEPublicOfferQuery WithSort(string[] sort)
         {
             _queryParamaters.Sort = sort;
 
@@ -185,15 +185,15 @@ namespace Artesian.SDK.Service.PublicOffer
         }
 
         /// <summary>
-        /// Execute Public Offer Query
+        /// Execute GME Public Offer Query
         /// </summary>
         /// <param name="ctk">CancellationToken</param>
         /// <returns>Enumerable of TimeSerieRow Actual</returns>
-        public async Task<PagedResult<PublicOfferCurveDto>> ExecuteAsync(CancellationToken ctk = default)
+        public async Task<PagedResult<GMEPublicOfferCurveDto>> ExecuteAsync(CancellationToken ctk = default)
         {
             string url = _buildRequest();
 
-            var res = await _client.Exec<PagedResult<PublicOfferCurveDto>>(HttpMethod.Get, url, ctk: ctk);
+            var res = await _client.Exec<PagedResult<GMEPublicOfferCurveDto>>(HttpMethod.Get, url, ctk: ctk);
             return res;
         }
 

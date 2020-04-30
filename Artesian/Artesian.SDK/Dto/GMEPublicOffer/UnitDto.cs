@@ -3,24 +3,24 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Artesian.SDK.Dto.PublicOffer
+namespace Artesian.SDK.Dto.GMEPublicOffer
 {
     /// <summary>
-    /// OperatorDto class
+    /// UnitDto class
     /// </summary>
     [MessagePackObject]
-    public class OperatorDto
+    public class UnitDto
     {
         /// <summary>
-        /// Operator Id
+        /// Unit Id
         /// </summary>
         [Key(0)]
         public int Id { get; set; }
 
         /// <summary>
-        /// Operator
+        /// Unit
         /// </summary>
         [Key(1)]
-        public string Operator { get; set; }
+        public string Unit { get; set; }
     }
 }

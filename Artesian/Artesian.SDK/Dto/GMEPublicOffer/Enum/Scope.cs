@@ -1,21 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Artesian.SDK.Dto.PublicOffer
+﻿namespace Artesian.SDK.Dto.GMEPublicOffer
 {
     /// <summary>
     /// Purpose
     /// </summary>
-    public enum Status : byte
+    public enum Scope : byte
     {
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
-        ACC = 0,
-        REJ = 1,
-        INC = 2,
-        REP = 3,
-        REV = 4,
-        SUB = 5,
+        NULL = 0,
+        ACC = 1,
+        AS = 2,
+        CA = 3,
+        GR1 = 4,
+        GR2 = 5,
+        GR3 = 6,
+        GR4 = 7,
+        RS = 8,
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     }
 }

@@ -125,7 +125,7 @@ namespace Artesian.SDK.Factory
             {
                 var data = new UpsertCurveData(_identifier)
                 {
-                    Timezone = _entity.OriginalTimezone,
+                    Timezone = _entity.OriginalGranularity.IsTimeGranularity() ? "UTC" : _entity.OriginalTimezone,
                     DownloadedAt = downloadedAt,
                     DeferCommandExecution = deferCommandExecution,
                     MarketAssessment = new Dictionary<LocalDateTime, IDictionary<string, MarketAssessmentValue>>(),

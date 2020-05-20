@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Net.Http;
 using Artesian.SDK.Dto;
-using Artesian.SDK.Dto.PublicOffer;
+using Artesian.SDK.Dto.GMEPublicOffer;
 using Artesian.SDK.Service;
-using Artesian.SDK.Service.PublicOffer;
+using Artesian.SDK.Service.GMEPublicOffer;
 using Flurl;
 using Flurl.Http.Testing;
 using NodaTime;
@@ -13,7 +13,7 @@ using NUnit.Framework;
 namespace Artesian.SDK.Tests
 {
     [TestFixture]
-    public class PublicOfferQueries
+    public class GMEPublicOfferQueries
     {
         private ArtesianServiceConfig _cfg = new ArtesianServiceConfig(new Uri(TestConstants.BaseAddress), TestConstants.APIKey);
 
@@ -24,7 +24,7 @@ namespace Artesian.SDK.Tests
             using (var httpTest = new HttpTest())
             {
 
-                var qs = new PublicOfferService(_cfg);
+                var qs = new GMEPublicOfferService(_cfg);
 
                 var act = qs.CreateRawCurveQuery()
                        .ForDate(new LocalDate(2019,1,1))
@@ -44,7 +44,7 @@ namespace Artesian.SDK.Tests
             using (var httpTest = new HttpTest())
             {
 
-                var qs = new PublicOfferService(_cfg);
+                var qs = new GMEPublicOfferService(_cfg);
 
                 var act = qs.CreateRawCurveQuery()
                        .ForDate(new LocalDate(2019, 1, 1))
@@ -89,7 +89,7 @@ namespace Artesian.SDK.Tests
             using (var httpTest = new HttpTest())
             {
 
-                var qs = new PublicOfferService(_cfg);
+                var qs = new GMEPublicOfferService(_cfg);
 
                 var act = qs.ReadOperatorsAsync(2,20)
                        .ConfigureAwait(true).GetAwaiter().GetResult();
@@ -108,7 +108,7 @@ namespace Artesian.SDK.Tests
             using (var httpTest = new HttpTest())
             {
 
-                var qs = new PublicOfferService(_cfg);
+                var qs = new GMEPublicOfferService(_cfg);
 
                 var act = qs.ReadOperatorsAsync(2, 20, operatorFilter: "myFilter", sort: new string[] { "operator asc" })
                        .ConfigureAwait(true).GetAwaiter().GetResult();
@@ -129,7 +129,7 @@ namespace Artesian.SDK.Tests
             using (var httpTest = new HttpTest())
             {
 
-                var qs = new PublicOfferService(_cfg);
+                var qs = new GMEPublicOfferService(_cfg);
 
                 var act = qs.ReadUnitsAsync(2, 4)
                        .ConfigureAwait(true).GetAwaiter().GetResult();
@@ -148,7 +148,7 @@ namespace Artesian.SDK.Tests
             using (var httpTest = new HttpTest())
             {
 
-                var qs = new PublicOfferService(_cfg);
+                var qs = new GMEPublicOfferService(_cfg);
 
                 var act = qs.ReadUnitsAsync(2, 20, unitFilter: "myFilter", sort: new string[] { "unit asc" })
                        .ConfigureAwait(true).GetAwaiter().GetResult();
@@ -170,7 +170,7 @@ namespace Artesian.SDK.Tests
             using (var httpTest = new HttpTest())
             {
 
-                var qs = new PublicOfferService(_cfg);
+                var qs = new GMEPublicOfferService(_cfg);
 
                 var req = qs.ReadUnitConfigurationMappingAsync("myUnit")
                        .ConfigureAwait(true).GetAwaiter().GetResult();
@@ -186,7 +186,7 @@ namespace Artesian.SDK.Tests
         {
             using (var httpTest = new HttpTest())
             {
-                var qs = new PublicOfferService(_cfg);
+                var qs = new GMEPublicOfferService(_cfg);
 
                 var req = qs.ReadUnitConfigurationMappingsAsync(1, 20)
                        .ConfigureAwait(true).GetAwaiter().GetResult();
@@ -204,7 +204,7 @@ namespace Artesian.SDK.Tests
         {
             using (var httpTest = new HttpTest())
             {
-                var qs = new PublicOfferService(_cfg);
+                var qs = new GMEPublicOfferService(_cfg);
 
                 var req = qs.ReadUnitConfigurationMappingsAsync(1, 20, unitFilter: "unitFilterTest", sort: new string[] { "unit desc" })
                        .ConfigureAwait(true).GetAwaiter().GetResult();
@@ -224,7 +224,7 @@ namespace Artesian.SDK.Tests
         {
             using (var httpTest = new HttpTest())
             {
-                var qs = new PublicOfferService(_cfg);
+                var qs = new GMEPublicOfferService(_cfg);
 
                 var unitCfg = new UnitConfigurationDto() {
                 
@@ -252,7 +252,7 @@ namespace Artesian.SDK.Tests
         {
             using (var httpTest = new HttpTest())
             {
-                var qs = new PublicOfferService(_cfg);
+                var qs = new GMEPublicOfferService(_cfg);
 
                 qs.DeleteUnitConfigurationMappingAsync("unitToDelete")
                        .ConfigureAwait(true).GetAwaiter().GetResult();

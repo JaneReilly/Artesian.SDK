@@ -1,20 +1,20 @@
 ﻿using Artesian.SDK.Dto;
-using Artesian.SDK.Dto.PublicOffer;
+using Artesian.SDK.Dto.GMEPublicOffer;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Artesian.SDK.Service.PublicOffer
+namespace Artesian.SDK.Service.GMEPublicOffer
 {
     /// <summary>
-    /// Public Offer Service Interface
+    /// GME Public Offer Service Interface
     /// </summary>
-    public interface IPublicOfferService
+    public interface IGMEPublicOfferService
     {
         /// <summary>
-        /// Create Public Offer Query
+        /// Create GME Public Offer Query
         /// </summary>
         /// <returns></returns>
-        PublicOfferQuery CreateRawCurveQuery();
+        GMEPublicOfferQuery CreateRawCurveQuery();
 
         /// <summary>
         /// Get paged OperatorDto 

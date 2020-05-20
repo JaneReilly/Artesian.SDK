@@ -1,13 +1,13 @@
 ﻿using MessagePack;
 using NodaTime;
 
-namespace Artesian.SDK.Dto.PublicOffer
+namespace Artesian.SDK.Dto.GMEPublicOffer
 {
     /// <summary>
-    /// PublicOfferCurve class
+    /// GMEPublicOfferCurve class
     /// </summary>
     [MessagePackObject]
-    public class PublicOfferCurveDto
+    public class GMEPublicOfferCurveDto
     {
         /// <summary>
         /// The Status

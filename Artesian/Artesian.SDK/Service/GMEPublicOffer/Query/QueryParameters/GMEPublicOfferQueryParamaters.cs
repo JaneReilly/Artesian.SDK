@@ -1,12 +1,12 @@
-﻿using Artesian.SDK.Dto.PublicOffer;
+﻿using Artesian.SDK.Dto.GMEPublicOffer;
 using NodaTime;
 using System.Collections.Generic;
 
-namespace Artesian.SDK.Service.PublicOffer
+namespace Artesian.SDK.Service.GMEPublicOffer
 {
-    internal class PublicOfferQueryParamaters
+    internal class GMEPublicOfferQueryParamaters
     {
-        public PublicOfferQueryParamaters()
+        public GMEPublicOfferQueryParamaters()
         {
         }
 

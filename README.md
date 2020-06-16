@@ -28,13 +28,13 @@ The Artesian.SDK instance can be configured using either Client credentials or A
 
 ```csharp
 //API-Key
- ArtesianServiceConfig _cfg = new ArtesianServiceConfig(
+ ArtesianServiceConfig cfg = new ArtesianServiceConfig(
 		new Uri("https://fake-artesian-env/"),
-		"5418B0DB - 7AB9 - 4875 - 81BA - 6EE609E073B6"
+		"5418B0DB-7AB9-4875-81BA-6EE609E073B6"
 		);
 
 //Client credentials
- ArtesianServiceConfig _cfg = new ArtesianServiceConfig(
+ ArtesianServiceConfig cfg = new ArtesianServiceConfig(
 		new Uri("https://fake-artesian-env/"),
 		"audience",
 		"domain",
@@ -53,13 +53,13 @@ Optionally a custom policy can be introduced to configure policy constraints wit
 is implemented
 
 ```csharp
-ArtesianPolicyConfig _policy = new ArtesianPolicyConfig();
-	_policy
+ArtesianPolicyConfig policy = new ArtesianPolicyConfig();
+	policy
 	    .RetryPolicyConfig(retryCount: 3, retryWaitTime: 200)
 	    .CircuitBreakerPolicyConfig(maxExceptions: 2, durationOfBreak: 3)
 	    .BulkheadPolicyConfig(maxParallelism: 10, maxQueuingActions: 15);
 
-var qs = new QueryService(_cfg,_policy);
+var qs = new QueryService(cfg,policy);
 ```
 
 <table>
@@ -91,7 +91,6 @@ var act = qs.CreateActual(idStrategy)
 ### Actual Time Series
 
 ```csharp
-var queryservice = new QueryService(_cfg);
 var actualTimeSeries = await qs.CreateActual()
                 .ForMarketData(new int[] { 100000001, 100000002, 100000003 })
                 .InGranularity(Granularity.Day)
@@ -113,7 +112,6 @@ To construct an Actual Time Series the following must be provided.
 ### Market Assessment Time Series
 
 ```csharp
-var queryservice = new QueryService(_cfg);
 var marketAssesmentSeries = await qs.CreateMarketAssessment()
                        .ForMarketData(new int[] { 100000001 })
                        .ForProducts(new string[] { "M+1", "GY+1" })
@@ -135,7 +133,6 @@ To construct a Market Assessment Time Series the following must be provided.
 ## Auction Time Series
 
 ```csharp
-var queryservice = new QueryService(_cfg);
 var marketAssesmentSeries = await qs.CreateAuction()
                        .ForMarketData(new int[] { 100000001 })
                        .InAbsoluteDateRange(new LocalDate(2018,08,01),new LocalDate(2018,08,10))
@@ -290,7 +287,7 @@ Latest Value
 
 ## MarketData Service
 
-Using the ArtesianServiceConfig `_cfg` we create an instance of the MarketDataService which is used to retrieve and edit
+Using the ArtesianServiceConfig `cfg` we create an instance of the MarketDataService which is used to retrieve and edit
 MarketData refrences. `GetMarketReference` will read the marketdata entity by MarketDataIdentifier and returns an istance of IMarketData if it exists.
 
 ```csharp
@@ -305,7 +302,7 @@ var marketDataEntity = new MarketDataEntity.Input(){
     MarketDataId = 1
 }
 
-var marketDataService = new MarketDataService(_cfg);
+var marketDataService = new MarketDataService(cfg);
 
 var marketData = await marketDataQueryService.GetMarketDataReference(new MarketDataIdentifier(
         marketDataEntity.ProviderName,

@@ -28,13 +28,13 @@ The Artesian.SDK instance can be configured using either Client credentials or A
 
 ```csharp
 //API-Key
- ArtesianServiceConfig _cfg = new ArtesianServiceConfig(
-		new Uri("https://fake-artesian-env/"),
-		"5418B0DB - 7AB9 - 4875 - 81BA - 6EE609E073B6"
-		);
+ArtesianServiceConfig cfg = new ArtesianServiceConfig(
+   new Uri("https://fake-artesian-env/"),
+   "5418B0DB-7AB9-4875-81BA-6EE609E073B6"
+   );
 
 //Client credentials
- ArtesianServiceConfig _cfg = new ArtesianServiceConfig(
+ArtesianServiceConfig cfg = new ArtesianServiceConfig(
 		new Uri("https://fake-artesian-env/"),
 		"audience",
 		"domain",
@@ -53,13 +53,13 @@ Optionally a custom policy can be introduced to configure policy constraints wit
 is implemented
 
 ```csharp
-ArtesianPolicyConfig _policy = new ArtesianPolicyConfig();
-	_policy
+ArtesianPolicyConfig policy = new ArtesianPolicyConfig();
+	policy
 	    .RetryPolicyConfig(retryCount: 3, retryWaitTime: 200)
 	    .CircuitBreakerPolicyConfig(maxExceptions: 2, durationOfBreak: 3)
 	    .BulkheadPolicyConfig(maxParallelism: 10, maxQueuingActions: 15);
 
-var qs = new QueryService(_cfg,_policy);
+var qs = new QueryService(cfg, policy);
 ```
 
 <table>
@@ -91,7 +91,6 @@ var act = qs.CreateActual(idStrategy)
 ### Actual Time Series
 
 ```csharp
-var queryservice = new QueryService(_cfg);
 var actualTimeSeries = await qs.CreateActual()
                 .ForMarketData(new int[] { 100000001, 100000002, 100000003 })
                 .InGranularity(Granularity.Day)
@@ -113,7 +112,6 @@ To construct an Actual Time Series the following must be provided.
 ### Market Assessment Time Series
 
 ```csharp
-var queryservice = new QueryService(_cfg);
 var marketAssesmentSeries = await qs.CreateMarketAssessment()
                        .ForMarketData(new int[] { 100000001 })
                        .ForProducts(new string[] { "M+1", "GY+1" })
@@ -124,7 +122,7 @@ var marketAssesmentSeries = await qs.CreateMarketAssessment()
 To construct a Market Assessment Time Series the following must be provided.
 
 <table>
-  <tr><th>Actual Query</th><th>Description</th></tr>
+  <tr><th>Market Assessment Query</th><th>Description</th></tr>
   <tr><td>Market Data ID</td><td>Provide a market data id or set of market data id's to query</td></tr>
   <tr><td>Product</td><td>Provide a product or set of products</td></tr>
   <tr><td>Time Extraction Window</td><td>An extraction time window for data to be queried </td></tr>
@@ -135,7 +133,6 @@ To construct a Market Assessment Time Series the following must be provided.
 ## Auction Time Series
 
 ```csharp
-var queryservice = new QueryService(_cfg);
 var marketAssesmentSeries = await qs.CreateAuction()
                        .ForMarketData(new int[] { 100000001 })
                        .InAbsoluteDateRange(new LocalDate(2018,08,01),new LocalDate(2018,08,10))
@@ -219,6 +216,26 @@ Most Updated Version
  /// optional paramater to limit version
  .ForMUV(new LocalDateTime(2019, 05, 01, 2, 0, 0))
 ```
+### Bid Ask Time Series
+
+```csharp
+var bidAskSeries = await qs.CreateBidAsk()
+                       .ForMarketData(new int[] { 100000001 })
+                       .ForProducts(new string[] { "M+1", "GY+1" })
+                       .InRelativeInterval(RelativeInterval.RollingMonth)
+                       .ExecuteAsync();
+```
+
+To construct a Bid Ask Time Series the following must be provided.
+
+<table>
+  <tr><th>Bid Ask Query</th><th>Description</th></tr>
+  <tr><td>Market Data ID</td><td>Provide a market data id or set of market data id's to query</td></tr>
+  <tr><td>Product</td><td>Provide a product or set of products</td></tr>
+  <tr><td>Time Extraction Window</td><td>An extraction time window for data to be queried </td></tr>
+</table>
+
+[Go to Time Extraction window section](#artesian-sdk-extraction-windows)
 
 ### Artesian SDK Extraction Windows
 
@@ -290,7 +307,7 @@ Latest Value
 
 ## MarketData Service
 
-Using the ArtesianServiceConfig `_cfg` we create an instance of the MarketDataService which is used to retrieve and edit
+Using the ArtesianServiceConfig `cfg` we create an instance of the MarketDataService which is used to retrieve and edit
 MarketData refrences. `GetMarketReference` will read the marketdata entity by MarketDataIdentifier and returns an istance of IMarketData if it exists.
 
 ```csharp
@@ -305,7 +322,7 @@ var marketDataEntity = new MarketDataEntity.Input(){
     MarketDataId = 1
 }
 
-var marketDataService = new MarketDataService(_cfg);
+var marketDataService = new MarketDataService(cfg);
 
 var marketData = await marketDataQueryService.GetMarketDataReference(new MarketDataIdentifier(
         marketDataEntity.ProviderName,
@@ -380,7 +397,11 @@ var marketAssessmentValue = new MarketAssessmentValue()
     Close = 20,
     Low = 18,
     Open = 33,
-    Settlement = 22
+    Settlement = 22,
+    VolumePaid = 34,
+    VolumeGiven = 23,
+    Volume = 16
+
 };
 
 writeMarketData.AddData(new LocalDate(2018, 11, 28), "Dec-18", marketAssessmentValue);
@@ -403,6 +424,28 @@ bid.Add(new AuctionBidValue(100, 10));
 offer.Add(new AuctionBidValue(120, 12));
 
 writeMarketData.Add(localDateTime, new AuctionBids(localDateTime, bid.ToArray(), offer.ToArray()));
+await writeMarketData.Save(Instant.FromDateTimeUtc(DateTime.Now.ToUniversalTime()));
+```
+### Bid Ask Time Series
+
+`EditBidAsk` starts the write mode for a Bid Ask. Checks are done to verify registration and MarketDataType to verify it is a Bid Ask.
+Using `AddData` to provide a local date time and a BidAskValue to be written.
+
+```csharp
+var writeMarketData = marketData.EditBidAsk();
+
+var bidAskValue = new BidAskValue()
+{
+    BestBidPrice = 47,
+    BestBidQuantity = 18,
+    BestAskPrice = 20,
+    BestAskQuantity = 33,
+    LastPrice = 22,
+    LastQuantity = 13
+};
+
+writeMarketData.AddData(new LocalDate(2018, 11, 28), "Dec-18", bidAskValue);
+
 await writeMarketData.Save(Instant.FromDateTimeUtc(DateTime.Now.ToUniversalTime()));
 ```
 

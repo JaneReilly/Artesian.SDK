@@ -116,8 +116,9 @@ namespace Artesian.SDK.Factory
         /// <param name="deferCommandExecution">DeferCommandExecution</param>
         /// <param name="deferDataGeneration">DeferDataGeneration</param>
         /// <param name="keepNulls">if <see langword="false"/> nulls are ignored (server-side). That is the default behaviour.</param>
+        /// <param name="ctk">The Cancellation Token</param>
         /// <returns></returns>
-        public async Task Save(Instant downloadedAt, bool deferCommandExecution = false, bool deferDataGeneration = true, bool keepNulls = false)
+        public async Task Save(Instant downloadedAt, bool deferCommandExecution = false, bool deferDataGeneration = true, bool keepNulls = false, CancellationToken ctk = default)
         {
             Ensure.Any.IsNotNull(_entity);
 
@@ -138,10 +139,8 @@ namespace Artesian.SDK.Factory
                     data.MarketAssessment.Add(reportTime.Key, assessments);
                 }
 
-                await _marketDataService.UpsertCurveDataAsync(data);
+                await _marketDataService.UpsertCurveDataAsync(data, ctk);
             }
-            //else
-            //    _logger.Warn("No Data to be saved.");
         }
 
         /// <summary>

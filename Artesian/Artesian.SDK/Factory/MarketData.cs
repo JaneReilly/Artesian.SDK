@@ -203,5 +203,24 @@ namespace Artesian.SDK.Factory
             var mas = new MarketAssessment(this);
             return mas;
         }
+
+        /// <summary>
+        /// Bid Ask Edit
+        /// </summary>
+        /// <remarks>
+        /// Start write mode for Bid Ask
+        /// </remarks>
+        /// <returns> IBidAskWritable </returns>
+        public IBidAskWritable EditBidAsk()
+        {
+            if (_entity == null)
+                throw new BidAskException("Bid Ask is not yet registered");
+
+            if (_entity.Type != MarketDataType.BidAsk)
+                throw new BidAskException("Entity is not a Bid Ask");
+
+            var bask = new BidAsk(this);
+            return bask;
+        }
     }
 }

@@ -99,6 +99,15 @@ namespace Artesian.SDK.Factory
         /// </remarks>
         /// <returns> Marketdata </returns>
         IMarketAssessmentWritable EditMarketAssessment();
+
+        /// <summary>
+        /// Edit for Bid Ask
+        /// </summary>
+        /// <remarks>
+        /// Start write mode for Bid Ask
+        /// </remarks>
+        /// <returns> Marketdata </returns>
+        IBidAskWritable EditBidAsk();
     }
 
     /// <summary>
@@ -124,7 +133,7 @@ namespace Artesian.SDK.Factory
         /// <remarks>
         /// MarketAssessment AddData
         /// </remarks>
-        /// <param name="time">The istant of the value</param>
+        /// <param name="time">The instant of the value</param>
         /// <param name="product">The product</param>
         /// <param name="value">Market assessment Value</param>
         /// <returns></returns>
@@ -150,6 +159,54 @@ namespace Artesian.SDK.Factory
     }
 
     /// <summary>
+    /// Interface for Bid Ask Write
+    /// </summary>
+    public interface IBidAskWritable
+    {
+        /// <summary>
+        /// BidAsk AddData
+        /// </summary>
+        /// <remarks>
+        /// BidAsk AddData
+        /// </remarks>
+        /// <param name="localDate">The local date of the value</param>
+        /// <param name="product">The product</param>
+        /// <param name="value">Bid Ask Value</param>
+        /// <returns></returns>
+        AddBidAskOperationResult AddData(LocalDate localDate, string product, BidAskValue value);
+
+        /// <summary>
+        /// BidAsk AddData
+        /// </summary>
+        /// <remarks>
+        /// BidAsk AddData
+        /// </remarks>
+        /// <param name="time">The instant of the value</param>
+        /// <param name="product">The product</param>
+        /// <param name="value">Bid Ask Value</param>
+        /// <returns></returns>
+        AddBidAskOperationResult AddData(Instant time, string product, BidAskValue value);
+
+        /// <summary>
+        /// BidAsk ClearData
+        /// </summary>
+        void ClearData();
+
+        /// <summary>
+        /// BidAsk Save
+        /// </summary>
+        /// <remarks>
+        /// BidAsk Save
+        /// </remarks>
+        /// <param name="downloadedAt">The instant downloaded</param>
+        /// <param name="deferCommandExecution">Defer Command Execution</param>
+        /// <param name="deferDataGeneration">Defer Data Generation</param>
+        /// <param name="keepNulls">if <see langword="false"/></param>
+        /// <returns></returns>
+        Task Save(Instant downloadedAt, bool deferCommandExecution = false, bool deferDataGeneration = true, bool keepNulls = false);
+
+    }
+    /// <summary>
     /// Interface for Auction Bid Write
     /// </summary>
     public interface IAuctionMarketDataWritable
@@ -172,7 +229,7 @@ namespace Artesian.SDK.Factory
         /// <remarks>
         /// Auction AddData
         /// </remarks>
-        /// <param name="time">The istant of the value</param>
+        /// <param name="time">The instant of the value</param>
         /// <param name="bid">The bid</param>
         /// <param name="offer">The offer</param>
         /// <returns></returns>

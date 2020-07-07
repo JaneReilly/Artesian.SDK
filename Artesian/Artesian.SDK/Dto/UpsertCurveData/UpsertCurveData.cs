@@ -100,6 +100,12 @@ namespace Artesian.SDK.Dto
         /// </summary>
         [MessagePack.Key(9)]
         public IDictionary<LocalDateTime, AuctionBids> AuctionRows { get; set; }
+
+        /// <summary>
+        /// The BidAsk
+        /// </summary>
+        [MessagePack.Key(10)]
+        public IDictionary<LocalDateTime, IDictionary<string, BidAskValue>> BidAsk { get; set; }
     }
 
     internal static class UpsertCurveDataExt

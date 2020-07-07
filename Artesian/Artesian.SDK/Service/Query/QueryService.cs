@@ -128,5 +128,28 @@ namespace Artesian.SDK.Service
         {
             return new AuctionQuery(_client, partitionStrategy ?? _partitionStrategy);
         }
+
+        /// <summary>
+        /// Create Bid Ask Time Serie Query
+        /// </summary>
+        /// <returns>
+        /// Bid Ask Time Serie <see cref="MasQuery"/>
+        /// </returns>
+        public BidAskQuery CreateBidAsk()
+        {
+            return new BidAskQuery(_client, _partitionStrategy);
+        }
+
+        /// <summary>
+        /// Create Bid Ask Time Serie Query
+        /// </summary>
+        /// <param name="partitionStrategy">Partition Strategy</param>
+        /// <returns>
+        /// Bid Ask Time Serie <see cref="MasQuery"/>
+        /// </returns>
+        public BidAskQuery CreateBidAsk(IPartitionStrategy partitionStrategy)
+        {
+            return new BidAskQuery(_client, partitionStrategy ?? _partitionStrategy);
+        }
     }
 }

@@ -324,7 +324,7 @@ var marketDataEntity = new MarketDataEntity.Input(){
 
 var marketDataService = new MarketDataService(cfg);
 
-var marketData = await marketDataQueryService.GetMarketDataReference(new MarketDataIdentifier(
+var marketData = await marketDataService.GetMarketDataReference(new MarketDataIdentifier(
         marketDataEntity.ProviderName,
         marketDataEntity.MarketDataName)
     );

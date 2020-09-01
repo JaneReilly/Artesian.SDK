@@ -16,8 +16,12 @@
     <PackageTags>Ark;c#;Visual Studio;Framework;Arkive;Artesian;</PackageTags>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
 
-    <Version>2.0.1</Version>
+    <Version>2.1.0</Version>
     <VersionSuffix></VersionSuffix>
+    <PackageReleaseNotes>
+      Update Ark.Tools packages
+    </PackageReleaseNotes>
+    
     <Version Condition=" '$(VersionSuffix)' != '' ">$(Version)-$(VersionSuffix)</Version>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <LangVersion>latest</LangVersion>
@@ -43,9 +47,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Ark.Tools.Http" Version="2.3.2" />
+    <PackageReference Include="Ark.Tools.Http" Version="2.7.0" />
     <PackageReference Include="System.ComponentModel.Annotations" Version="4.7.0" />
-    <PackageReference Include="Ark.Tools.Auth0" Version="2.3.2" />
+    <PackageReference Include="Ark.Tools.Auth0" Version="2.7.0" />
   </ItemGroup>
 
 

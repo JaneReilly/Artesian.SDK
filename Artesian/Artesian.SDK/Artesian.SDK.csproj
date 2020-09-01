@@ -18,6 +18,7 @@
 
     <Version>2.1.0</Version>
     <VersionSuffix>beta01</VersionSuffix>
+    
     <Version Condition=" '$(VersionSuffix)' != '' ">$(Version)-$(VersionSuffix)</Version>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <LangVersion>latest</LangVersion>
@@ -43,9 +44,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Ark.Tools.Http" Version="2.3.2" />
+    <PackageReference Include="Ark.Tools.Http" Version="2.7.1" />
     <PackageReference Include="System.ComponentModel.Annotations" Version="4.7.0" />
-    <PackageReference Include="Ark.Tools.Auth0" Version="2.3.2" />
+    <PackageReference Include="Ark.Tools.Auth0" Version="2.7.1" />
   </ItemGroup>
 
 

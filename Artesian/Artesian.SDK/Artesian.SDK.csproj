@@ -16,8 +16,11 @@
     <PackageTags>Ark;c#;Visual Studio;Framework;Arkive;Artesian;</PackageTags>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
 
-    <Version>2.1.0</Version>
-    <VersionSuffix>beta01</VersionSuffix>
+    <Version>2.2.0</Version>
+    <VersionSuffix></VersionSuffix>
+    <PackageReleaseNotes>
+      Support for Bid/Ask type
+    </PackageReleaseNotes>
     
     <Version Condition=" '$(VersionSuffix)' != '' ">$(Version)-$(VersionSuffix)</Version>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>

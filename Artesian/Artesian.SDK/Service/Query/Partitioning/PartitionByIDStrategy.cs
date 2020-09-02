@@ -110,6 +110,30 @@ namespace Artesian.SDK.Service
                                 )));
         }
 
+        /// <summary>
+        /// Partition strategy for Bid Ask Query
+        /// </summary>
+        /// <param name="queryParamaters">The list of Bid Ask Query paramaters to be partitioned. See <see cref="BidAskQueryParamaters"/></param>
+        /// <returns>
+        /// The input list of Bid Ask Query paramaters partitioned by MarketData ID. See <see cref="BidAskQueryParamaters"/>
+        /// </returns>
+        public IEnumerable<BidAskQueryParamaters> Partition(IEnumerable<BidAskQueryParamaters> queryParamaters)
+        {
+            if (queryParamaters.Any(g => g.Ids == null)) return queryParamaters;
+
+            return queryParamaters.SelectMany(queryParamater =>
+                        _partitionIds(queryParamater.Ids)
+                            .Select(g => new BidAskQueryParamaters(g,
+                                queryParamater.ExtractionRangeSelectionConfig,
+                                queryParamater.ExtractionRangeType,
+                                queryParamater.TimeZone,
+                                queryParamater.FilterId,
+                                queryParamater.Products,
+                                queryParamater.FillerKindType,
+                                queryParamater.FillerConfig
+                                )));
+        }
+
         private IEnumerable<IEnumerable<int>> _partitionIds(IEnumerable<int> ids)
         {
             return ids.Select((x, i) => (value: x, index: i))

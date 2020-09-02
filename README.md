@@ -28,13 +28,13 @@ The Artesian.SDK instance can be configured using either Client credentials or A
 
 ```csharp
 //API-Key
- ArtesianServiceConfig cfg = new ArtesianServiceConfig(
-		new Uri("https://fake-artesian-env/"),
-		"5418B0DB-7AB9-4875-81BA-6EE609E073B6"
-		);
+ArtesianServiceConfig cfg = new ArtesianServiceConfig(
+   new Uri("https://fake-artesian-env/"),
+   "5418B0DB-7AB9-4875-81BA-6EE609E073B6"
+   );
 
 //Client credentials
- ArtesianServiceConfig cfg = new ArtesianServiceConfig(
+ArtesianServiceConfig cfg = new ArtesianServiceConfig(
 		new Uri("https://fake-artesian-env/"),
 		"audience",
 		"domain",
@@ -59,7 +59,7 @@ ArtesianPolicyConfig policy = new ArtesianPolicyConfig();
 	    .CircuitBreakerPolicyConfig(maxExceptions: 2, durationOfBreak: 3)
 	    .BulkheadPolicyConfig(maxParallelism: 10, maxQueuingActions: 15);
 
-var qs = new QueryService(cfg,policy);
+var qs = new QueryService(cfg, policy);
 ```
 
 <table>
@@ -122,7 +122,7 @@ var marketAssesmentSeries = await qs.CreateMarketAssessment()
 To construct a Market Assessment Time Series the following must be provided.
 
 <table>
-  <tr><th>Actual Query</th><th>Description</th></tr>
+  <tr><th>Market Assessment Query</th><th>Description</th></tr>
   <tr><td>Market Data ID</td><td>Provide a market data id or set of market data id's to query</td></tr>
   <tr><td>Product</td><td>Provide a product or set of products</td></tr>
   <tr><td>Time Extraction Window</td><td>An extraction time window for data to be queried </td></tr>
@@ -216,6 +216,26 @@ Most Updated Version
  /// optional paramater to limit version
  .ForMUV(new LocalDateTime(2019, 05, 01, 2, 0, 0))
 ```
+### Bid Ask Time Series
+
+```csharp
+var bidAskSeries = await qs.CreateBidAsk()
+                       .ForMarketData(new int[] { 100000001 })
+                       .ForProducts(new string[] { "M+1", "GY+1" })
+                       .InRelativeInterval(RelativeInterval.RollingMonth)
+                       .ExecuteAsync();
+```
+
+To construct a Bid Ask Time Series the following must be provided.
+
+<table>
+  <tr><th>Bid Ask Query</th><th>Description</th></tr>
+  <tr><td>Market Data ID</td><td>Provide a market data id or set of market data id's to query</td></tr>
+  <tr><td>Product</td><td>Provide a product or set of products</td></tr>
+  <tr><td>Time Extraction Window</td><td>An extraction time window for data to be queried </td></tr>
+</table>
+
+[Go to Time Extraction window section](#artesian-sdk-extraction-windows)
 
 ### Artesian SDK Extraction Windows
 
@@ -377,7 +397,11 @@ var marketAssessmentValue = new MarketAssessmentValue()
     Close = 20,
     Low = 18,
     Open = 33,
-    Settlement = 22
+    Settlement = 22,
+    VolumePaid = 34,
+    VolumeGiven = 23,
+    Volume = 16
+
 };
 
 writeMarketData.AddData(new LocalDate(2018, 11, 28), "Dec-18", marketAssessmentValue);
@@ -400,6 +424,28 @@ bid.Add(new AuctionBidValue(100, 10));
 offer.Add(new AuctionBidValue(120, 12));
 
 writeMarketData.Add(localDateTime, new AuctionBids(localDateTime, bid.ToArray(), offer.ToArray()));
+await writeMarketData.Save(Instant.FromDateTimeUtc(DateTime.Now.ToUniversalTime()));
+```
+### Bid Ask Time Series
+
+`EditBidAsk` starts the write mode for a Bid Ask. Checks are done to verify registration and MarketDataType to verify it is a Bid Ask.
+Using `AddData` to provide a local date time and a BidAskValue to be written.
+
+```csharp
+var writeMarketData = marketData.EditBidAsk();
+
+var bidAskValue = new BidAskValue()
+{
+    BestBidPrice = 47,
+    BestBidQuantity = 18,
+    BestAskPrice = 20,
+    BestAskQuantity = 33,
+    LastPrice = 22,
+    LastQuantity = 13
+};
+
+writeMarketData.AddData(new LocalDate(2018, 11, 28), "Dec-18", bidAskValue);
+
 await writeMarketData.Save(Instant.FromDateTimeUtc(DateTime.Now.ToUniversalTime()));
 ```
 

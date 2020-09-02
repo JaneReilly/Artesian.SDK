@@ -6,6 +6,7 @@ using NodaTime;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Artesian.SDK.Factory
@@ -128,8 +129,9 @@ namespace Artesian.SDK.Factory
         /// <param name="deferCommandExecution">DeferCommandExecution</param>
         /// <param name="deferDataGeneration">DeferDataGeneration</param>
         /// <param name="keepNulls">if <see langword="false"/> nulls are ignored (server-side). That is the default behaviour.</param>
+        /// <param name="ctk">The Cancellation Token</param> 
         /// <returns></returns>
-        public async Task Save(Instant downloadedAt, bool deferCommandExecution = false, bool deferDataGeneration = true, bool keepNulls = false)
+        public async Task Save(Instant downloadedAt, bool deferCommandExecution = false, bool deferDataGeneration = true, bool keepNulls = false, CancellationToken ctk = default)
         {
             Ensure.Any.IsNotNull(_entity);
 
@@ -145,7 +147,7 @@ namespace Artesian.SDK.Factory
                     KeepNulls = keepNulls
                 };
 
-                await _marketDataService.UpsertCurveDataAsync(data);
+                await _marketDataService.UpsertCurveDataAsync(data, ctk);
             }
         }
     }

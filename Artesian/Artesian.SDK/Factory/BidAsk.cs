@@ -14,70 +14,70 @@ using System.Threading.Tasks;
 namespace Artesian.SDK.Factory
 {
     /// <summary>
-    /// MarketAssessment entity
+    /// BidAsk entity
     /// </summary>
-    internal sealed class MarketAssessment : IMarketAssessmentWritable
+    internal sealed class BidAsk : IBidAskWritable
     {
         private IMarketDataService _marketDataService;
         private MarketDataEntity.Output _entity = null;
         private readonly MarketDataIdentifier _identifier = null;
 
         /// <summary>
-        /// MarketAssessment Constructor
+        /// BidAsks Constructor
         /// </summary>
-        internal MarketAssessment(MarketData marketData)
+        internal BidAsk(MarketData marketData)
         {
             _entity = marketData._entity;
             _marketDataService = marketData._marketDataService;
 
             _identifier = new MarketDataIdentifier(_entity.ProviderName, _entity.MarketDataName);
 
-            Assessments = new List<AssessmentElement>();
+            BidAsks = new List<BidAskElement>();
         }
 
         /// <summary>
-        /// MarketData AssessmentElement
+        /// BidAsk BidAskElement
         /// </summary>
-        public List<AssessmentElement> Assessments { get; internal set; }
+        public List<BidAskElement> BidAsks { get; internal set; }
 
         /// <summary>
         /// MarketData ClearData
         /// </summary>
         public void ClearData()
         {
-            Assessments.Clear();
+            BidAsks.Clear();
         }
 
         /// <summary>
-        /// MarketAssessment AddData
+        /// BidAsk AddData
         /// </summary>
         /// <remarks>
         /// Add Data on to the curve with localDate
         /// </remarks>
-        /// <returns>AddAssessmentOperationResult</returns>
-        public AddAssessmentOperationResult AddData(LocalDate localDate, string product, MarketAssessmentValue value)
+        /// <returns>AddBidAskOperationResult</returns>
+        public AddBidAskOperationResult AddData(LocalDate localDate, string product, BidAskValue value)
         {
             if (_entity.OriginalGranularity.IsTimeGranularity())
-                throw new MarketAssessmentException("This MarketData has Time granularity. Use AddData(Instant time...)");
+                throw new BidAskException("This MarketData has Time granularity. Use AddData(Instant time...)");
 
-            return _addAssessment(localDate.AtMidnight(), product, value);
+            return _addBidAsk(localDate.AtMidnight(), product, value);
         }
         /// <summary>
-        /// MarketAssessment AddData
+        /// BidAsk AddData
         /// </summary>
         /// <remarks>
         /// Add Data on to the curve with Instant
         /// </remarks>
-        /// <returns>AddAssessmentOperationResult</returns>
-        public AddAssessmentOperationResult AddData(Instant time, string product, MarketAssessmentValue value)
+        /// <returns>AddBidAskOperationResult</returns>
+        public AddBidAskOperationResult AddData(Instant time, string product, BidAskValue value)
         {
             if (!_entity.OriginalGranularity.IsTimeGranularity())
-                throw new MarketAssessmentException("This MarketData has Date granularity. Use AddData(LocalDate date...)");
+                throw new BidAskException("This MarketData has Date granularity. Use AddData(LocalDate date...)");
 
-            return _addAssessment(time.InUtc().LocalDateTime, product, value);
+            return _addBidAsk(time.InUtc().LocalDateTime, product, value);
         }
 
-        private AddAssessmentOperationResult _addAssessment(LocalDateTime reportTime, string product, MarketAssessmentValue value)
+        private AddBidAskOperationResult _addBidAsk(LocalDateTime reportTime, string product, BidAskValue value)
         {
             //Relative products
             if (Regex.IsMatch(product, @"\+\d+$"))
@@ -87,23 +87,21 @@ namespace Artesian.SDK.Factory
             {
                 var period = ArtesianUtils.MapTimePeriod(_entity.OriginalGranularity);
                 if (!reportTime.IsStartOfInterval(period))
-                    throw new MarketAssessmentException("Trying to insert Report Time {0} with the wrong format to Assessment {1}. Should be of period {2}", reportTime, _identifier, period);
+                    throw new BidAskException("Trying to insert Report Time {0} with the wrong format to BidAsk {1}. Should be of period {2}", reportTime, _identifier, period);
             }
             else
             {
                 var period = ArtesianUtils.MapDatePeriod(_entity.OriginalGranularity);
                 if (!reportTime.IsStartOfInterval(period))
-                    throw new MarketAssessmentException("Trying to insert Report Time {0} with wrong the format to Assessment {1}. Should be of period {2}", reportTime, _identifier, period);
+                    throw new BidAskException("Trying to insert Report Time {0} with wrong the format to BidAsk {1}. Should be of period {2}", reportTime, _identifier, period);
             }
 
-            //if (reportTime.Date >= product.ReferenceDate)
-            //    return AddAssessmentOperationResult.IllegalReferenceDate;
 
-            if (Assessments.Any(row => row.ReportTime == reportTime && row.Product.Equals(product)))
-                return AddAssessmentOperationResult.ProductAlreadyPresent;
+            if (BidAsks.Any(row => row.ReportTime == reportTime && row.Product.Equals(product)))
+                return AddBidAskOperationResult.ProductAlreadyPresent;
 
-            Assessments.Add(new AssessmentElement(reportTime, product, value));
-            return AddAssessmentOperationResult.AssessmentAdded;
+            BidAsks.Add(new BidAskElement(reportTime, product, value));
+            return AddBidAskOperationResult.BidAskAdded;
         }
 
         /// <summary>
@@ -122,21 +120,21 @@ namespace Artesian.SDK.Factory
         {
             Ensure.Any.IsNotNull(_entity);
 
-            if (Assessments.Any())
+            if (BidAsks.Any())
             {
                 var data = new UpsertCurveData(_identifier)
                 {
                     Timezone = _entity.OriginalGranularity.IsTimeGranularity() ? "UTC" : _entity.OriginalTimezone,
                     DownloadedAt = downloadedAt,
                     DeferCommandExecution = deferCommandExecution,
-                    MarketAssessment = new Dictionary<LocalDateTime, IDictionary<string, MarketAssessmentValue>>(),
+                    BidAsk = new Dictionary<LocalDateTime, IDictionary<string, BidAskValue>>(),
                     KeepNulls = keepNulls
                 };
 
-                foreach (var reportTime in Assessments.GroupBy(g => g.ReportTime))
+                foreach (var reportTime in BidAsks.GroupBy(g => g.ReportTime))
                 {
-                    var assessments = reportTime.ToDictionary(key => key.Product.ToString(), value => value.Value);
-                    data.MarketAssessment.Add(reportTime.Key, assessments);
+                    var BidAsks = reportTime.ToDictionary(key => key.Product.ToString(), value => value.Value);
+                    data.BidAsk.Add(reportTime.Key, BidAsks);
                 }
 
                 await _marketDataService.UpsertCurveDataAsync(data, ctk);
@@ -144,14 +142,14 @@ namespace Artesian.SDK.Factory
         }
 
         /// <summary>
-        /// AssessmentElement entity
+        /// BidAskElement entity
         /// </summary>
-        public class AssessmentElement
+        public class BidAskElement
         {
             /// <summary>
-            /// AssessmentElement constructor
+            /// BidAskElement constructor
             /// </summary>
-            public AssessmentElement(LocalDateTime reportTime, string product, MarketAssessmentValue value)
+            public BidAskElement(LocalDateTime reportTime, string product, BidAskValue value)
             {
                 ReportTime = reportTime;
                 Product = product;
@@ -159,17 +157,17 @@ namespace Artesian.SDK.Factory
             }
 
             /// <summary>
-            /// AssessmentElement ReportTime
+            /// BidAskElement ReportTime
             /// </summary>
             public LocalDateTime ReportTime { get; set; }
             /// <summary>
-            /// AssessmentElement Product
+            /// BidAskElement Product
             /// </summary>
             public string Product { get; set; }
             /// <summary>
-            /// AssessmentElement MarketAssessmentValue
+            /// BidAskElement BidAskValue
             /// </summary>
-            public MarketAssessmentValue Value { get; set; }
+            public BidAskValue Value { get; set; }
         }
     }
 }

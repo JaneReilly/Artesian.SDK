@@ -33,4 +33,16 @@
       , IllegalReferenceDate = 2
 #pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
     }
+
+    /// <summary>
+    /// Add BidAsk OperationResult enums
+    /// </summary>
+    public enum AddBidAskOperationResult
+    {
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
+        BidAskAdded = 0
+      , ProductAlreadyPresent = 1
+      , IllegalReferenceDate = 2
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
+    }
 }

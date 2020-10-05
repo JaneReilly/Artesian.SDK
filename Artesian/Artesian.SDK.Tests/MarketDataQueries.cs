@@ -451,7 +451,7 @@ namespace Artesian.SDK.Tests
             {
                 var mds = new MarketDataService(_cfg);
 
-                //Create Version
+                //Create invalid Version by populating BidAsk
                 var data = new UpsertCurveData()
                 {
                     ID = new MarketDataIdentifier("test", "testName"),
@@ -467,15 +467,8 @@ namespace Artesian.SDK.Tests
                 data.BidAsk.Add(localDateTime, new Dictionary<string, BidAskValue>());
                 data.BidAsk[localDateTime].Add("test", new BidAskValue());
 
-                try
-                {
-                    mds.UpsertCurveDataAsync(data).ConfigureAwait(true).GetAwaiter().GetResult();
-                }catch(ArgumentException ex)
-                {
-                    ex.Message.Contains("UpsertCurveData BidAsk must be NULL if Rows are Valorized");
-                }
-
-               
+                var ex = Assert.Throws<ArgumentException>(() => mds.UpsertCurveDataAsync(data).ConfigureAwait(true).GetAwaiter().GetResult());
+                Assert.Contains(ex.Message, actual: new[] { "UpsertCurveData BidAsk must be NULL if Rows are Valorized" } );
             }
         }
 
@@ -486,7 +479,7 @@ namespace Artesian.SDK.Tests
             {
                 var mds = new MarketDataService(_cfg);
 
-                //Create Version
+                //Create invalid MarketAssessment by populating AutioonRows
                 var data = new UpsertCurveData()
                 {
                     ID = new MarketDataIdentifier("test", "testName"),
@@ -507,14 +500,8 @@ namespace Artesian.SDK.Tests
                 data.MarketAssessment.Add(localDateTime, new Dictionary<string, MarketAssessmentValue>());
                 data.MarketAssessment[localDateTime].Add("test", new MarketAssessmentValue());
 
-                try
-                {
-                    mds.UpsertCurveDataAsync(data).ConfigureAwait(true).GetAwaiter().GetResult();
-                }
-                catch (ArgumentException ex)
-                {
-                    ex.Message.Contains("UpsertCurveData Auctions must be NULL if MarketAssessment are Valorized");
-                }
+                var ex = Assert.Throws<ArgumentException>(() => mds.UpsertCurveDataAsync(data).ConfigureAwait(true).GetAwaiter().GetResult());
+                Assert.Contains(ex.Message, actual: new[] { "UpsertCurveData Auctions must be NULL if MarketAssessment are Valorized" });
             }
         }
         #endregion

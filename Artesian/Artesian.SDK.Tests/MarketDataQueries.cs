@@ -443,6 +443,80 @@ namespace Artesian.SDK.Tests
                     .Times(1);
             }
         }
+
+        [Test]
+        public void ValidationCheck_UpsertCurveData_Versioned_with_BidAsk()
+        {
+            using (var httpTest = new HttpTest())
+            {
+                var mds = new MarketDataService(_cfg);
+
+                //Create Version
+                var data = new UpsertCurveData()
+                {
+                    ID = new MarketDataIdentifier("test", "testName"),
+                    Timezone = "CET",
+                    DownloadedAt = SystemClock.Instance.GetCurrentInstant(),
+                    Rows = new Dictionary<LocalDateTime, double?>() { { new LocalDateTime(2018, 01, 01, 0, 0), 21.4 } },
+                    BidAsk = new Dictionary<LocalDateTime, IDictionary<string, BidAskValue>>(),
+                    Version = new LocalDateTime(2018, 09, 25, 12, 0, 0, 123).PlusNanoseconds(100)
+                };
+
+                var localDateTime = new LocalDateTime(2018, 09, 24, 00, 00);
+
+                data.BidAsk.Add(localDateTime, new Dictionary<string, BidAskValue>());
+                data.BidAsk[localDateTime].Add("test", new BidAskValue());
+
+                try
+                {
+                    mds.UpsertCurveDataAsync(data).ConfigureAwait(true).GetAwaiter().GetResult();
+                }catch(ArgumentException ex)
+                {
+                    ex.Message.Contains("UpsertCurveData BidAsk must be NULL if Rows are Valorized");
+                }
+
+               
+            }
+        }
+
+        [Test]
+        public void ValidationCheck_UpsertCurveData_MarketAssesment_with_Auction()
+        {
+            using (var httpTest = new HttpTest())
+            {
+                var mds = new MarketDataService(_cfg);
+
+                //Create Version
+                var data = new UpsertCurveData()
+                {
+                    ID = new MarketDataIdentifier("test", "testName"),
+                    Timezone = "CET",
+                    DownloadedAt = SystemClock.Instance.GetCurrentInstant(),
+                    AuctionRows = new Dictionary<LocalDateTime, AuctionBids>(),
+                    MarketAssessment = new Dictionary<LocalDateTime, IDictionary<string, MarketAssessmentValue>>()
+                };
+
+                var localDateTime = new LocalDateTime(2018, 09, 24, 00, 00);
+                var bid = new List<AuctionBidValue>();
+                var offer = new List<AuctionBidValue>();
+                bid.Add(new AuctionBidValue(100, 10));
+                offer.Add(new AuctionBidValue(120, 12));
+
+                data.AuctionRows.Add(localDateTime, new AuctionBids(localDateTime, bid.ToArray(), offer.ToArray()));
+
+                data.MarketAssessment.Add(localDateTime, new Dictionary<string, MarketAssessmentValue>());
+                data.MarketAssessment[localDateTime].Add("test", new MarketAssessmentValue());
+
+                try
+                {
+                    mds.UpsertCurveDataAsync(data).ConfigureAwait(true).GetAwaiter().GetResult();
+                }
+                catch (ArgumentException ex)
+                {
+                    ex.Message.Contains("UpsertCurveData Auctions must be NULL if MarketAssessment are Valorized");
+                }
+            }
+        }
         #endregion
 
         #region TimeTransform

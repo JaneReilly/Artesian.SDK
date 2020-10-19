@@ -237,6 +237,31 @@ namespace Artesian.SDK.Tests
         }
 
         [Test]
+        public void ActWithCustomHeader()
+        {
+            using (var httpTest = new HttpTest())
+            {
+                var qs = new QueryService(_cfg);
+
+                var act = qs.CreateActual()
+                       .ForMarketData(new int[] { 100000001 })
+                       .InGranularity(Granularity.Day)
+                       .InRelativePeriodRange(Period.FromWeeks(2), Period.FromDays(20))
+                       .ExecuteAsync().Result;
+
+                httpTest.ShouldHaveCalled($"{_cfg.BaseAddress}query/v1.0/ts/Day/P2W/P20D"
+                    .SetQueryParam("id", 100000001))
+                    .WithVerb(HttpMethod.Get)
+                    .WithHeader("Accept", "application/x.msgpacklz4; q=1.0")
+                    .WithHeader("Accept", "application/x-msgpack; q=0.75")
+                    .WithHeader("Accept", "application/json; q=0.5")
+                    .WithHeader("X-Api-Key", TestConstants.APIKey)
+                    .WithHeader("X-Artesian-Agent", ArtesianConstants.SDKVersionHeaderValue)
+                    .Times(1);
+            }
+        }
+
+        [Test]
         public void Act_Partitioned_By_ID()
         {
             using (var httpTest = new HttpTest())

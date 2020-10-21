@@ -26,7 +26,6 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Ark.Tools.Http;
-using Microsoft.Extensions.PlatformAbstractions;
 
 namespace Artesian.SDK.Service
 {
@@ -45,8 +44,6 @@ namespace Artesian.SDK.Service
         private readonly string _url;
         private readonly AsyncPolicy _resilienceStrategy;
         private readonly string _apiKey;
-
-        //public static string SDKVersionHeaderValue = $@".NET<{ArtesianConstants.SDKVersion}>,{Environment.OSVersion.Platform}<{Environment.OSVersion.Version}>,{PlatformServices.Default.Application.RuntimeFramework.Identifier}<{PlatformServices.Default.Application.RuntimeFramework.Version}>";
 
         /// <summary>
         /// Client constructor Auth credentials / ApiKey can be passed through config

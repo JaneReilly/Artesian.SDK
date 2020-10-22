@@ -108,6 +108,8 @@ namespace Artesian.SDK.Service
             {
                 var req = _client.Request(resource).WithAcceptHeader(_formatters).AllowAnyHttpStatus();
 
+                req = req.WithHeader("X-Artesian-Agent", ArtesianConstants.SDKVersionHeaderValue);
+
                 if (_apiKey != null)
                     req = req.WithHeader("X-Api-Key", _apiKey);
                 else

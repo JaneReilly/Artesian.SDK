@@ -13,11 +13,9 @@ namespace Artesian.SDK.Service
     /// </summary>
     public abstract class ArtesianConstants
     {
-        internal const string SDKVersion = "v2.2.1";
-
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
-		public static string SDKVersionHeaderValue = $@".NET<{Assembly.GetExecutingAssembly().GetName().Version}>,{Environment.OSVersion.Platform}<{Environment.OSVersion.Version}>,{PlatformServices.Default.Application.RuntimeFramework.Identifier}<{PlatformServices.Default.Application.RuntimeFramework.Version}>";
-#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
+        public readonly static string SDKVersionHeaderValue = $@"C#:{Assembly.GetExecutingAssembly().GetName().Version},{Environment.OSVersion.Platform}:{Environment.OSVersion.Version},{PlatformServices.Default.Application.RuntimeFramework.Identifier}:{PlatformServices.Default.Application.RuntimeFramework.Version}";
+ #pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 
 		internal const string CharacterValidatorRegEx = @"^[^'"",:;\s](?:(?:[^'"",:;\s]| )*[^'"",:;\s])?$";
         internal const string MarketDataNameValidatorRegEx = @"^[^\s](?:(?:[^\s]| )*[^\s])?$";

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Net.Http;
 using Artesian.SDK.Dto;
 using Artesian.SDK.Service;
@@ -258,6 +259,28 @@ namespace Artesian.SDK.Tests
                     .WithHeader("X-Api-Key", TestConstants.APIKey)
                     .WithHeader("X-Artesian-Agent", ArtesianConstants.SDKVersionHeaderValue)
                     .Times(1);
+            }
+        }
+
+        [Test]
+        public void ActWithCustomHeaderFormatCheck()
+        {
+            using (var httpTest = new HttpTest())
+            {
+                var qs = new QueryService(_cfg);
+
+                var act = qs.CreateActual()
+                       .ForMarketData(new int[] { 100000001 })
+                       .InGranularity(Granularity.Day)
+                       .InRelativePeriodRange(Period.FromWeeks(2), Period.FromDays(20))
+                       .ExecuteAsync().Result;
+
+                var headerXAgent = httpTest.CallLog.FirstOrDefault().Request.Headers.Where(w => w.Key == "X-Artesian-Agent").FirstOrDefault();
+
+                //C#: 2.2.1.0,Win32NT: 10.0.19041.0,.NETFramework: 4.6.1
+                StringAssert.Contains("C#:", headerXAgent.Value.FirstOrDefault());
+                StringAssert.Contains("Win32NT:", headerXAgent.Value.FirstOrDefault());
+                StringAssert.Contains(".NETFramework:", headerXAgent.Value.FirstOrDefault());
             }
         }
 

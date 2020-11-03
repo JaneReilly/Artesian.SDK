@@ -277,8 +277,8 @@ namespace Artesian.SDK.Tests
 
                 var headerXAgent = httpTest.CallLog.FirstOrDefault().Request.Headers.Where(w => w.Key == "X-Artesian-Agent").FirstOrDefault();
 
-                //C#: 2.2.1.0,Win32NT: 10.0.19041.0,.NETFramework: 4.6.1
-                StringAssert.Contains("C#:", headerXAgent.Value.FirstOrDefault());
+                //ArtesianSDK-C#: 2.2.1.0,Win32NT: 10.0.19041.0,.NETFramework: 4.6.1
+                StringAssert.Contains("ArtesianSDK-C#:", headerXAgent.Value.FirstOrDefault());
                 StringAssert.Contains("Win32NT:", headerXAgent.Value.FirstOrDefault());
                 StringAssert.Contains(".NETFramework:", headerXAgent.Value.FirstOrDefault());
             }

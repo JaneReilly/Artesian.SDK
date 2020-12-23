@@ -215,7 +215,7 @@ namespace Artesian.SDK.Service
                         .SetQueryParam("tz", qp.TimeZone)
                         .SetQueryParam("tr", qp.TransformId)
                         .SetQueryParam("fillerK", qp.FillerKindType)
-                        .SetQueryParam("FillerTimeSeriesDV", qp.FillerConfig.FillerTimeSeriesDV)
+                        .SetQueryParam("fillerDV", qp.FillerConfig.FillerTimeSeriesDV)
                         .SetQueryParam("fillerP", qp.FillerConfig.FillerPeriod)
                         .ToString())
                 .ToList();

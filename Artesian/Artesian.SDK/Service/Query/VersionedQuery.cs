@@ -480,7 +480,7 @@ namespace Artesian.SDK.Service
                             .SetQueryParam("tr", qp.TransformId)
                             .SetQueryParam("versionLimit", qp.VersionLimit)
                             .SetQueryParam("fillerK",  qp.FillerKindType)
-                            .SetQueryParam("FillerTimeSeriesDV", qp.FillerConfig.FillerTimeSeriesDV)
+                            .SetQueryParam("fillerDV", qp.FillerConfig.FillerTimeSeriesDV)
                             .SetQueryParam("fillerP", qp.FillerConfig.FillerPeriod)
                             .ToString())
                     .ToList();

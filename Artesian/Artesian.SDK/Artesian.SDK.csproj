@@ -16,7 +16,7 @@
     <PackageTags>Ark;c#;Visual Studio;Framework;Arkive;Artesian;</PackageTags>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
 
-    <Version>2.2.4</Version>
+    <Version>2.2.5</Version>
     <VersionSuffix></VersionSuffix>
     <PackageReleaseNotes>
       Support for Bid/Ask type

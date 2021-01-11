@@ -28,6 +28,7 @@ namespace Artesian.SDK.Dto.GMEPublicOffer
         SLOV = 15,
         SUD = 16,
         SVIZ = 17,
+        CALA = 18,
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     }
 }

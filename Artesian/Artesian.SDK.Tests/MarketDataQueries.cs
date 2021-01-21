@@ -25,9 +25,9 @@ namespace Artesian.SDK.Tests
 
                 var mdq = mds.ReadMarketDataRegistryAsync(new MarketDataIdentifier("TestProvider", "TestCurveName")).ConfigureAwait(true).GetAwaiter().GetResult();
 
-                httpTest.ShouldHaveCalled($"{_cfg.BaseAddress}v2.1/marketdata/entity"
-                    .SetQueryParam("provider", "TestProvider")
-                    .SetQueryParam("curveName", "TestCurveName"))
+                httpTest.ShouldHaveCalledPath($"{_cfg.BaseAddress}v2.1/marketdata/entity")
+                    .WithQueryParam("provider", "TestProvider")
+                    .WithQueryParam("curveName", "TestCurveName")
                     .WithVerb(HttpMethod.Get)
                     .Times(1);
             }
@@ -42,12 +42,12 @@ namespace Artesian.SDK.Tests
 
                 var mdq = mds.ReadCurveRangeAsync(100000001, 1, 1, "M+1", new LocalDateTime(2018, 07, 19, 12, 0), new LocalDateTime(2017, 07, 19, 12, 0)).ConfigureAwait(true).GetAwaiter().GetResult();
 
-                httpTest.ShouldHaveCalled($"{_cfg.BaseAddress}v2.1/marketdata/entity/100000001/curves"
-                    .SetQueryParam("versionFrom", new LocalDateTime(2018, 07, 19, 12, 0))
-                    .SetQueryParam("versionTo", new LocalDateTime(2017, 07, 19, 12, 0))
-                    .SetQueryParam("product", "M+1")
-                    .SetQueryParam("page", 1)
-                    .SetQueryParam("pageSize", 1))
+                httpTest.ShouldHaveCalledPath($"{_cfg.BaseAddress}v2.1/marketdata/entity/100000001/curves")
+                    .WithQueryParam("versionFrom", new LocalDateTime(2018, 07, 19, 12, 0))
+                    .WithQueryParam("versionTo", new LocalDateTime(2017, 07, 19, 12, 0))
+                    .WithQueryParam("product", "M+1")
+                    .WithQueryParam("page", 1)
+                    .WithQueryParam("pageSize", 1)
                     .WithVerb(HttpMethod.Get)
                     .Times(1);
             }
@@ -62,7 +62,7 @@ namespace Artesian.SDK.Tests
 
                 var mdq = mds.ReadMarketDataRegistryAsync(100000001).ConfigureAwait(true).GetAwaiter().GetResult();
 
-                httpTest.ShouldHaveCalled($"{_cfg.BaseAddress}v2.1/marketdata/entity/100000001")
+                httpTest.ShouldHaveCalledPath($"{_cfg.BaseAddress}v2.1/marketdata/entity/100000001")
                    .WithVerb(HttpMethod.Get)
                    .Times(1);
             }
@@ -87,7 +87,7 @@ namespace Artesian.SDK.Tests
 
                 var mdq = mds.RegisterMarketDataAsync(marketDataEntity).ConfigureAwait(true).GetAwaiter().GetResult();
 
-                httpTest.ShouldHaveCalled($"{_cfg.BaseAddress}v2.1/marketdata/entity")
+                httpTest.ShouldHaveCalledPath($"{_cfg.BaseAddress}v2.1/marketdata/entity")
                     .WithVerb(HttpMethod.Post)
                     .WithContentType("application/x.msgpacklz4")
                     .WithHeadersTest()
@@ -115,7 +115,7 @@ namespace Artesian.SDK.Tests
 
                 var mdq = mds.UpdateMarketDataAsync(marketDataEntity).ConfigureAwait(true).GetAwaiter().GetResult();
 
-                httpTest.ShouldHaveCalled($"{_cfg.BaseAddress}v2.1/marketdata/entity/1")
+                httpTest.ShouldHaveCalledPath($"{_cfg.BaseAddress}v2.1/marketdata/entity/1")
                     .WithVerb(HttpMethod.Put)
                     .WithContentType("application/x.msgpacklz4")
                     .WithHeadersTest()
@@ -132,7 +132,7 @@ namespace Artesian.SDK.Tests
 
                 mds.DeleteMarketDataAsync(1).ConfigureAwait(true).GetAwaiter().GetResult();
 
-                httpTest.ShouldHaveCalled($"{_cfg.BaseAddress}v2.1/marketdata/entity/1")
+                httpTest.ShouldHaveCalledPath($"{_cfg.BaseAddress}v2.1/marketdata/entity/1")
                     .WithVerb(HttpMethod.Delete)
                     .WithHeadersTest()
                     .Times(1);
@@ -142,13 +142,13 @@ namespace Artesian.SDK.Tests
 
         #region SearchFacet
         [Test]
-        public void SearchFacet_SearchFacetAsync()
+        public void SearchFacet_SearchFacet()
         {
             using (var httpTest = new HttpTest())
             {
                 Dictionary<string, string[]> filterDict = new Dictionary<string, string[]>
                 {
-                    {"TestKey",new string[]{"TestValue"} }
+                    {"TestKey",new []{"TestValue"} }
                 };
                 var mds = new MarketDataService(_cfg);
                 var filter = new ArtesianSearchFilter
@@ -161,13 +161,12 @@ namespace Artesian.SDK.Tests
                 };
                 var mdq = mds.SearchFacetAsync(filter, false).ConfigureAwait(true).GetAwaiter().GetResult();
 
-                httpTest.ShouldHaveCalled($"{_cfg.BaseAddress}v2.1/marketdata/searchfacet"
-                    .SetQueryParam("pageSize", 1)
-                    .SetQueryParam("page", 1)
-                    .SetQueryParam("searchText", "testText")
-                    .SetQueryParam("filters", "TestKey%3ATestValue", true)
-                    .SetQueryParam("sorts", "OriginalTimezone", true)
-                    )
+                httpTest.ShouldHaveCalledPath($"{_cfg.BaseAddress}v2.1/marketdata/searchfacet")
+                    .WithQueryParam("pageSize", 1)
+                    .WithQueryParam("page", 1)
+                    .WithQueryParam("searchText", "testText")
+                    .WithQueryParam("filters", "TestKey:TestValue")
+                    .WithQueryParam("sorts", "OriginalTimezone")
                     .WithVerb(HttpMethod.Get)
                     .Times(1);
             }
@@ -185,7 +184,7 @@ namespace Artesian.SDK.Tests
 
                 var operations = new Operations()
                 {
-                    IDS = new HashSet<MarketDataETag>() { (new MarketDataETag(0, "provaEtag")) },
+                    IDS = new HashSet<MarketDataETag>() { new MarketDataETag(0, "provaEtag")},
                     OperationList = new List<OperationParams>() {
                         new  OperationParams()
                         {
@@ -201,7 +200,7 @@ namespace Artesian.SDK.Tests
 
                 var mdq = mds.PerformOperationsAsync(operations).ConfigureAwait(true).GetAwaiter().GetResult();
 
-                httpTest.ShouldHaveCalled($"{_cfg.BaseAddress}v2.1/marketdata/operations")
+                httpTest.ShouldHaveCalledPath($"{_cfg.BaseAddress}v2.1/marketdata/operations")
                     .WithVerb(HttpMethod.Post)
                     .Times(1);
             }
@@ -216,7 +215,7 @@ namespace Artesian.SDK.Tests
 
                 var operations = new Operations()
                 {
-                    IDS = new HashSet<MarketDataETag>() { (new MarketDataETag(0, "provaEtag")) },
+                    IDS = new HashSet<MarketDataETag>() { new MarketDataETag(0, "provaEtag") },
                     OperationList = new List<OperationParams>() {
                         new  OperationParams()
                         {
@@ -232,7 +231,7 @@ namespace Artesian.SDK.Tests
 
                 var mdq = mds.PerformOperationsAsync(operations).ConfigureAwait(true).GetAwaiter().GetResult();
 
-                httpTest.ShouldHaveCalled($"{_cfg.BaseAddress}v2.1/marketdata/operations")
+                httpTest.ShouldHaveCalledPath($"{_cfg.BaseAddress}v2.1/marketdata/operations")
                     .WithVerb(HttpMethod.Post)
                     .Times(1);
             }
@@ -247,7 +246,7 @@ namespace Artesian.SDK.Tests
 
                 var operations = new Operations()
                 {
-                    IDS = new HashSet<MarketDataETag>() { (new MarketDataETag(0, "provaEtag")) },
+                    IDS = new HashSet<MarketDataETag>() { new MarketDataETag(0, "provaEtag") },
                     OperationList = new List<OperationParams>() {
                         new  OperationParams()
                         {
@@ -262,7 +261,7 @@ namespace Artesian.SDK.Tests
 
                 var mdq = mds.PerformOperationsAsync(operations).ConfigureAwait(true).GetAwaiter().GetResult();
 
-                httpTest.ShouldHaveCalled($"{_cfg.BaseAddress}v2.1/marketdata/operations")
+                httpTest.ShouldHaveCalledPath($"{_cfg.BaseAddress}v2.1/marketdata/operations")
                     .WithVerb(HttpMethod.Post)
                     .Times(1);
             }
@@ -277,7 +276,7 @@ namespace Artesian.SDK.Tests
 
                 var operations = new Operations()
                 {
-                    IDS = new HashSet<MarketDataETag>() { (new MarketDataETag(0, "provaEtag")) },
+                    IDS = new HashSet<MarketDataETag>() { new MarketDataETag(0, "provaEtag") },
                     OperationList = new List<OperationParams>() {
                         new  OperationParams()
                         {
@@ -292,7 +291,7 @@ namespace Artesian.SDK.Tests
 
                 var mdq = mds.PerformOperationsAsync(operations).ConfigureAwait(true).GetAwaiter().GetResult();
 
-                httpTest.ShouldHaveCalled($"{_cfg.BaseAddress}v2.1/marketdata/operations")
+                httpTest.ShouldHaveCalledPath($"{_cfg.BaseAddress}v2.1/marketdata/operations")
                     .WithVerb(HttpMethod.Post)
                     .Times(1);
             }
@@ -307,7 +306,7 @@ namespace Artesian.SDK.Tests
 
                 var operations = new Operations()
                 {
-                    IDS = new HashSet<MarketDataETag>() { (new MarketDataETag(0, "provaEtag")) },
+                    IDS = new HashSet<MarketDataETag>() { new MarketDataETag(0, "provaEtag") },
                     OperationList = new List<OperationParams>() {
                         new  OperationParams()
                         {
@@ -322,7 +321,7 @@ namespace Artesian.SDK.Tests
 
                 var mdq = mds.PerformOperationsAsync(operations).ConfigureAwait(true).GetAwaiter().GetResult();
 
-                httpTest.ShouldHaveCalled($"{_cfg.BaseAddress}v2.1/marketdata/operations")
+                httpTest.ShouldHaveCalledPath($"{_cfg.BaseAddress}v2.1/marketdata/operations")
                     .WithVerb(HttpMethod.Post)
                     .Times(1);
             }
@@ -337,7 +336,7 @@ namespace Artesian.SDK.Tests
 
                 var operations = new Operations()
                 {
-                    IDS = new HashSet<MarketDataETag>() { (new MarketDataETag(0, "provaEtag")) },
+                    IDS = new HashSet<MarketDataETag>() { new MarketDataETag(0, "provaEtag") },
                     OperationList = new List<OperationParams>() {
                         new  OperationParams()
                         {
@@ -352,7 +351,7 @@ namespace Artesian.SDK.Tests
 
                 var mdq = mds.PerformOperationsAsync(operations).ConfigureAwait(true).GetAwaiter().GetResult();
 
-                httpTest.ShouldHaveCalled($"{_cfg.BaseAddress}v2.1/marketdata/operations")
+                httpTest.ShouldHaveCalledPath($"{_cfg.BaseAddress}v2.1/marketdata/operations")
                     .WithVerb(HttpMethod.Post)
                     .Times(1);
             }
@@ -371,7 +370,7 @@ namespace Artesian.SDK.Tests
                 {
                     ID = new MarketDataIdentifier("test", "testName"),
                     Timezone = "CET",
-                    DownloadedAt = new Instant(),
+                    DownloadedAt = SystemClock.Instance.GetCurrentInstant(),
                     MarketAssessment = new Dictionary<LocalDateTime, IDictionary<string, MarketAssessmentValue>>()
                 };
 
@@ -382,7 +381,7 @@ namespace Artesian.SDK.Tests
 
                 mds.UpsertCurveDataAsync(data).ConfigureAwait(true).GetAwaiter().GetResult();
 
-                httpTest.ShouldHaveCalled($"{_cfg.BaseAddress}v2.1/marketdata/upsertdata")
+                httpTest.ShouldHaveCalledPath($"{_cfg.BaseAddress}v2.1/marketdata/upsertdata")
                     .WithVerb(HttpMethod.Post)
                     .Times(1);
             }
@@ -399,7 +398,7 @@ namespace Artesian.SDK.Tests
                 {
                     ID = new MarketDataIdentifier("test", "testName"),
                     Timezone = "CET",
-                    DownloadedAt = new Instant(),
+                    DownloadedAt = SystemClock.Instance.GetCurrentInstant(),
                     AuctionRows = new Dictionary<LocalDateTime, AuctionBids>()
                 };
 
@@ -413,7 +412,7 @@ namespace Artesian.SDK.Tests
 
                 mds.UpsertCurveDataAsync(data).ConfigureAwait(true).GetAwaiter().GetResult();
 
-                httpTest.ShouldHaveCalled($"{_cfg.BaseAddress}v2.1/marketdata/upsertdata")
+                httpTest.ShouldHaveCalledPath($"{_cfg.BaseAddress}v2.1/marketdata/upsertdata")
                     .WithVerb(HttpMethod.Post)
                     .Times(1);
             }
@@ -438,7 +437,7 @@ namespace Artesian.SDK.Tests
 
                 mds.UpsertCurveDataAsync(data).ConfigureAwait(true).GetAwaiter().GetResult();
 
-                httpTest.ShouldHaveCalled($"{_cfg.BaseAddress}v2.1/marketdata/upsertdata")
+                httpTest.ShouldHaveCalledPath($"{_cfg.BaseAddress}v2.1/marketdata/upsertdata")
                     .WithVerb(HttpMethod.Post)
                     .Times(1);
             }
@@ -516,7 +515,7 @@ namespace Artesian.SDK.Tests
 
                 var mdq = mds.ReadTimeTransformBaseAsync(1).ConfigureAwait(true).GetAwaiter().GetResult();
 
-                httpTest.ShouldHaveCalled($"{_cfg.BaseAddress}v2.1/timeTransform/entity/1")
+                httpTest.ShouldHaveCalledPath($"{_cfg.BaseAddress}v2.1/timeTransform/entity/1")
                    .WithVerb(HttpMethod.Get)
                    .Times(1);
             }
@@ -527,7 +526,7 @@ namespace Artesian.SDK.Tests
 
                 var mdq = mds.ReadTimeTransformBaseAsync(2).ConfigureAwait(true).GetAwaiter().GetResult();
 
-                httpTest.ShouldHaveCalled($"{_cfg.BaseAddress}v2.1/timeTransform/entity/2")
+                httpTest.ShouldHaveCalledPath($"{_cfg.BaseAddress}v2.1/timeTransform/entity/2")
                    .WithVerb(HttpMethod.Get)
                    .Times(1);
             }
@@ -542,10 +541,10 @@ namespace Artesian.SDK.Tests
 
                 var mdq = mds.ReadTimeTransformsAsync(1, 1, true).ConfigureAwait(true).GetAwaiter().GetResult();
 
-                httpTest.ShouldHaveCalled($"{_cfg.BaseAddress}v2.1/timeTransform/entity"
-                    .SetQueryParam("pageSize", 1)
-                    .SetQueryParam("page", 1)
-                    .SetQueryParam("userDefined", true))
+                httpTest.ShouldHaveCalledPath($"{_cfg.BaseAddress}v2.1/timeTransform/entity")
+                    .WithQueryParam("pageSize", 1)
+                    .WithQueryParam("page", 1)
+                    .WithQueryParam("userDefined", true)
                     .WithVerb(HttpMethod.Get)
                     .Times(1);
             }
@@ -560,10 +559,10 @@ namespace Artesian.SDK.Tests
 
                 var mdq = mds.ReadTimeTransformsAsync(1, 1, true).ConfigureAwait(true).GetAwaiter().GetResult();
 
-                httpTest.ShouldHaveCalled($"{_cfg.BaseAddress}v2.1/timeTransform/entity"
-                    .SetQueryParam("pageSize", 1)
-                    .SetQueryParam("page", 1)
-                    .SetQueryParam("userDefined", true))
+                httpTest.ShouldHaveCalledPath($"{_cfg.BaseAddress}v2.1/timeTransform/entity")
+                    .WithQueryParam("pageSize", 1)
+                    .WithQueryParam("page", 1)
+                    .WithQueryParam("userDefined", true)
                     .WithVerb(HttpMethod.Get)
                     .WithHeadersTest()
                     .Times(1);
@@ -590,7 +589,7 @@ namespace Artesian.SDK.Tests
 
                 var mdq = mds.RegisterTimeTransformBaseAsync(timeTransformEntity).ConfigureAwait(true).GetAwaiter().GetResult();
 
-                httpTest.ShouldHaveCalled($"{_cfg.BaseAddress}v2.1/timeTransform/entity")
+                httpTest.ShouldHaveCalledPath($"{_cfg.BaseAddress}v2.1/timeTransform/entity")
                     .WithVerb(HttpMethod.Post)
                     .WithContentType("application/x.msgpacklz4")
                     .WithHeadersTest()
@@ -618,7 +617,7 @@ namespace Artesian.SDK.Tests
 
                 var mdq = mds.UpdateTimeTransformBaseAsync(timeTransformEntity).ConfigureAwait(true).GetAwaiter().GetResult();
 
-                httpTest.ShouldHaveCalled($"{_cfg.BaseAddress}v2.1/timeTransform/entity/1")
+                httpTest.ShouldHaveCalledPath($"{_cfg.BaseAddress}v2.1/timeTransform/entity/1")
                     .WithVerb(HttpMethod.Put)
                     .WithContentType("application/x.msgpacklz4")
                     .WithHeadersTest()
@@ -627,7 +626,7 @@ namespace Artesian.SDK.Tests
         }
 
         [Test]
-        public void TimeTransform_DeleteTimeTransformSimpleShiftAsync()
+        public void TimeTransform_DeleteTimeTransformSimpleShift()
         {
             using (var httpTest = new HttpTest())
             {
@@ -635,7 +634,7 @@ namespace Artesian.SDK.Tests
 
                 mds.DeleteTimeTransformSimpleShiftAsync(1).ConfigureAwait(true).GetAwaiter().GetResult();
 
-                httpTest.ShouldHaveCalled($"{_cfg.BaseAddress}v2.1/timeTransform/entity/1")
+                httpTest.ShouldHaveCalledPath($"{_cfg.BaseAddress}v2.1/timeTransform/entity/1")
                     .WithVerb(HttpMethod.Delete)
                     .WithHeadersTest()
                     .Times(1);
@@ -660,7 +659,7 @@ namespace Artesian.SDK.Tests
 
                 var mdq = mds.CreateFilter(filter).ConfigureAwait(true).GetAwaiter().GetResult();
 
-                httpTest.ShouldHaveCalled($"{_cfg.BaseAddress}v2.1/filter")
+                httpTest.ShouldHaveCalledPath($"{_cfg.BaseAddress}v2.1/filter")
                     .WithVerb(HttpMethod.Post)
                     .WithContentType("application/x.msgpacklz4")
                     .WithHeadersTest()
@@ -684,7 +683,7 @@ namespace Artesian.SDK.Tests
 
                 var mdq = mds.UpdateFilter(1, filter).ConfigureAwait(true).GetAwaiter().GetResult();
 
-                httpTest.ShouldHaveCalled($"{_cfg.BaseAddress}v2.1/filter/1")
+                httpTest.ShouldHaveCalledPath($"{_cfg.BaseAddress}v2.1/filter/1")
                     .WithVerb(HttpMethod.Put)
                     .WithContentType("application/x.msgpacklz4")
                     .WithHeadersTest()
@@ -703,7 +702,7 @@ namespace Artesian.SDK.Tests
 
                 var mdq = mds.RemoveFilter(1).ConfigureAwait(true).GetAwaiter().GetResult();
 
-                httpTest.ShouldHaveCalled($"{_cfg.BaseAddress}v2.1/filter/1")
+                httpTest.ShouldHaveCalledPath($"{_cfg.BaseAddress}v2.1/filter/1")
                     .WithVerb(HttpMethod.Delete)
                     .WithHeadersTest()
                     .Times(1);
@@ -721,7 +720,7 @@ namespace Artesian.SDK.Tests
 
                 var mdq = mds.ReadFilter(1).ConfigureAwait(true).GetAwaiter().GetResult();
 
-                httpTest.ShouldHaveCalled($"{_cfg.BaseAddress}v2.1/filter/")
+                httpTest.ShouldHaveCalledPath($"{_cfg.BaseAddress}v2.1/filter/")
                     .WithVerb(HttpMethod.Get)
                     .WithHeadersTest()
                     .Times(1);
@@ -739,9 +738,9 @@ namespace Artesian.SDK.Tests
 
                 var mdq = mds.ReadFilters(1, 1).ConfigureAwait(true).GetAwaiter().GetResult();
 
-                httpTest.ShouldHaveCalled($"{_cfg.BaseAddress}v2.1/filter"
-                    .SetQueryParam("pageSize", 1)
-                    .SetQueryParam("page", 1))
+                httpTest.ShouldHaveCalledPath($"{_cfg.BaseAddress}v2.1/filter")
+                    .WithQueryParam("pageSize", 1)
+                    .WithQueryParam("page", 1)
                     .WithVerb(HttpMethod.Get)
                     .WithHeadersTest()
                     .Times(1);
@@ -761,7 +760,7 @@ namespace Artesian.SDK.Tests
 
                 var mdq = mds.ReadRolesByPath(path).ConfigureAwait(true).GetAwaiter().GetResult();
 
-                httpTest.ShouldHaveCalled($"{_cfg.BaseAddress}v2.1/acl/me")
+                httpTest.ShouldHaveCalledPath($"{_cfg.BaseAddress}v2.1/acl/me")
                     .WithVerb(HttpMethod.Get)
                     .WithHeadersTest()
                     .Times(1);
@@ -777,11 +776,11 @@ namespace Artesian.SDK.Tests
 
                 var mdq = mds.GetRoles(1, 1, new[] { "Principals" }).ConfigureAwait(true).GetAwaiter().GetResult();
 
-                httpTest.ShouldHaveCalled($"{_cfg.BaseAddress}v2.1/acl"
-                    .SetQueryParam("pageSize", 1)
-                    .SetQueryParam("page", 1)
-                    .SetQueryParam("principalIds", "Principals")
-                    .SetQueryParam("asOf", null))
+                httpTest.ShouldHaveCalledPath($"{_cfg.BaseAddress}v2.1/acl")
+                    .WithQueryParam("pageSize", 1)
+                    .WithQueryParam("page", 1)
+                    .WithQueryParam("principalIds", "Principals")
+                    .WithoutQueryParam("asOf")
                     .WithVerb(HttpMethod.Get)
                     .WithHeadersTest()
                     .Times(1);
@@ -815,7 +814,7 @@ namespace Artesian.SDK.Tests
 
                 mds.AddRoles(auth).ConfigureAwait(true).GetAwaiter().GetResult();
 
-                httpTest.ShouldHaveCalled($"{_cfg.BaseAddress}v2.1/acl/roles")
+                httpTest.ShouldHaveCalledPath($"{_cfg.BaseAddress}v2.1/acl/roles")
                     .WithVerb(HttpMethod.Post)
                     .WithContentType("application/x.msgpacklz4")
                     .WithHeadersTest()
@@ -850,7 +849,7 @@ namespace Artesian.SDK.Tests
 
                 mds.UpsertRoles(auth).ConfigureAwait(true).GetAwaiter().GetResult();
 
-                httpTest.ShouldHaveCalled($"{_cfg.BaseAddress}v2.1/acl")
+                httpTest.ShouldHaveCalledPath($"{_cfg.BaseAddress}v2.1/acl")
                     .WithVerb(HttpMethod.Post)
                     .WithContentType("application/x.msgpacklz4")
                     .WithHeadersTest()
@@ -885,7 +884,7 @@ namespace Artesian.SDK.Tests
 
                 mds.RemoveRoles(auth).ConfigureAwait(true).GetAwaiter().GetResult();
 
-                httpTest.ShouldHaveCalled($"{_cfg.BaseAddress}v2.1/acl/roles")
+                httpTest.ShouldHaveCalledPath($"{_cfg.BaseAddress}v2.1/acl/roles")
                     .WithVerb(HttpMethod.Delete)
                     .WithContentType("application/x.msgpacklz4")
                     .WithHeadersTest()
@@ -910,7 +909,7 @@ namespace Artesian.SDK.Tests
 
                 var mdq = mds.CreateAuthGroup(group).ConfigureAwait(true).GetAwaiter().GetResult();
 
-                httpTest.ShouldHaveCalled($"{_cfg.BaseAddress}v2.1/group")
+                httpTest.ShouldHaveCalledPath($"{_cfg.BaseAddress}v2.1/group")
                     .WithVerb(HttpMethod.Post)
                     .WithContentType("application/x.msgpacklz4")
                     .WithHeadersTest()
@@ -933,7 +932,7 @@ namespace Artesian.SDK.Tests
 
                 var mdq = mds.UpdateAuthGroup(1, group).ConfigureAwait(true).GetAwaiter().GetResult();
 
-                httpTest.ShouldHaveCalled($"{_cfg.BaseAddress}v2.1/group/1")
+                httpTest.ShouldHaveCalledPath($"{_cfg.BaseAddress}v2.1/group/1")
                     .WithVerb(HttpMethod.Put)
                     .WithContentType("application/x.msgpacklz4")
                     .WithHeadersTest()
@@ -950,7 +949,7 @@ namespace Artesian.SDK.Tests
 
                 mds.RemoveAuthGroup(1).ConfigureAwait(true).GetAwaiter().GetResult();
 
-                httpTest.ShouldHaveCalled($"{_cfg.BaseAddress}v2.1/group/1")
+                httpTest.ShouldHaveCalledPath($"{_cfg.BaseAddress}v2.1/group/1")
                     .WithVerb(HttpMethod.Delete)
                     .WithHeadersTest()
                     .Times(1);
@@ -966,7 +965,7 @@ namespace Artesian.SDK.Tests
 
                 mds.ReadAuthGroup(1).ConfigureAwait(true).GetAwaiter().GetResult();
 
-                httpTest.ShouldHaveCalled($"{_cfg.BaseAddress}v2.1/group/1")
+                httpTest.ShouldHaveCalledPath($"{_cfg.BaseAddress}v2.1/group/1")
                     .WithVerb(HttpMethod.Get)
                     .WithHeadersTest()
                     .Times(1);
@@ -982,9 +981,9 @@ namespace Artesian.SDK.Tests
 
                 var mdq = mds.ReadAuthGroups(1, 1).ConfigureAwait(true).GetAwaiter().GetResult();
 
-                httpTest.ShouldHaveCalled($"{_cfg.BaseAddress}v2.1/group"
-                    .SetQueryParam("pageSize", 1)
-                    .SetQueryParam("page", 1))
+                httpTest.ShouldHaveCalledPath($"{_cfg.BaseAddress}v2.1/group")
+                    .WithQueryParam("pageSize", 1)
+                    .WithQueryParam("page", 1)
                     .WithVerb(HttpMethod.Get)
                     .WithHeadersTest()
                     .Times(1);
@@ -1007,7 +1006,7 @@ namespace Artesian.SDK.Tests
 
                 var mdq = mds.CreateApiKeyAsync(apiKey).ConfigureAwait(true).GetAwaiter().GetResult();
 
-                httpTest.ShouldHaveCalled($"{_cfg.BaseAddress}v2.1/apikey/entity")
+                httpTest.ShouldHaveCalledPath($"{_cfg.BaseAddress}v2.1/apikey/entity")
                     .WithVerb(HttpMethod.Post)
                     .WithContentType("application/x.msgpacklz4")
                     .WithHeadersTest()
@@ -1024,7 +1023,7 @@ namespace Artesian.SDK.Tests
 
                 var mdq = mds.ReadApiKeyByIdAsync(1).ConfigureAwait(true).GetAwaiter().GetResult();
 
-                httpTest.ShouldHaveCalled($"{_cfg.BaseAddress}v2.1/apikey/entity/1")
+                httpTest.ShouldHaveCalledPath($"{_cfg.BaseAddress}v2.1/apikey/entity/1")
                     .WithVerb(HttpMethod.Get)
                     .WithHeadersTest()
                     .Times(1);
@@ -1040,8 +1039,8 @@ namespace Artesian.SDK.Tests
 
                 var mdq = mds.ReadApiKeyByKeyAsync("testKey").ConfigureAwait(true).GetAwaiter().GetResult();
 
-                httpTest.ShouldHaveCalled($"{_cfg.BaseAddress}v2.1/apikey/entity"
-                    .SetQueryParam("key", "testKey"))
+                httpTest.ShouldHaveCalledPath($"{_cfg.BaseAddress}v2.1/apikey/entity")
+                    .WithQueryParam("key", "testKey")
                     .WithVerb(HttpMethod.Get)
                     .WithHeadersTest()
                     .Times(1);
@@ -1057,10 +1056,10 @@ namespace Artesian.SDK.Tests
 
                 var mdq = mds.ReadApiKeysAsync(1, 1, "testName").ConfigureAwait(true).GetAwaiter().GetResult();
 
-                httpTest.ShouldHaveCalled($"{_cfg.BaseAddress}v2.1/apikey/entity"
-                    .SetQueryParam("pageSize", 1)
-                    .SetQueryParam("page", 1)
-                    .SetQueryParam("userId", "testName"))
+                httpTest.ShouldHaveCalledPath($"{_cfg.BaseAddress}v2.1/apikey/entity")
+                    .WithQueryParam("pageSize", 1)
+                    .WithQueryParam("page", 1)
+                    .WithQueryParam("userId", "testName")
                     .WithVerb(HttpMethod.Get)
                     .WithHeadersTest()
                     .Times(1);
@@ -1076,7 +1075,7 @@ namespace Artesian.SDK.Tests
 
                 mds.DeleteApiKeyAsync(1).ConfigureAwait(true).GetAwaiter().GetResult();
 
-                httpTest.ShouldHaveCalled($"{_cfg.BaseAddress}v2.1/apikey/entity/1")
+                httpTest.ShouldHaveCalledPath($"{_cfg.BaseAddress}v2.1/apikey/entity/1")
                     .WithVerb(HttpMethod.Delete)
                     .WithHeadersTest()
                     .Times(1);

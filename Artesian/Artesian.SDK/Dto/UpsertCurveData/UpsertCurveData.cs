@@ -118,7 +118,7 @@ namespace Artesian.SDK.Dto
             if (upsertCurveData.Timezone != null && DateTimeZoneProviders.Tzdb.GetZoneOrNull(upsertCurveData.Timezone) == null)
                 throw new ArgumentException("UpsertCurveData Timezone must be in IANA database if valorized");
 
-            if (upsertCurveData.DownloadedAt == null)
+            if (upsertCurveData.DownloadedAt == default)
                 throw new ArgumentException("UpsertCurveData DownloadedAt must be valorized");
 
             if (upsertCurveData.Rows == null)

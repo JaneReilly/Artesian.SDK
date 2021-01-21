@@ -127,34 +127,34 @@ namespace Artesian.SDK.Service
 
                     using (var res =  await _resilienceStrategy.ExecuteAsync ( () =>  req.SendAsync(method, content: content, completionOption: HttpCompletionOption.ResponseContentRead, cancellationToken: ctk)))
                     {
-                        if (res.StatusCode == HttpStatusCode.NoContent || res.StatusCode == HttpStatusCode.NotFound)
+                        if (res.ResponseMessage.StatusCode == HttpStatusCode.NoContent || res.ResponseMessage.StatusCode == HttpStatusCode.NotFound)
                             return default;
 
-                        if (!res.IsSuccessStatusCode)
+                        if (!res.ResponseMessage.IsSuccessStatusCode)
                         {
                             ArtesianSdkProblemDetail problemDetail = null;
                             string responseText = string.Empty;
 
-                            if (res.Content.Headers.ContentType.MediaType == "application/problem+json")
+                            if (res.ResponseMessage.Content.Headers.ContentType.MediaType == "application/problem+json")
                             {
-                                problemDetail = await res.Content.ReadAsAsync<ArtesianSdkProblemDetail>(_formatters, ctk);
+                                problemDetail = await res.ResponseMessage.Content.ReadAsAsync<ArtesianSdkProblemDetail>(_formatters, ctk);
                             }
                             else
                             {
-                                if (res.StatusCode == HttpStatusCode.BadRequest)
+                                if (res.ResponseMessage.StatusCode == HttpStatusCode.BadRequest)
                                 {
-                                    responseText = _tryDecodeText(await res.Content.ReadAsAsync<object>(_formatters, ctk));
+                                    responseText = _tryDecodeText(await res.ResponseMessage.Content.ReadAsAsync<object>(_formatters, ctk));
                                 }
                                 else
                                 {
-                                    responseText = await res.Content.ReadAsStringAsync();
+                                    responseText = await res.ResponseMessage.Content.ReadAsStringAsync();
                                 }
                             }
 
                             var detailMessage = problemDetail?.Detail ?? problemDetail?.Title ?? problemDetail?.Type ?? "Content:" + Environment.NewLine + responseText;
                             var exceptionMessage = $"Failed handling REST call to WebInterface {method} {_url + resource}. Returned status: {res.StatusCode}. {detailMessage}";
 
-                            switch (res.StatusCode)
+                            switch (res.ResponseMessage.StatusCode)
                             {
                                 case HttpStatusCode.BadRequest:
                                     throw new ArtesianSdkValidationException(exceptionMessage, problemDetail);
@@ -168,7 +168,7 @@ namespace Artesian.SDK.Service
                             }
                         }
 
-                        return await res.Content.ReadAsAsync<TResult>(_formatters, ctk);
+                        return await res.ResponseMessage.Content.ReadAsAsync<TResult>(_formatters, ctk);
                     }
                 }
                 finally

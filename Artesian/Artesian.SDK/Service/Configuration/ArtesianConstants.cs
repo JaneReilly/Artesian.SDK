@@ -13,7 +13,7 @@ namespace Artesian.SDK.Service
     public abstract class ArtesianConstants
     {
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
-        public readonly static string SDKVersionHeaderValue = $@"ArtesianSDK-C#:{Assembly.GetExecutingAssembly().GetName().Version},{Environment.OSVersion.Platform}:{Environment.OSVersion.Version},{_frameworkName.Identifier}:{_frameworkName.Version}";
+        public readonly static string SDKVersionHeaderValue = $@"ArtesianSDK-C#:{Assembly.GetExecutingAssembly().GetName().Version},{Environment.OSVersion.Platform}:{Environment.OSVersion.Version},{_frameworkName?.Identifier}:{_frameworkName?.Version}";
  #pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 
 		internal const string CharacterValidatorRegEx = @"^[^'"",:;\s](?:(?:[^'"",:;\s]| )*[^'"",:;\s])?$";
@@ -25,6 +25,6 @@ namespace Artesian.SDK.Service
         internal const string MetadataVersion = "v2.1";
         internal const int ServiceRequestTimeOutMinutes = 10;
 
-        private static FrameworkName _frameworkName = new FrameworkName(AppDomain.CurrentDomain.SetupInformation.TargetFrameworkName);
+        private static FrameworkName _frameworkName { get => new FrameworkName(Assembly.GetExecutingAssembly()?.GetCustomAttribute<TargetFrameworkAttribute>()?.FrameworkName); }
     }
 }

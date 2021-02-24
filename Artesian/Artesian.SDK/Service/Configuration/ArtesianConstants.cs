@@ -1,10 +1,9 @@
 ﻿// Copyright (c) ARK LTD. All rights reserved.
 // Licensed under the MIT License. See LICENSE in the project root for
 // license information. 
-
-using Microsoft.Extensions.PlatformAbstractions;
 using System;
 using System.Reflection;
+using System.Runtime.Versioning;
 
 namespace Artesian.SDK.Service
 {
@@ -14,7 +13,7 @@ namespace Artesian.SDK.Service
     public abstract class ArtesianConstants
     {
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
-        public readonly static string SDKVersionHeaderValue = $@"ArtesianSDK-C#:{Assembly.GetExecutingAssembly().GetName().Version},{Environment.OSVersion.Platform}:{Environment.OSVersion.Version},{PlatformServices.Default.Application.RuntimeFramework.Identifier}:{PlatformServices.Default.Application.RuntimeFramework.Version}";
+        public readonly static string SDKVersionHeaderValue = $@"ArtesianSDK-C#:{Assembly.GetExecutingAssembly().GetName().Version},{Environment.OSVersion.Platform}:{Environment.OSVersion.Version},{_frameworkName.Identifier}:{_frameworkName.Version}";
  #pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 
 		internal const string CharacterValidatorRegEx = @"^[^'"",:;\s](?:(?:[^'"",:;\s]| )*[^'"",:;\s])?$";
@@ -26,5 +25,6 @@ namespace Artesian.SDK.Service
         internal const string MetadataVersion = "v2.1";
         internal const int ServiceRequestTimeOutMinutes = 10;
 
+        private static FrameworkName _frameworkName = new FrameworkName(AppDomain.CurrentDomain.SetupInformation.TargetFrameworkName);
     }
 }

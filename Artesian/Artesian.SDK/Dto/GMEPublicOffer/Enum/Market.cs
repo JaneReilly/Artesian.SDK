@@ -25,6 +25,7 @@ namespace Artesian.SDK.Dto.GMEPublicOffer
         MB4 = 33,
         MB5 = 34,
         MB6 = 35,
+        MRR = 50
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     }
 }
